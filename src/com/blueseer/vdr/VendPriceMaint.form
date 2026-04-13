@@ -47,10 +47,10 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="tbkey" alignment="0" min="-2" pref="126" max="-2" attributes="0"/>
-                      <Component id="ddpart" alignment="0" max="32767" attributes="0"/>
+                      <Component id="dditem" alignment="0" max="32767" attributes="0"/>
                       <Component id="dduom" alignment="0" min="-2" pref="103" max="-2" attributes="0"/>
                       <Component id="ddcurr" alignment="0" min="-2" pref="105" max="-2" attributes="0"/>
-                      <Component id="price" alignment="0" min="-2" pref="101" max="-2" attributes="0"/>
+                      <Component id="tbprice" alignment="0" min="-2" pref="101" max="-2" attributes="0"/>
                       <Component id="jScrollPane2" alignment="0" min="-2" pref="178" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -94,7 +94,7 @@
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="ddpart" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="dditem" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lbitem" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -109,7 +109,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="price" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tbprice" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -136,10 +136,10 @@
             <Property name="name" type="java.lang.String" value="lblprice" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="price">
+        <Component class="javax.swing.JTextField" name="tbprice">
           <Events>
-            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="priceFocusGained"/>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="priceFocusLost"/>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbpriceFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbpriceFocusLost"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
@@ -206,14 +206,14 @@
             <Property name="name" type="java.lang.String" value="lblapplied" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="ddpart">
+        <Component class="javax.swing.JComboBox" name="dditem">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="ddpartItemStateChanged"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="dditemItemStateChanged"/>
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>

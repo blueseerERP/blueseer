@@ -36,18 +36,32 @@ import static com.blueseer.utl.BlueSeerUtils.ArrayListStringArrayToJson;
 import static com.blueseer.utl.BlueSeerUtils.arrayToJson;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerAuthAPI;
 import com.blueseer.vdr.venData;
+import static com.blueseer.vdr.venData.addOrUpdateVdpMstr;
+import static com.blueseer.vdr.venData.addUpdateVDCtrl;
 import static com.blueseer.vdr.venData.addVDCDet;
+import static com.blueseer.vdr.venData.addVdpMstr;
 import static com.blueseer.vdr.venData.addVendMstr;
 import static com.blueseer.vdr.venData.addVendMstrMass;
+import static com.blueseer.vdr.venData.addVprMstr;
 import static com.blueseer.vdr.venData.deleteVDCDet;
+import static com.blueseer.vdr.venData.deleteVdpMstr;
 import static com.blueseer.vdr.venData.deleteVendMstr;
+import static com.blueseer.vdr.venData.deleteVprMstr;
 import static com.blueseer.vdr.venData.getVDCDet;
+import static com.blueseer.vdr.venData.getVDCtrl;
+import static com.blueseer.vdr.venData.getVdpMstr;
 import static com.blueseer.vdr.venData.getVenRptPickerData;
 import static com.blueseer.vdr.venData.getVendBrowseView;
 import static com.blueseer.vdr.venData.getVendMstr;
+import static com.blueseer.vdr.venData.getVendPriceBrowseView;
 import static com.blueseer.vdr.venData.getVendShipSet;
+import static com.blueseer.vdr.venData.getVendXrefBrowseView;
+import static com.blueseer.vdr.venData.getVprMstr;
+import static com.blueseer.vdr.venData.getVprPriceLists;
 import static com.blueseer.vdr.venData.updateVDCDet;
+import static com.blueseer.vdr.venData.updateVdpMstr;
 import static com.blueseer.vdr.venData.updateVendMstr;
+import static com.blueseer.vdr.venData.updateVprMstr;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -241,6 +255,163 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         break;
         }
         
+        case "addVdpMstr" : { 
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            ObjectMapper objectMapper = new ObjectMapper();
+            venData.vdp_mstr x = objectMapper.readValue(sb.toString(), venData.vdp_mstr.class);            
+            response.getWriter().print(arrayToJson(addVdpMstr(x)));
+            break;
+          }
+        
+        case "addOrUpdateVdpMstr" : { 
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            ObjectMapper objectMapper = new ObjectMapper();
+            venData.vdp_mstr x = objectMapper.readValue(sb.toString(), venData.vdp_mstr.class);              
+            response.getWriter().print(arrayToJson(addOrUpdateVdpMstr(x)));
+            break;
+          }
+        
+        case "updateVdpMstr" : { 
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            ObjectMapper objectMapper = new ObjectMapper();
+            venData.vdp_mstr x = objectMapper.readValue(sb.toString(), venData.vdp_mstr.class);              
+            response.getWriter().print(arrayToJson(updateVdpMstr(x)));
+            break;
+          }
+        
+        case "deleteVdpMstr" : { 
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            ObjectMapper objectMapper = new ObjectMapper();
+            venData.vdp_mstr x = objectMapper.readValue(sb.toString(), venData.vdp_mstr.class);              
+            response.getWriter().print(arrayToJson(deleteVdpMstr(x)));
+            break;
+          }
+        
+        case "getVdpMstr" :  {      
+            venData.vdp_mstr vdp = getVdpMstr(new String[]{request.getHeader("param1"), 
+                    request.getHeader("param2")});
+            ObjectMapper objectMapper = new ObjectMapper();
+            String r = objectMapper.writeValueAsString(vdp);
+            response.getWriter().print(r);
+            break;  
+        }
+        
+        case "addUpdateVDCtrl" : { 
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            ObjectMapper objectMapper = new ObjectMapper();
+            venData.vd_ctrl x = objectMapper.readValue(sb.toString(), venData.vd_ctrl.class);            
+            response.getWriter().print(arrayToJson(addUpdateVDCtrl(x)));
+            break;
+          }
+        
+        case "getVDCtrl" : { 
+            String[] key = new String[]{request.getHeader("param1")}; 
+            venData.vd_ctrl x = getVDCtrl(key);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String r = objectMapper.writeValueAsString(x);
+            response.getWriter().print(r);
+            break;
+          }
+        
+        case "addVprMstr" : { 
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            ObjectMapper objectMapper = new ObjectMapper();
+            venData.vpr_mstr x = objectMapper.readValue(sb.toString(), venData.vpr_mstr.class);            
+            response.getWriter().print(arrayToJson(addVprMstr(x)));
+            break;
+          }
+        
+        case "updateVprMstr" : { 
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            ObjectMapper objectMapper = new ObjectMapper();
+            venData.vpr_mstr x = objectMapper.readValue(sb.toString(), venData.vpr_mstr.class);            
+            response.getWriter().print(arrayToJson(updateVprMstr(x)));
+            break;
+          }
+        
+        case "deleteVprMstr" : { 
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            ObjectMapper objectMapper = new ObjectMapper();
+            venData.vpr_mstr x = objectMapper.readValue(sb.toString(), venData.vpr_mstr.class);            
+            response.getWriter().print(arrayToJson(deleteVprMstr(x)));
+            break;
+          }
+        
+        case "getVprMstr" : { 
+            String[] key = new String[]{request.getHeader("param1")}; 
+            venData.vpr_mstr x = getVprMstr(key);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String r = objectMapper.writeValueAsString(x);
+            response.getWriter().print(r);
+            break;
+          }
+        
+        case "getVprPriceLists" : { 
+            ArrayList<venData.vpr_mstr> x = getVprPriceLists(request.getHeader("param1"));
+            ObjectMapper objectMapper = new ObjectMapper();
+            String r = objectMapper.writeValueAsString(x);
+            response.getWriter().print(r);
+            break;
+          }
+        
+        
+        case "getVendPriceBrowseView" : {
+        String[] x = new String[]{
+               request.getHeader("param1"), 
+               request.getHeader("param2")
+               };     
+        response.getWriter().print(getVendPriceBrowseView(x));  
+        break;
+        }
+        
+        case "getVendXrefBrowseView" : {
+        String[] x = new String[]{
+               request.getHeader("param1"), 
+               request.getHeader("param2")
+               };     
+        response.getWriter().print(getVendXrefBrowseView(x));  
+        break;
+        }
         
         default:
         response.getWriter().print("");

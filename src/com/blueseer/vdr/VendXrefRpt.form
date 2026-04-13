@@ -200,9 +200,7 @@
                       <Component id="btRun" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btcsv1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btdetail" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="257" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="351" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -212,7 +210,6 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btRun" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btdetail" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tbtext" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btcsv1" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -228,15 +225,6 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="btdetail">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Hide Detail"/>
-                <Property name="name" type="java.lang.String" value="bthidedetail" noResource="true"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdetailActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JButton" name="btRun">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Run"/>

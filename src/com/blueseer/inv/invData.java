@@ -5396,8 +5396,23 @@ public class invData {
 
     }
 
-    public static double getItemPriceFromVend(String vend, String item, String uom, String curr) {
-       double myreturn = 0;
+    public static String[] getItemPriceFromVend(String vend, String item, String uom, String curr) {
+       if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getItemPriceFromVend"});
+            list.add(new String[]{"param1", vend});
+            list.add(new String[]{"param2", item});
+            list.add(new String[]{"param3", uom});
+            list.add(new String[]{"param4", curr});
+            try {
+                return jsonToStringArray(sendServerPost(list, "", null, "dataServINV"));
+            } catch (IOException ex) { 
+                bslog(ex);
+                return null;
+            }
+        } 
+        
+        String[] myreturn = new String[]{"",""};
        String pricecode = "";
 
         try{
@@ -5420,13 +5435,16 @@ public class invData {
                      vend = pricecode;
                  }
 
-                res = st.executeQuery("select vpr_price from vpr_mstr where vpr_vend = " + "'" + vend + "'" + 
+                res = st.executeQuery("select vpr_price, it_desc from vpr_mstr " + 
+                        " inner join item_mstr on it_item = vpr_item " +
+                        " where vpr_vend = " + "'" + vend + "'" + 
                                       " AND vpr_item = " + "'" + item + "'" +
                                       " AND vpr_uom = " + "'" + uom + "'" +
                                       " AND vpr_curr = " + "'" + curr + "'" +        
                                       " AND vpr_type = 'LIST' "+ ";");
                while (res.next()) {
-                   myreturn = res.getDouble("vpr_price");
+                   myreturn[0] = res.getString("it_desc");
+                   myreturn[1] = res.getString("vpr_price");
 
                 }
 

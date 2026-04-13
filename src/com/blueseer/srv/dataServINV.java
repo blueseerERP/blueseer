@@ -81,6 +81,7 @@ import static com.blueseer.inv.invData.getItemMasterSchedlist;
 import static com.blueseer.inv.invData.getItemMstr;
 import static com.blueseer.inv.invData.getItemPrice;
 import static com.blueseer.inv.invData.getItemPriceFromCust;
+import static com.blueseer.inv.invData.getItemPriceFromVend;
 import static com.blueseer.inv.invData.getItemQOHTotal;
 import static com.blueseer.inv.invData.getItemQtyByWarehouseAndLocation;
 import static com.blueseer.inv.invData.getItemRoutingBrowseView;
@@ -1127,6 +1128,14 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                     request.getHeader("param4"),
                     request.getHeader("param5"),
                     request.getHeader("param6"))));  
+            break;
+        }
+        
+        case "getItemPriceFromVend" : {
+            response.getWriter().print(arrayToJson(getItemPriceFromVend(request.getHeader("param1"),
+                    request.getHeader("param2"),
+                    request.getHeader("param3"),
+                    request.getHeader("param4"))));  
             break;
         }
         

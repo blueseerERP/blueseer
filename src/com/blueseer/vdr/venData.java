@@ -906,7 +906,7 @@ public class venData {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
                 String jsonString = objectMapper.writeValueAsString(x);
-                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServCUS"));
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServVDR"));
             } catch (IOException ex) {
                 bslog(ex);
                 return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
@@ -1223,6 +1223,18 @@ public class venData {
     
     
     public static String[] addUpdateVDCtrl(vd_ctrl x) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","addUpdateVDCtrl"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServVDR"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
         int rows = 0;
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  vd_ctrl"; // there should always be only 1 or 0 records 
@@ -1257,6 +1269,22 @@ public class venData {
     public static vd_ctrl getVDCtrl(String[] x) {
         vd_ctrl r = null;
         String[] m = new String[2];
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","getVDCtrl"});
+            list.add(new String[]{"param1",x[0]});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(list, "", null, "dataServVDR");
+                r = objectMapper.readValue(returnstring, vd_ctrl.class); 
+                return r;
+            } catch (IOException ex) {
+                bslog(ex);
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+                r = new vd_ctrl(m);
+                return r;
+            }
+        }
         String sql = "select * from vd_ctrl;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -1282,6 +1310,18 @@ public class venData {
     }
     
     public static String[] addVdpMstr(vdp_mstr x) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","addVdpMstr"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServVDR"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  vdp_mstr where vdp_vitem = ? and vdp_vend = ?";
         String sqlInsert = "insert into vdp_mstr (vdp_vend, vdp_item, vdp_vitem, " +
@@ -1318,6 +1358,18 @@ public class venData {
     }
 
     public static String[] addOrUpdateVdpMstr(vdp_mstr x) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","addOrUpdateVdpMstr"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServVDR"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  vdp_mstr where vdp_vitem = ? and vdp_vend = ?";
         String sqlInsert = "insert into vdp_mstr (vdp_vend, vdp_item, vdp_vitem, " +
@@ -1366,6 +1418,18 @@ public class venData {
     }
 
     public static String[] updateVdpMstr(vdp_mstr x) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","updateVdpMstr"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServVDR"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
         String[] m = new String[2];
         String sql = "update vdp_mstr set vdp_item = ?, vdp_upc = ?, " +
                 " vdp_userid = ?, vdp_misc = ?, vdp_sku = ?  " +   
@@ -1389,7 +1453,19 @@ public class venData {
     }
     
     public static String[] deleteVdpMstr(vdp_mstr x) { 
-       String[] m = new String[2];
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","deleteVdpMstr"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServVDR"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        String[] m = new String[2];
         String sql = "delete from vdp_mstr where vdp_vitem = ? and vdp_vend = ?; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1407,6 +1483,25 @@ public class venData {
     public static vdp_mstr getVdpMstr(String[] x) {
         vdp_mstr r = null;
         String[] m = new String[2];
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","getVdpMstr"});
+            list.add(new String[]{"param1",x[0]});
+            if (x.length > 1) {
+            list.add(new String[]{"param2",x[1]});            
+            }
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(list, "", null, "dataServVDR");
+                r = objectMapper.readValue(returnstring, vdp_mstr.class); 
+                return r;
+            } catch (IOException ex) {
+                bslog(ex);
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+                r = new vdp_mstr(m);
+                return r;
+            }
+        }
         String sql = "";
          if (x.length >= 2 && ! x[1].isEmpty()) {
             sql = "select * from vdp_mstr where vdp_vend = ? and vdp_vitem = ?;";
@@ -1444,6 +1539,234 @@ public class venData {
         }
         return r;
     }
+    
+    public static String[] addVprMstr(vpr_mstr x) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","addVprMstr"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServVDR"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  vpr_mstr where vpr_vend = ? and vpr_item = ? and vpr_uom = ? and vpr_curr = ? ;";
+        String sqlInsert = "insert into vpr_mstr (vpr_vend, vpr_item, vpr_type, vpr_desc, vpr_uom, vpr_curr, "
+                        + "vpr_price)  " 
+                        + " values (?,?,?,?,?,?,?); "; 
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.vpr_vend);
+             ps.setString(2, x.vpr_item);
+             ps.setString(3, x.vpr_uom);
+             ps.setString(4, x.vpr_curr);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.vpr_vend);
+            psi.setString(2, x.vpr_item);
+            psi.setString(3, x.vpr_type);
+            psi.setString(4, x.vpr_desc);
+            psi.setString(5, x.vpr_uom);
+            psi.setString(6, x.vpr_curr);
+            psi.setString(7, x.vpr_price);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateVprMstr(vpr_mstr x) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","updateVprMstr"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServVDR"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        String[] m = new String[2];
+        String sql = "update vpr_mstr set vpr_desc = ?, vpr_price = ? " +   
+                " where vpr_vend = ? and vpr_item = ? and vpr_uom = ? and vpr_curr = ? and vpr_type = ?; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        
+        ps.setString(1, x.vpr_desc);
+        ps.setString(2, x.vpr_price);
+        ps.setString(3, x.vpr_vend);
+        ps.setString(4, x.vpr_item);
+        ps.setString(5, x.vpr_uom);
+        ps.setString(6, x.vpr_curr);
+        ps.setString(7, x.vpr_type);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] deleteVprMstr(vpr_mstr x) { 
+       if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","deleteVprMstr"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServVDR"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        String[] m = new String[2];
+        String sql = "delete from vpr_mstr where vpr_vend = ? and vpr_item = ? and vpr_uom = ? and vpr_curr = ? and vpr_type = ?; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.vpr_vend);
+        ps.setString(2, x.vpr_item);
+        ps.setString(3, x.vpr_uom);
+        ps.setString(4, x.vpr_curr);
+        ps.setString(5, x.vpr_type);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static vpr_mstr getVprMstr(String[] x) {
+        vpr_mstr r = null;
+        String[] m = new String[2];
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","getVprMstr"});
+            list.add(new String[]{"param1",x[0]}); // vend
+            list.add(new String[]{"param2",x[1]}); // item
+            list.add(new String[]{"param3",x[2]}); // uom
+            list.add(new String[]{"param4",x[3]}); // curr
+            list.add(new String[]{"param5",x[4]}); // type
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(list, "", null, "dataServVDR");
+                r = objectMapper.readValue(returnstring, vpr_mstr.class); 
+                return r;
+            } catch (IOException ex) {
+                bslog(ex);
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+                r = new vpr_mstr(m);
+                return r;
+            }
+        }
+        String sql = "select * from vpr_mstr where vpr_vend = ? and vpr_item = ? and vpr_uom = ? and vpr_curr = ? and vpr_type = ?;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+        ps.setString(2, x[1]);
+        ps.setString(3, x[2]);
+        ps.setString(4, x[3]);
+        ps.setString(5, x[4]);
+        
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new vpr_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                      
+                        r = new vpr_mstr(m, res.getString("vpr_vend"), 
+                            res.getString("vpr_item"),
+                            res.getString("vpr_type"),
+                            res.getString("vpr_desc"),
+                            res.getString("vpr_uom"),
+                            res.getString("vpr_curr"),
+                            res.getString("vpr_price") 
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new vpr_mstr(m);
+        }
+        return r;
+    }
+    
+    public static ArrayList<vpr_mstr> getVprPriceLists(String code) {
+        vpr_mstr r = null;
+        String[] m = new String[2];
+        ArrayList<vpr_mstr> list = new ArrayList<vpr_mstr>();
+        
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> paramlist = new ArrayList<>();
+            paramlist.add(new String[]{"id","getVprPriceLists"});
+            paramlist.add(new String[]{"param1",code});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(paramlist, "", null, "dataServVDR");
+                list = objectMapper.readValue(returnstring, new TypeReference<ArrayList<vpr_mstr>>() {});
+                return list;
+            } catch (IOException ex) {
+                bslog(ex);
+                return list;
+            }
+        }
+        
+        String sql = "select * from vpr_mstr where vpr_vend = ? and vpr_type = 'LIST' order by vpr_item ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new vpr_mstr(m);
+                } else {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    while(res.next()) {
+                        r = new vpr_mstr(m, res.getString("vpr_vend"), 
+                            res.getString("vpr_item"),
+                            res.getString("vpr_type"),
+                            res.getString("vpr_desc"),
+                            res.getString("vpr_uom"),
+                            res.getString("vpr_curr"),
+                            res.getString("vpr_price")
+                        );
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new vpr_mstr(m);
+               list.add(r);
+        }
+        return list;
+    }
+    
     
     public static VendShipSet getVendShipSet(String[] x ) {
         VendShipSet r = null;
@@ -1515,6 +1838,122 @@ public class venData {
     
     
     // misc
+    public static String getVendPriceBrowseView(String[] keys) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {  
+                 
+                int i = 0;
+                String expire = "";
+                if (! keys[1].isBlank()) {
+                    if (keys[0].equals("item")) {
+                    res = st.executeQuery("SELECT vpr_vend, vd_name, vpr_item, it_desc, vpr_uom, vpr_curr, vpr_price, vpr_type FROM  vpr_mstr inner join vd_mstr on vd_addr = vpr_vend inner join item_mstr on it_item = vpr_item where " +
+                        " vpr_item like " + "'" + "%" + keys[1] + "%' ;") ;
+                    } else {
+                        res = st.executeQuery("SELECT vpr_vend, vd_name, vpr_item, it_desc, vpr_uom, vpr_curr, vpr_price, vpr_type FROM  vpr_mstr inner join vd_mstr on vd_addr = vpr_vend inner join item_mstr on it_item = vpr_item where " +
+                        " vpr_vend like " + "'" + "%" + keys[1] + "%' ;") ;
+                    }
+                } else {
+                  res = st.executeQuery("SELECT vpr_vend, vd_name, vpr_item, it_desc, vpr_uom, vpr_curr, vpr_price, vpr_type FROM  vpr_mstr inner join vd_mstr on vd_addr = vpr_vend inner join item_mstr on it_item = vpr_item  " +
+                        " limit 500 ;") ;  
+                }
+                
+                
+                while (res.next()) {
+                        i++;
+                        JSONArray rowArray = new JSONArray(); 
+                        rowArray.put("select");
+                        rowArray.put(res.getString("vpr_vend"));
+                        rowArray.put(res.getString("vd_name"));
+                        rowArray.put(res.getString("vpr_item"));
+                        rowArray.put(res.getString("it_desc"));
+                        rowArray.put(res.getString("vpr_uom"));
+                        rowArray.put(res.getString("vpr_curr"));
+                        rowArray.put(res.getString("vpr_type"));
+                        rowArray.put(res.getString("vpr_price"));
+                        jsonarray.put(rowArray);
+                        
+                } 
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return jsonarray.toString(); 
+    }
+    
+    public static String getVendXrefBrowseView(String[] keys) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {  
+                 
+                int i = 0;
+                if (keys[0].equals("item")) {
+                res = st.executeQuery("SELECT * FROM  vdp_mstr  left outer join vd_mstr on vd_addr = vdp_vend where " +
+                    " vdp_item like " + "'%" + keys[1] + "%' ;") ;
+                } else {
+                    res = st.executeQuery("SELECT * FROM  vdp_mstr  left outer join vd_mstr on vd_addr = vdp_vend where " +
+                    " vdp_vitem like " + "'%" + keys[1] + "%' ;") ;
+                }
+              
+                while (res.next()) {
+                        i++;
+                        JSONArray rowArray = new JSONArray(); 
+                        rowArray.put("select");
+                        rowArray.put(res.getString("vdp_vend"));
+                        rowArray.put(res.getString("vd_name"));
+                        rowArray.put(res.getString("vdp_item"));
+                        rowArray.put(res.getString("vdp_vitem"));
+                        rowArray.put(res.getString("vdp_sku"));
+                        rowArray.put(res.getString("vdp_upc"));
+                        rowArray.put(res.getString("vdp_misc"));
+                        jsonarray.put(rowArray);
+                        
+                } 
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return jsonarray.toString(); 
+    }
+    
     public static String getVenRptPickerData(String[] keys) {
         JSONArray jsonarray = new JSONArray();
         try {

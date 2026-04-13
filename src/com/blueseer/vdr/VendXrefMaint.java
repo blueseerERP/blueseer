@@ -34,12 +34,18 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.adm.admData;
+import static com.blueseer.adm.admData.addChangeLog;
+import com.blueseer.adm.admData.change_log;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
+import static com.blueseer.utl.BlueSeerUtils.clog;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.logChange;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -50,18 +56,19 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerV;
 import com.blueseer.utl.OVData;
+import static com.blueseer.vdr.venData.addVdpMstr;
+import static com.blueseer.vdr.venData.deleteVdpMstr;
+import static com.blueseer.vdr.venData.getVdpMstr;
+import static com.blueseer.vdr.venData.updateVdpMstr;
+import com.blueseer.vdr.venData.vdp_mstr;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -82,11 +89,18 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeer {
+public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeerV {
 
    // global variable declarations
-                boolean isLoad = false;
-    
+                 // global variable declarations
+        boolean isLoad = false;
+        boolean canUpdate = false;
+        boolean isAutoPost = false;
+        ArrayList<String[]> initDataSets = null;
+        String defaultSite = "";
+        String defaultCurrency = "";
+        String defaultCC = "";
+        private static vdp_mstr x = null;
     // global datatablemodel declarations       
                 
     public VendXrefMaint() {
@@ -95,15 +109,15 @@ public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeer {
     }
 
     // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -142,9 +156,8 @@ public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeer {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();  
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -271,25 +284,41 @@ public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeer {
        }
     }
     
-    public void setComponentDefaultValues() {
+    public void setComponentDefaultValues(boolean init) {
        isLoad = true;
-         ArrayList myvend = venData.getVendMstrListMinusCarrier();
+         if (init) {
+        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "vendors,items");
+        }
+        
         ddvend.removeAllItems();
-        for (int i = 0; i < myvend.size(); i++) {
-            ddvend.addItem(myvend.get(i));
-        }
-        ArrayList mypart = invData.getItemMasterRawlist();
         ddpart.removeAllItems();
-        for (int i = 0; i < mypart.size(); i++) {
-            ddpart.addItem(mypart.get(i));
+        
+        for (String[] s : initDataSets) {
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1];  
+            }
+            if (s[0].equals("canupdate")) {
+              canUpdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+          
+            if (s[0].equals("vendors")) {
+              ddvend.addItem(s[1]); 
+            }
+            if (s[0].equals("items")) {
+              ddpart.addItem(s[1]); 
+            }
         }
-         if (ddvend.getItemCount()> 0) {        
+        
+        
+        if (ddvend.getItemCount()> 0) {        
          ddvend.setSelectedIndex(0);
-         }
+        }
         if (ddpart.getItemCount() > 0) { 
         ddpart.setSelectedIndex(0);
         }
-         tbkey.setText("");
+
+        
+        tbkey.setText("");
         skunbr.setText("");
         upcnbr.setText("");
         misc.setText("");
@@ -300,7 +329,7 @@ public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public void newAction(String x) {
        setPanelComponentState(this, true);
-        setComponentDefaultValues();
+        setComponentDefaultValues(false);
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
@@ -314,22 +343,19 @@ public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        if (x[0].equals("0")) {
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         Map<String,Integer> f = OVData.getTableInfo(new String[]{"vdp_mstr"});
         int fc;
         
@@ -381,12 +407,12 @@ public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeer {
     public void initvars(String[] arg) {
        
        setPanelComponentState(this, false); 
-       setComponentDefaultValues();
+       setComponentDefaultValues(initDataSets == null);
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -395,224 +421,67 @@ public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                int i = 0;
-                
-                proceed = validateInput("addRecord");
-                
-                if (proceed) {
-
-                    res = st.executeQuery("select * from vdp_mstr where vdp_vitem = " + 
-                      "'" + tbkey.getText().toString() + "'" +
-                      " and vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" +
-                      ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into vdp_mstr "
-                        + "(vdp_vend, vdp_item, vdp_vitem, vdp_sku, vdp_upc, vdp_misc, vdp_userid"
-                        + " ) "
-                        + " values ( " + "'" + ddvend.getSelectedItem() + "'" + ","
-                        + "'" + ddpart.getSelectedItem() + "'" + ","
-                        + "'" + tbkey.getText() + "'" + ","
-                        + "'" + skunbr.getText() + "'" + ","
-                        + "'" + upcnbr.getText() + "'" + ","
-                        + "'" + misc.getText() + "'"  + ","
-                        + "'" + bsmf.MainFrame.userid.toString() + "'"
-                        + ")"
-                        + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
-     return m;
+     String[] m = addVdpMstr(createRecord());
+         return m; 
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
+     vdp_mstr _x = this.x;
+     vdp_mstr _y = createRecord();
+     String[] m = updateVdpMstr(_y);
      
-     try {
-            boolean proceed = true;
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            try {
-                   
-               proceed = validateInput("updateRecord");
-                
-                if (proceed) {
-                    st.executeUpdate("update vdp_mstr set "
-                            + " vdp_item = " + "'" + ddpart.getSelectedItem() + "'" + ","
-                            + " vdp_sku = "  + "'" + skunbr.getText() + "'" + ","
-                            + " vdp_upc = "  + "'" + upcnbr.getText() + "'" + ","
-                            + " vdp_misc = "  + "'" + misc.getText() + "'"  + ","
-                            + " vdp_userid = "  + "'" + bsmf.MainFrame.userid.toString() + "'"
-                            + " where vdp_vend = " + "'" + ddvend.getSelectedItem() + "'" 
-                            + " and vdp_vitem = " + "'" + tbkey.getText() + "'"
-                        + ";");
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
-     return m;
+     // change log check
+     if (m[0].equals("0")) {
+       ArrayList<change_log> c = logChange(tbkey.getText(), this.getClass().getSimpleName(),_x,_y);
+       if (! c.isEmpty()) {
+           addChangeLog(c);
+       } 
+     }
+        
+         return m;
      }
      
     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            try {
-                   int i = st.executeUpdate("delete from vdp_mstr where vdp_vitem = " + 
-                      "'" + tbkey.getText().toString() + "'" +
-                      " and vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" +
-                      ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
+         m = deleteVdpMstr(createRecord());  
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+        // change log check
+        if (m[0].equals("0")) {
+            ArrayList<change_log> c = new ArrayList<change_log>();
+            c.add(clog(this.x.vdp_vend() + "/" + this.x.vdp_item(), 
+                     this.x.getClass().getName(), 
+                     this.getClass().getSimpleName(), 
+                     "deletion", 
+                     "", 
+                     ""));
+            if (! c.isEmpty()) {
+               addChangeLog(c);
+            } 
+        }
+         return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                if (x == null && x.length < 1) { return new String[]{}; };
-                // two key system....make accomodation for first key action performed returning first record where it exists..else grab specific rec with both keys
-                if (x.length == 1) {
-                res = st.executeQuery("select * from vdp_mstr where vdp_vitem = " + "'" + x[0] + "'"  + " limit 1 ;"); 
-                } 
-                if (x.length == 2) {
-                 res = st.executeQuery("SELECT * FROM  vdp_mstr left outer join vd_mstr on vd_addr = vdp_vend where " +
-                    " vdp_vend = " + "'" + x[0] + "'" + 
-                    " AND vdp_vitem = " + "'" + x[1] + "'" + ";") ;
-                }  
-                while (res.next()) {
-                    i++;
-                    ddvend.setSelectedItem(res.getString("vdp_vend"));
-                     ddpart.setSelectedItem(res.getString("vdp_item"));
-                     tbkey.setText(res.getString("vdp_vitem"));
-                    skunbr.setText(res.getString("vdp_sku"));
-                    upcnbr.setText(res.getString("vdp_upc"));
-                    misc.setText(res.getString("vdp_misc"));
-                    
-                    btupdate.setEnabled(true);
-                    btadd.setEnabled(false);
-                    btdelete.setEnabled(true);
-                    
-                   
-                }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+       x = getVdpMstr(key);
+        return x.m();
     }
+    
+    public String[] updateForm() {
+        ddvend.setSelectedItem(x.vdp_vend());
+        ddpart.setSelectedItem(x.vdp_item());
+        tbkey.setText(x.vdp_vitem());
+        skunbr.setText(x.vdp_sku());
+        upcnbr.setText(x.vdp_upc());
+        misc.setText(x.vdp_misc());
+        setAction(x.m());
+        return x.m();  
+    }
+    
     
     public void lookUpFrame() {
         
@@ -660,6 +529,19 @@ public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
 
+    public vdp_mstr createRecord() {        
+        vdp_mstr x = new vdp_mstr(null, 
+                ddvend.getSelectedItem().toString(),
+                ddpart.getSelectedItem().toString(),
+                tbkey.getText(),
+                upcnbr.getText(),
+                bsmf.MainFrame.userid,
+                misc.getText(),
+                skunbr.getText()
+                );
+        return x;
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -853,27 +735,27 @@ public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       if (! validateInput("addRecord")) {
+       if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-       if (! validateInput("deleteRecord")) {
+       if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});   
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       if (! validateInput("updateRecord")) {
+       if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -882,11 +764,12 @@ public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeer {
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
         BlueSeerUtils.messagereset();
+        initDataSets = null;
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed

@@ -26,71 +26,51 @@ SOFTWARE.
 
 package com.blueseer.vdr;
 
-import com.blueseer.ctr.*;
-import com.blueseer.rcv.*;
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.checkperms;
-import static bsmf.MainFrame.db;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.FileDialog;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
-import static bsmf.MainFrame.driver;
-import static bsmf.MainFrame.ds;
-import static bsmf.MainFrame.mydialog;
-import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
-import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import com.blueseer.adm.admData;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
-import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
-import com.blueseer.vdr.venData;
-import java.sql.Connection;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
+import static com.blueseer.utl.BlueSeerUtils.jsonToData;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
 public class VendPriceRpt extends javax.swing.JPanel {
+    
+    boolean isLoad = false;
+    public String rsData; 
+    Object[][] roData;
+    ArrayList<String[]> initDataSets = new ArrayList<>();
+    String defaultsite = "";
+    String defaultCurrency = "";
  
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      
@@ -100,9 +80,10 @@ public class VendPriceRpt extends javax.swing.JPanel {
                         getGlobalColumnTag("code"), 
                         getGlobalColumnTag("name"), 
                         getGlobalColumnTag("item"), 
-                        getGlobalColumnTag("description"), 
+                        getGlobalColumnTag("description"),                        
                         getGlobalColumnTag("uom"), 
                         getGlobalColumnTag("currency"), 
+                        getGlobalColumnTag("type"),
                         getGlobalColumnTag("price")})
                         {
                       @Override  
@@ -159,52 +140,130 @@ public class VendPriceRpt extends javax.swing.JPanel {
         setLanguageTags(this);
     }
 
-     public void getdetail(String rvid) {
+    public void executeTask(String x, String[] y) { 
       
-         modeldetail.setNumRows(0);
-         double total = 0;
-        
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                String blanket = "";
+        class Task extends SwingWorker<String[], Void> {
+         
+          String action = "";
+          String[] key = null;
+          
+          public Task(String action, String[] key) { 
+              this.action = action;
+              this.key = key;
+          }     
+            
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            rsData = "";
+            
+            
+            switch(this.action) {
+                case "dataInit":
+                    message = getInitialization();
+                    break;
                 
-                res = st.executeQuery("select rvd_id, rvd_po, rvd_poline, rvd_item, rvd_packingslip, rvd_date, rvd_netprice, rvd_qty, rvd_voqty " +
-                        " from recv_det " +
-                        " where rvd_id = " + "'" + rvid + "'" + ";");
-                while (res.next()) {
-                   modeldetail.addRow(new Object[]{ 
-                      res.getString("rvd_id"), 
-                       res.getString("rvd_po"),
-                       res.getString("rvd_poline"),
-                       res.getString("rvd_item"),
-                       res.getString("rvd_packingslip"),
-                       res.getString("rvd_date"),
-                       currformatDouble(res.getDouble("rvd_netprice")),
-                      res.getInt("rvd_qty"), 
-                      res.getInt("rvd_voqty")});
-                }
-               
+                case "getBrowseView":
+                    message = getBrowseView();
+                    break; 
               
-                tabledetail.setModel(modeldetail);
-                 tabledetail.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
-                this.repaint();
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                default:
+                    message = new String[]{"1", "unknown action"};
             }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+            
+            
+            
+            
+            return message;
         }
-
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+            
+            
+            if (this.action.equals("dataInit")) {
+                    done_Initialization();
+            }
+            
+            if (this.action.equals("getBrowseView")) {
+                done_getBrowseView();
+            }        
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
     }
+        
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                 // start reset background colors
+                if (component instanceof JTextField) {
+                    if (((JTextField) component).isEditable()) {
+                     component.setBackground(Color.WHITE);
+                    } else {
+                     component.setBackground(bsmf.MainFrame.nonEditableColor);   
+                    }
+                }
+                if (component instanceof JComboBox) {
+                     component.setBackground(bsmf.MainFrame.ddbgcolor);
+                }
+                // end reset background colors
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
     
     public void setLanguageTags(Object myobj) {
        JPanel panel = null;
@@ -251,25 +310,101 @@ public class VendPriceRpt extends javax.swing.JPanel {
     }
     
     public void initvars(String[] arg) {
-       rbpart.setSelected(true);
+       executeTask("dataInit", null);
+    }
+    
+    public String[] getInitialization() {
+        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "");
+        if (initDataSets.isEmpty()) {
+           return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.dataInitError}; 
+        } else {
+           return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess}; 
+        }
+    }  
+    
+    public void done_Initialization() {
+        
+        isLoad = true;
+        setPanelComponentState(this, true);
+        rbpart.setSelected(true);
        rbcode.setSelected(false);
        buttonGroup1.add(rbpart);
        buttonGroup1.add(rbcode);
-       
-       
-       
+              
+              
        // Detail table is not required at this version
        detailpanel.setVisible(false);
        btdetail.setEnabled(false);
        
        
-         mymodel.setRowCount(0);
-         tablereport.setModel(mymodel);
-         tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-         tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
+        mymodel.setRowCount(0);
+        tablereport.setModel(mymodel);
+        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
          
+        
+        for (String[] s : initDataSets) {
+           
+            if (s[0].equals("site")) {
+              defaultsite = s[1]; 
+            }
+            
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1]; 
+            }
+        }
+        
+        tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));
+         
+        isLoad = false;
+        
     }
     
+    public String[] getBrowseView() {
+        String jsonString = null; 
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
+        ArrayList<String[]> list = new ArrayList<>();
+        list.add(new String[]{"id","getVendPriceBrowseView"});
+        list.add(new String[]{"param1",(rbpart.isSelected()) ? "item" : "vitem"});
+        list.add(new String[]{"param2",tbtext.getText()});
+        
+        try {
+                jsonString = sendServerPost(list, "", null, "dataServVDR"); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getVendPriceBrowseView")};
+            }
+        } else {
+            jsonString = venData.getVendPriceBrowseView(new String[]{
+                (rbpart.isSelected()) ? "item" : "vitem",
+                tbtext.getText()
+            });
+        }
+      
+      if (jsonString == null) {
+          return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getVendPriceBrowseView return jsonString is null")};
+      }
+        
+      roData = jsonToData(jsonString);
+       
+      return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getMessageTag(1125)};
+    }
+
+    public void done_getBrowseView() {
+       
+        setPanelComponentState(this, true);
+        int i = 0;
+        mymodel.setNumRows(0);
+        if (roData != null) {
+            for (Object[] rowData : roData) {                
+               mymodel.addRow(rowData);
+                i++;
+            }
+        }
+       
+        roData = null;
+    }   
+      
+
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -481,7 +616,11 @@ public class VendPriceRpt extends javax.swing.JPanel {
         
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
-        String[] myparameter = new String[]{tablereport.getValueAt(row, 1).toString(),tablereport.getValueAt(row, 4).toString(),tablereport.getValueAt(row, 3).toString(),tablereport.getValueAt(row, 5).toString(),tablereport.getValueAt(row, 6).toString()};
+        String[] myparameter = new String[]{tablereport.getValueAt(row, 1).toString(),
+            tablereport.getValueAt(row, 3).toString(),
+            tablereport.getValueAt(row, 5).toString(),
+            tablereport.getValueAt(row, 6).toString(),
+            tablereport.getValueAt(row, 7).toString()};
         if ( col == 0) {
               if (! checkperms("VendPriceMaint")) { return; }
            reinitpanels("VendPriceMaint", true, myparameter);
@@ -493,54 +632,9 @@ public class VendPriceRpt extends javax.swing.JPanel {
     }//GEN-LAST:event_tbtextActionPerformed
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
-        mymodel.setRowCount(0);
-        try {
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                if (rbpart.isSelected()) {
-                res = st.executeQuery("SELECT vpr_vend, vd_name, vpr_item, it_desc, vpr_uom, vpr_curr, vpr_price FROM  vpr_mstr inner join vd_mstr on vd_addr = vpr_vend inner join item_mstr on it_item = vpr_item where " +
-                    " vpr_item like " + "'" + "%" + tbtext.getText().toString() + "%' ;") ;
-                } else {
-                res = st.executeQuery("SELECT vpr_vend, vd_name, vpr_item, it_desc, vpr_uom, vpr_curr, vpr_price FROM  vpr_mstr inner join vd_mstr on vd_addr = vpr_vend inner join item_mstr on it_item = vpr_item where " +
-                    " vpr_vend like " + "'" + "%" + tbtext.getText().toString() + "%' ;") ;
-                }
-
-
-                while (res.next()) {
-                    i++;
-                     mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("vpr_vend"),
-                        res.getString("vd_name"),
-                        res.getString("vpr_item"),
-                        res.getString("it_desc"),
-                        res.getString("vpr_uom"),
-                        res.getString("vpr_curr"),
-                        res.getDouble("vpr_price")
-                    });
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        mymodel.setNumRows(0);
+        setPanelComponentState(this, false);
+        executeTask("getBrowseView", null);
 
     }//GEN-LAST:event_btRunActionPerformed
 

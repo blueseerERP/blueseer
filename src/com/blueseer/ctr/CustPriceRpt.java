@@ -84,11 +84,13 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
 /**
@@ -284,6 +286,62 @@ public class CustPriceRpt extends javax.swing.JPanel {
        }
     }
     
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                 // start reset background colors
+                if (component instanceof JTextField) {
+                    if (((JTextField) component).isEditable()) {
+                     component.setBackground(Color.WHITE);
+                    } else {
+                     component.setBackground(bsmf.MainFrame.nonEditableColor);   
+                    }
+                }
+                if (component instanceof JComboBox) {
+                     component.setBackground(bsmf.MainFrame.ddbgcolor);
+                }
+                // end reset background colors
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
     public void initvars(String[] arg) {
        executeTask("dataInit", null);
     }
@@ -300,6 +358,7 @@ public class CustPriceRpt extends javax.swing.JPanel {
     public void done_Initialization() {
         
         isLoad = true;
+        setPanelComponentState(this, true);
         rbpart.setSelected(true);
         rbcode.setSelected(false);
         buttonGroup1.add(rbpart);
@@ -366,7 +425,7 @@ public class CustPriceRpt extends javax.swing.JPanel {
     }
 
     public void done_getBrowseView() {
-       
+        setPanelComponentState(this, true);
         int i = 0;
         mymodel.setNumRows(0);
         if (roData != null) {
@@ -625,6 +684,8 @@ public class CustPriceRpt extends javax.swing.JPanel {
     }//GEN-LAST:event_tbtextActionPerformed
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
+        mymodel.setNumRows(0);
+        setPanelComponentState(this, false);
         executeTask("getBrowseView", null);
     }//GEN-LAST:event_btRunActionPerformed
 

@@ -31,17 +31,17 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
-import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
-import com.blueseer.fgl.fglData;
+import com.blueseer.adm.admData;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -52,33 +52,26 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerV;
 import com.blueseer.utl.OVData;
+import static com.blueseer.vdr.venData.addVprMstr;
+import static com.blueseer.vdr.venData.deleteVprMstr;
+import static com.blueseer.vdr.venData.getVprMstr;
+import static com.blueseer.vdr.venData.getVprPriceLists;
+import static com.blueseer.vdr.venData.updateVprMstr;
+import com.blueseer.vdr.venData.vpr_mstr;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -91,15 +84,21 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
+public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeerV {
 
     
     
     // global variable declarations
-                boolean isLoad = false;
+        boolean isLoad = false;
+        boolean canUpdate = false;
+        boolean isAutoPost = false;
+        ArrayList<String[]> initDataSets = null;
+        String defaultSite = "";
+        String defaultCurrency = "";
+        String defaultCC = "";
     
-    // global datatablemodel declarations       
-     DefaultListModel listmodel = new DefaultListModel();
+                private static vpr_mstr x = null;
+    // global datatablemodel declarations   
      DefaultListModel pricelistmodel = new DefaultListModel();           
                 
     public VendPriceMaint() {
@@ -108,15 +107,15 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
     }
 
     // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(BlueSeerUtils.dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(BlueSeerUtils.dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -139,7 +138,8 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                     break;
                 case "get":
                     message = getRecord(key);    
-                    break;    
+                    break;     
+                    
                 default:
                     message = new String[]{"1", "unknown action"};
             }
@@ -153,17 +153,12 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
             String[] message = get();
            
             BlueSeerUtils.endTask(message);
-           if (this.type.equals("delete")) {
-             initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
-             tbkey.requestFocus();
-             setPriceList(tbkey.getText());
-           } else {
-             initvars(null);  
-           }
-           
+               if (this.type.equals("get")) {
+                 updateForm();
+                 tbkey.requestFocus();
+               } else {
+                 initvars(null);  
+               }
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -177,7 +172,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
        z.execute(); 
        
     }
-   
+    
     public void setPanelComponentState(Object myobj, boolean b) {
         JPanel panel = null;
         JTabbedPane tabpane = null;
@@ -285,34 +280,51 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
        }
     }
     
-    public void setComponentDefaultValues() {
+    public void setComponentDefaultValues(boolean init) {
        isLoad = true;
-        tbkey.setText("");
-         price.setText("");
+       
+       if (init) {
+        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "currencies,items,uoms");
+        }
+       
+       tbkey.setText("");
+        tbprice.setText("");
          
          pricelist.setModel(pricelistmodel);
          
          dduom.removeAllItems();
-        ArrayList<String> mylist = OVData.getUOMList();
-        for (String code : mylist) {
-            dduom.addItem(code);
-        }
-       
          ddcurr.removeAllItems();
-        ArrayList<String> curr = fglData.getCurrlist();
-        for (String code : curr) {
-            ddcurr.addItem(code);
-        }
-        
-        ArrayList mypart = invData.getItemMasterRawlist();
-        ddpart.removeAllItems();
-        for (int i = 0; i < mypart.size(); i++) {
-            ddpart.addItem(mypart.get(i).toString());
-        }
-        
-        
-        listmodel.removeAllElements();
+         dditem.removeAllItems();
         pricelistmodel.removeAllElements();
+        
+         for (String[] s : initDataSets) {
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1];  
+            }
+            if (s[0].equals("canupdate")) {
+              canUpdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+           
+            if (s[0].equals("currencies")) {
+              ddcurr.addItem(s[1]); 
+            }
+            if (s[0].equals("items")) {
+              dditem.addItem(s[1]); 
+            }
+            if (s[0].equals("uoms")) {
+              dduom.addItem(s[1]); 
+            }
+        }
+        
+        if (ddcurr.getItemCount() > 0) {
+          ddcurr.setSelectedItem(defaultCurrency);
+        }        
+        
+        dduom.insertItemAt("", 0);
+        dduom.setSelectedIndex(0);
+        
+        dditem.insertItemAt("", 0);
+        dditem.setSelectedIndex(0);
     
        
         
@@ -321,7 +333,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public void newAction(String x) {
        setPanelComponentState(this, true);
-        setComponentDefaultValues();
+        setComponentDefaultValues(false);
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
@@ -335,9 +347,9 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
+        if (x[0].equals("0")) {
             m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
@@ -347,10 +359,10 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
+       
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
          
                 if (tbkey.getText().isEmpty()) {
@@ -361,10 +373,10 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                 }
          
         
-                if (ddpart.getSelectedItem() == null || ddpart.getSelectedItem().toString().isEmpty()) {
+                if (dditem.getSelectedItem() == null || dditem.getSelectedItem().toString().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1026));
-                    ddpart.requestFocus();
+                    dditem.requestFocus();
                     return b;
                 }
                 
@@ -384,10 +396,10 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                 
                 
                 
-                if (price.getText().isEmpty()) {
+                if (tbprice.getText().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1024));
-                    price.requestFocus();
+                    tbprice.requestFocus();
                     return b;
                 }
                 
@@ -400,12 +412,12 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
     public void initvars(String[] arg) {
        
        setPanelComponentState(this, false); 
-       setComponentDefaultValues();
+       setComponentDefaultValues(initDataSets == null);
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
                 
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -414,120 +426,12 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                int i = 0;
-                
-                proceed = validateInput("addRecord");
-                
-                if (proceed) {
-
-                    res = st.executeQuery("select vpr_item from vpr_mstr where " +
-                    " vpr_item = " + "'" + ddpart.getSelectedItem().toString() + "'" +
-                    " and vpr_vend = " + "'" + tbkey.getText() + "'" +
-                    " and vpr_uom = " + "'" + dduom.getSelectedItem().toString() + "'" +
-                    " and vpr_curr = " + "'" + ddcurr.getSelectedItem().toString() + "'" +        
-                    ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into vpr_mstr "
-                        + "(vpr_vend, vpr_item, vpr_type, vpr_desc, vpr_uom, vpr_curr, "
-                        + "vpr_price "
-                        + " ) "
-                        + " values ( " + "'" + tbkey.getText() + "'" + ","
-                        + "'" + ddpart.getSelectedItem().toString() + "'" + ","
-                        + "'LIST'" + ","
-                        + "'" + ddpart.getSelectedItem().toString() + "'" + ","
-                        + "'" + dduom.getSelectedItem().toString() + "'" + ","
-                        + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
-                        + "'" + price.getText().replace(defaultDecimalSeparator, '.') + "'"
-                        + ")"
-                        + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-                   
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
+     String[] m = addVprMstr(createRecord());
      return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-            boolean proceed = true;
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            try {
-                   
-               proceed = validateInput("updateRecord");
-                
-                if (proceed) {
-                    st.executeUpdate("update vpr_mstr "
-                        + " set vpr_price = " + "'" + price.getText().replace(defaultDecimalSeparator, '.') + "'"
-                        + " where vpr_vend = " + "'" + tbkey.getText() + "'"
-                        + " and vpr_type = 'LIST' "
-                        + " and vpr_item = " + "'" + ddpart.getSelectedItem().toString() + "'"
-                        + " and vpr_uom = " + "'" + dduom.getSelectedItem().toString() + "'"
-                        + " and vpr_curr = " + "'" + ddcurr.getSelectedItem().toString() + "'"        
-                        + ";");
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                  //  initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-     
+     String[] m = updateVprMstr(createRecord());
      return m;
      }
      
@@ -535,118 +439,16 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
      String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn("Are you sure?");
         if (proceed) {
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            try {
-              
-                   int i = st.executeUpdate("delete from vpr_mstr where vpr_vend = " + "'" + x[0] + "'" + 
-                                            " and vpr_item = " + "'" + x[1] + "'" +
-                                            " and vpr_uom = " + "'" + x[2] + "'" +
-                                            " and vpr_curr = " + "'" + x[3] + "'" +
-                                            " and vpr_type = 'LIST' " + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
+        m = deleteVprMstr(createRecord());
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
      return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                
-                if (x == null || x.length < 1 || x.length > 4) { return new String[]{}; };
-                // 4 key system....make accomodation for first key action performed returning first record where it exists..else grab specific rec with all 4 keys
-                if (x.length == 1) {
-                res = st.executeQuery("select * from vpr_mstr where vpr_vend = " + "'" + x[0] + "'"  + " limit 1 ;"); 
-                } 
-                if (x.length == 2) {
-                 res = st.executeQuery("SELECT * FROM  vpr_mstr where " +
-                    " vpr_vend = " + "'" + x[0] + "'" + 
-                    " AND vpr_item = " + "'" + x[1] + "'" +    
-                        " limit 1 ;") ;
-                }
-                if (x.length == 3) {
-                 res = st.executeQuery("SELECT * FROM  vpr_mstr where " +
-                    " vpr_vend = " + "'" + x[0] + "'" + 
-                    " AND vpr_item = " + "'" + x[1] + "'" + 
-                    " AND vpr_uom = " + "'" + x[2] + "'" +        
-                        " limit 1 ;") ;
-                }
-                if (x.length == 4) {
-                res = st.executeQuery("SELECT * FROM  vpr_mstr where " +
-                    " vpr_vend = " + "'" + x[0] + "'" + 
-                    " AND vpr_item = " + "'" + x[1] + "'" +
-                    " AND vpr_uom = " + "'" + x[2] + "'" +
-                    " AND vpr_curr = " + "'" + x[3] + "'" +        
-                        ";") ;
-                }
-                        
-                while (res.next()) {
-                    i++;
-                     tbkey.setText(res.getString("vpr_vend"));
-                     ddpart.setSelectedItem(res.getString("vpr_item"));
-                     dduom.setSelectedItem(res.getString("vpr_uom"));
-                     ddcurr.setSelectedItem(res.getString("vpr_curr"));
-                     price.setText(bsformat("s", (res.getString("vpr_price").replace('.',defaultDecimalSeparator)), "4"));
-                }
-                
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+        x = getVprMstr(key);
+        return x.m();
     }
     
     public void lookUpFrame() {
@@ -678,7 +480,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                 ludialog.dispose();
-                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString(), target.getValueAt(row,3).toString(), target.getValueAt(row,4).toString(), "LIST"});
                 }
             }
         };
@@ -691,83 +493,52 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
 
+    public vpr_mstr createRecord() { 
+                     
+        vpr_mstr x = new vpr_mstr(null, 
+        tbkey.getText(),
+        dditem.getSelectedItem().toString(),
+        "LIST",
+        dditem.getSelectedItem().toString(),        
+        dduom.getSelectedItem().toString(),
+        ddcurr.getSelectedItem().toString(),
+        tbprice.getText()
+        );
+      
+        return x;
+    }
+    
+    public String[] updateForm() {
+        tbkey.setText(x.vpr_vend());
+        dditem.setSelectedItem(x.vpr_item());
+        dduom.setSelectedItem(x.vpr_uom());
+        ddcurr.setSelectedItem(x.vpr_curr());
+        tbprice.setText(x.vpr_price());
+        setPriceList(x.vpr_vend());
+        setAction(x.m());
+        return x.m();  
+    }
+    
     
     // custom funcs
-    public void getVendPriceRecord(String vend, String part, String uom, String curr) {
-        initvars(null);
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                res = st.executeQuery("SELECT * FROM  vpr_mstr where " +
-                    " vpr_vend = " + "'" + vend + "'" + 
-                    " AND vpr_item = " + "'" + part + "'" +
-                    " AND vpr_uom = " + "'" + uom + "'" +
-                    " AND vpr_curr = " + "'" + curr + "'" +        
-                        ";") ;
-                        
-                while (res.next()) {
-                    i++;
-                  
-                    tbkey.setText(res.getString("vpr_vend"));
-                     ddpart.setSelectedItem(res.getString("vpr_item"));
-                     dduom.setSelectedItem(res.getString("vpr_uom"));
-                     ddcurr.setSelectedItem(res.getString("vpr_curr"));
-                     price.setText(bsformat("s", (res.getString("vpr_price").replace('.',defaultDecimalSeparator)), "4"));
-                     btupdate.setEnabled(true);
-                     btdelete.setEnabled(true);
-                     btadd.setEnabled(false);
-                }
-               
-               
-                
-                if (i == 0) 
-                    bsmf.MainFrame.show(getMessageTag(1001));
-               
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-
-    }
       
     public void setData() {
-        if (ddpart.getItemCount() > 0 && ! tbkey.getText().isEmpty() && dduom.getItemCount() > 0 && ddcurr.getItemCount() > 0) {
-        double myprice = invData.getItemPriceFromVend(tbkey.getText(), ddpart.getSelectedItem().toString(), 
+        if (dditem.getItemCount() > 0 && ! tbkey.getText().isEmpty() && dduom.getItemCount() > 0 && ddcurr.getItemCount() > 0) {
+        String[] x = invData.getItemPriceFromVend(tbkey.getText(), dditem.getSelectedItem().toString(), 
                 dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
-         lbitem.setText(invData.getItemDesc(ddpart.getSelectedItem().toString()));
-        if (myprice == 0) {
-            price.setText("0");
+         lbitem.setText(x[0]);
+        if (x[1].isBlank() || x[1].equals("0")) {
+            tbprice.setText("0");
             btadd.setEnabled(true);
             btupdate.setEnabled(false);
             btdelete.setEnabled(false);
-            price.setBackground(Color.YELLOW);
+            tbprice.setBackground(Color.YELLOW);
         } else {
-            price.setText(currformatDouble(myprice));
+            tbprice.setText(currformatDouble(bsParseDouble(x[1]))); 
             btadd.setEnabled(false);
             btupdate.setEnabled(true);
             btdelete.setEnabled(true); 
-            price.setBackground(Color.GREEN);
+            tbprice.setBackground(Color.GREEN);
         }
         }
     }
@@ -775,51 +546,9 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
     public void setPriceList(String x) {
         pricelistmodel.removeAllElements();
         String pricecode = "";
-        try {
-
-           Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-             
-              res = st.executeQuery("select vpr_item, vpr_uom, vpr_curr from vpr_mstr where vpr_vend = " + "'" + 
-                      x + "'" +
-                      " and vpr_type = " + "'LIST'" +
-                      ";");
-               while (res.next()) {
-                      pricelistmodel.addElement(res.getString("vpr_item") + ":" + res.getString("vpr_uom") + ":" + res.getString("vpr_curr"));
-               }
-               
-               
-             
-               res = st.executeQuery("select vd_price_code from vd_mstr where vd_addr = " + "'" + 
-                      x + "'" +
-                      ";");
-               while (res.next()) {
-               pricecode = res.getString("vd_price_code") == null ? "" : res.getString("vd_price_code");
-               }
-               
-               
-              
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+        ArrayList<vpr_mstr> vprlist = getVprPriceLists(tbkey.getText());
+        for (vpr_mstr vpr : vprlist) {
+        pricelistmodel.addElement(vpr.vpr_item() + ":" + vpr.vpr_uom() + ":" + vpr.vpr_curr());
         }
     }
     
@@ -835,7 +564,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        price = new javax.swing.JTextField();
+        tbprice = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         btadd = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
@@ -844,7 +573,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane2 = new javax.swing.JScrollPane();
         pricelist = new javax.swing.JList();
         jLabel4 = new javax.swing.JLabel();
-        ddpart = new javax.swing.JComboBox<>();
+        dditem = new javax.swing.JComboBox<>();
         dduom = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         ddcurr = new javax.swing.JComboBox<>();
@@ -864,12 +593,12 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel5.setText("Price");
         jLabel5.setName("lblprice"); // NOI18N
 
-        price.addFocusListener(new java.awt.event.FocusAdapter() {
+        tbprice.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                priceFocusGained(evt);
+                tbpriceFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                priceFocusLost(evt);
+                tbpriceFocusLost(evt);
             }
         });
 
@@ -913,9 +642,9 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel4.setText("Applied");
         jLabel4.setName("lblapplied"); // NOI18N
 
-        ddpart.addItemListener(new java.awt.event.ItemListener() {
+        dditem.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                ddpartItemStateChanged(evt);
+                dditemItemStateChanged(evt);
             }
         });
 
@@ -982,10 +711,10 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ddpart, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(dditem, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1021,7 +750,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1033,7 +762,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1052,79 +781,53 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void pricelistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pricelistMouseClicked
-        if (! pricelist.isSelectionEmpty())
-        try {
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            String[] str = pricelist.getSelectedValue().toString().split(":", -1);
-            try {
-                 res = st.executeQuery("select vpr_price, vpr_item, vpr_uom, vpr_curr from vpr_mstr where vpr_vend = " + "'" +
-                    tbkey.getText() + "'" +
-                    " and vpr_type = " + "'LIST'" +
-                    " and vpr_item = " + "'" + str[0] + "'" +
-                    " and vpr_uom = " + "'" + str[1] + "'" +
-                    " and vpr_curr = " + "'" + str[2] + "'" +        
-                    ";");
-                while (res.next()) {
-                    dduom.setSelectedItem(res.getString("vpr_uom"));
-                    ddcurr.setSelectedItem(res.getString("vpr_curr"));
-                    ddpart.setSelectedItem(res.getString("vpr_item"));
-                    price.setText(bsformat("s", (res.getString("vpr_price").replace('.',defaultDecimalSeparator)), "4"));
-                    
-                }
+        if (! pricelist.isSelectionEmpty()) {
+          String[] str  = pricelist.getSelectedValue().toString().split(":", -1);  //item, uom, curr
+          vpr_mstr vpr = getVprMstr(new String[]{tbkey.getText(),
+                    str[0], str[1], str[2], "LIST"});
+                
+               
+                isLoad = true;
+                dduom.setSelectedItem(vpr.vpr_uom());
+                ddcurr.setSelectedItem(vpr.vpr_curr());
+                dditem.setSelectedItem(vpr.vpr_item());
+                tbprice.setText(vpr.vpr_price());
+               
                 btadd.setEnabled(false);
                 btupdate.setEnabled(true);
                 btdelete.setEnabled(true);
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+                tbprice.setBackground(Color.GREEN);
+                isLoad = false;
         }
     }//GEN-LAST:event_pricelistMouseClicked
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       if (! validateInput("updateRecord")) {
+       if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText(), ddpart.getSelectedItem().toString(), dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString()});  
+        executeTask(dbaction.update, new String[]{tbkey.getText(), dditem.getSelectedItem().toString(), dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString()});  
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-        if (! validateInput("deleteRecord")) {
+        if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText(), ddpart.getSelectedItem().toString(), dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString()}); 
+        executeTask(dbaction.delete, new String[]{tbkey.getText(), dditem.getSelectedItem().toString(), dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString()}); 
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        if (! validateInput("addRecord")) {
+        if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText(), ddpart.getSelectedItem().toString(), dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString()});
+        executeTask(dbaction.add, new String[]{tbkey.getText(), dditem.getSelectedItem().toString(), dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString()});
     }//GEN-LAST:event_btaddActionPerformed
 
-    private void ddpartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ddpartItemStateChanged
+    private void dditemItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_dditemItemStateChanged
        setData();
-    }//GEN-LAST:event_ddpartItemStateChanged
+    }//GEN-LAST:event_dditemItemStateChanged
 
     private void dduomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dduomActionPerformed
         setData();
@@ -1134,24 +837,24 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
          setData();
     }//GEN-LAST:event_ddcurrActionPerformed
 
-    private void priceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_priceFocusLost
-            String x = BlueSeerUtils.bsformat("", price.getText(), "4");
+    private void tbpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpriceFocusLost
+            String x = BlueSeerUtils.bsformat("", tbprice.getText(), "4");
         if (x.equals("error")) {
-            price.setText("");
-            price.setBackground(Color.yellow);
+            tbprice.setText("");
+            tbprice.setBackground(Color.yellow);
             bsmf.MainFrame.show(getMessageTag(1000));
-            price.requestFocus();
+            tbprice.requestFocus();
         } else {
-            price.setText(x);
-            price.setBackground(Color.white);
+            tbprice.setText(x);
+            tbprice.setBackground(Color.white);
         }
-    }//GEN-LAST:event_priceFocusLost
+    }//GEN-LAST:event_tbpriceFocusLost
 
-    private void priceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_priceFocusGained
-        if (bsParseDouble(price.getText()) == 0) {
-            price.setText("");
+    private void tbpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpriceFocusGained
+        if (bsParseDouble(tbprice.getText()) == 0) {
+            tbprice.setText("");
         }
-    }//GEN-LAST:event_priceFocusGained
+    }//GEN-LAST:event_tbpriceFocusGained
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
         newAction("");
@@ -1159,11 +862,12 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
         BlueSeerUtils.messagereset();
+        initDataSets = null;
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-       executeTask("get", new String[]{tbkey.getText()});
+       executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
@@ -1179,7 +883,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JComboBox<String> ddcurr;
-    private javax.swing.JComboBox<String> ddpart;
+    private javax.swing.JComboBox<String> dditem;
     private javax.swing.JComboBox<String> dduom;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -1191,8 +895,8 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lbitem;
     private javax.swing.JLabel lbvend;
-    private javax.swing.JTextField price;
     private javax.swing.JList pricelist;
     private javax.swing.JTextField tbkey;
+    private javax.swing.JTextField tbprice;
     // End of variables declaration//GEN-END:variables
 }
