@@ -3207,7 +3207,7 @@ public class fglData {
        return jsonarray.toString(); 
     }
     
-    public static String getEarningsbyCheckView(String[] keys) {
+    public static String getEarningsbyCheckView(String empnbr, String checknbr) {
         JSONArray jsonarray = new JSONArray();
         try {
             
@@ -3223,7 +3223,7 @@ public class fglData {
             try{
                 
                 String emptype = "";
-                res = st.executeQuery("select emp_type from emp_mstr where emp_nbr = " + "'" + keys[0] + "'" + ";");
+                res = st.executeQuery("select emp_type from emp_mstr where emp_nbr = " + "'" + empnbr + "'" + ";");
                 while (res.next()) {
                     emptype = res.getString("emp_type");
                 }
@@ -3233,8 +3233,8 @@ public class fglData {
                     res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.code_id as 't.code_id', " +
                             "  e.emp_rate as 'e.emp_rate', clc_desc " +
                            "  FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr inner join clock_code on clc_code = t.code_id " +
-                              " where t.emp_nbr = "  + "'" + keys[0] + "'" +
-                           " and t.checknbr = " + "'" + keys[1] + "'" +
+                              " where t.emp_nbr = "  + "'" + empnbr + "'" +
+                           " and t.checknbr = " + "'" + checknbr + "'" +
                                 " group by t.code_id " +       
                                 " order by t.code_id " +      
                                ";" );
@@ -3251,11 +3251,11 @@ public class fglData {
                 } else {
                     res = st.executeQuery("select pyd_payamt, pyd_tothours, pyd_emprate, emp_payfrequency " +
                          " from pay_det inner join emp_mstr on emp_nbr = pyd_empnbr where " +
-                        " pyd_empnbr = " + "'" + keys[0] + "'" + " AND pyd_checknbr = " + "'" + keys[1] + "'" +
+                        " pyd_empnbr = " + "'" + empnbr + "'" + " AND pyd_checknbr = " + "'" + checknbr + "'" +
                         " order by pyd_paydate desc ;");
                     while (res.next()) {
                     JSONArray rowArray = new JSONArray(); 
-                            rowArray.put(keys[0]);
+                            rowArray.put(empnbr);
                             rowArray.put("earnings");
                             rowArray.put("Salary");
                             rowArray.put(res.getString("emp_payfrequency"));

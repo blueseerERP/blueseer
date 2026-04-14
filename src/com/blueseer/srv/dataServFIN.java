@@ -723,7 +723,21 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
       response.getWriter().print(fglData.getPayRollBrowseDetView(request.getHeader("param1"), 
                     request.getHeader("param2"))); 
       break;
+    }
+    
+    case "getPayRollMaintDetView" : { 
+      response.getWriter().print(fglData.getPayRollMaintDetView(request.getHeader("param1"), 
+                    request.getHeader("param2"),
+                    request.getHeader("param3"),
+                    BlueSeerUtils.ConvertStringToBool(request.getHeader("param4"))));  
+      break;
     } 
+    
+    case "getHRMaintDetView" : { 
+      response.getWriter().print(fglData.getHRMaintDetView(request.getHeader("param1"), 
+                    request.getHeader("param2"))); 
+      break;
+    }
     
     case "getEarningsView" : { 
       response.getWriter().print(fglData.getEarningsView(new String[]{request.getHeader("param1"), 
@@ -742,6 +756,18 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                     request.getHeader("param5")})); 
       break;
     }  
+    
+    case "getDeductionsbyEmpView" : { 
+      response.getWriter().print(fglData.getDeductionsbyEmpView(request.getHeader("param1"), 
+                    request.getHeader("param2"))); 
+      break;
+    } 
+    
+    case "getEarningsbyCheckView" : { 
+      response.getWriter().print(fglData.getEarningsbyCheckView(request.getHeader("param1"), 
+                    request.getHeader("param2"))); 
+      break;
+    } 
     
     
     case "get_pie_EmpPayByDate" : { 

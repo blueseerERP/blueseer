@@ -923,7 +923,7 @@ public class EmployeeMaint extends javax.swing.JPanel  {
         String jsonString = null;
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
             ArrayList<String[]> list = new ArrayList<>();
-            list.add(new String[]{"id", "getEarningsByCheckView"});
+            list.add(new String[]{"id", "getEarningsbyCheckView"});
             list.add(new String[]{"param1", empnbr});
             list.add(new String[]{"param2", checknbr});
             try {
@@ -933,7 +933,7 @@ public class EmployeeMaint extends javax.swing.JPanel  {
                 return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getDetail")};
             }
         } else {
-            jsonString = fglData.getEarningsView(new String[]{empnbr, checknbr}); 
+            jsonString = fglData.getEarningsbyCheckView(empnbr, checknbr); 
         }        
         roEarnings = jsonToData(jsonString);
         
