@@ -1638,23 +1638,10 @@ public class apiUtils {
         return (micString);
     }
 
-    /**Calculates the hash value for a passed body part, base 64 encoded
-     *@param digestAlgOID digest OID algorithm, e.g. "1.3.14.3.2.26"
-     */
-    public static String calculateMIC(Part part, String digestAlgOID) throws GeneralSecurityException, MessagingException, IOException {
-        if (part == null) {
-            throw new GeneralSecurityException("calculateMIC: Part is null");
-        }
-        ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-        part.writeTo(bOut);
-        bOut.flush();
-        bOut.close();
-        byte data[] = bOut.toByteArray();
-        return (calculateMIC(data, digestAlgOID));
-    }
-    
     public static byte[] encryptData(byte[] data, X509Certificate encryptionCertificate, String algo) throws CertificateEncodingException, CMSException, IOException {
-        ASN1ObjectIdentifier x = null;
+        ASN1ObjectIdentifier x;
+        byte[] encryptedData = null;
+        
         if (algo.equals("AES128_CBC")) {
             x = CMSAlgorithm.AES128_CBC;
         } else if (algo.equals("AES192_CBC")) {
@@ -1670,28 +1657,23 @@ public class apiUtils {
         } else {
            x = CMSAlgorithm.DES_EDE3_CBC;  
         }
-        byte[] encryptedData = null;
-        if (null != data && null != encryptionCertificate) {
-            CMSEnvelopedDataGenerator cmsEnvelopedDataGenerator
-              = new CMSEnvelopedDataGenerator();
-
-            JceKeyTransRecipientInfoGenerator jceKey 
-              = new JceKeyTransRecipientInfoGenerator(encryptionCertificate);
+        
+        if (data != null && encryptionCertificate != null) {
+            CMSEnvelopedDataGenerator cmsEnvelopedDataGenerator = new CMSEnvelopedDataGenerator();
+            JceKeyTransRecipientInfoGenerator jceKey = new JceKeyTransRecipientInfoGenerator(encryptionCertificate);
             cmsEnvelopedDataGenerator.addRecipientInfoGenerator(jceKey);
             CMSTypedData msg = new CMSProcessableByteArray(data);
-            OutputEncryptor encryptor = new JceCMSContentEncryptorBuilder(x)
-              .setProvider("BC").build();
-            CMSEnvelopedData cmsEnvelopedData = cmsEnvelopedDataGenerator
-              .generate(msg,encryptor);
+            OutputEncryptor encryptor = new JceCMSContentEncryptorBuilder(x).setProvider("BC").build();
+            CMSEnvelopedData cmsEnvelopedData = cmsEnvelopedDataGenerator.generate(msg,encryptor);
             encryptedData = cmsEnvelopedData.getEncoded();
         }
-			    return encryptedData;
+	return encryptedData;
 	
 }
     
     public static byte[] decryptData(byte[] encryptedData, PrivateKey decryptionKey)throws CMSException {
             byte[] decryptedData = null;
-            if (null != encryptedData && null != decryptionKey) {
+            if (encryptedData != null && decryptionKey != null) {
                 CMSEnvelopedData envelopedData = new CMSEnvelopedData(encryptedData);
                 Collection<RecipientInformation> recipients = envelopedData.getRecipientInfos().getRecipients();
                 KeyTransRecipientInformation recipientInfo = (KeyTransRecipientInformation) recipients.iterator().next();
@@ -3067,10 +3049,8 @@ public class apiUtils {
        
         
         if (isEncrypted) {
-        //  sendbytes = encryptData(mm.getInputStream().readAllBytes(), encryptcertificate, as2m.as2_encalgo());
           sendbytes = encryptData(bytesToBeEncrypted, encryptcertificate, as2m.as2_encalgo());
         } else {
-           // sendbytes = mm.getInputStream().readAllBytes();
            sendbytes = bytesToBeEncrypted;
         }
         
@@ -3115,10 +3095,7 @@ public class apiUtils {
             rb.addHeader("content-disposition", "attachment; filename=" + "\"" + "smime.p7m" + "\"");
             rb.addHeader("connection", "close, TE");
             }        
-     //   } else {
-     //       rb.addHeader("Content-Type", "multipart/signed; protocol=\"application/pkcs7-signature\"; boundary=" + "\"" + newboundary + "\"" + "; micalg=sha1");
-     //   }
-        
+            
         // add custom headers
         ArrayList<String> list = EDData.getAS2AttributesList(as2m.as2_id(), "httpheader");
         for (String x : list) {
@@ -3127,14 +3104,7 @@ public class apiUtils {
                  rb.addHeader(h[0], h[1]);
                 }
             }
-        
-        
-        
-        
-       
-      //  InputStreamEntity ise = new InputStreamEntity(new ByteArrayInputStream(sendbytes));  // original Entity used prior to 20251005
-      //  rb.setEntity(new BufferedHttpEntity(ise));  // original Entity used prior to 20251005
-        
+     
         ByteArrayEntity baentity = new ByteArrayEntity(sendbytes);  // after 20251005 used for repeatable stream...for debugging prior to send
         rb.setEntity(new BufferedHttpEntity(baentity));  // after 20251005
         
@@ -3143,30 +3113,13 @@ public class apiUtils {
         
           
         if (isDebug) { 
-            
             RequestBuilder rb_debug = rb;
             ByteArrayEntity baentity_debug = new ByteArrayEntity(bytesToBeEncrypted);  // used for repeatable stream...for debugging prior to send
             rb_debug.setEntity(new BufferedHttpEntity(baentity_debug));
             HttpUriRequest request_debug = rb_debug.build();
             String debugfile = "debugAS2http." + now + "." + Long.toHexString(System.currentTimeMillis());
-            saveRequestToFile(request_debug, "temp" + "/" + debugfile);
-            
-            /*
-            String debugfile = "debugAS2http." + now + "." + Long.toHexString(System.currentTimeMillis());
-            Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
-            Header[] headers = request.getAllHeaders();
-            try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
-                String micdebugdec = "DEBUG MIC: " + mic + "\n";
-                stream.write(micdebugdec.getBytes());
-                for (Header x : headers) {
-                    String h = x.getName() + ": " + x.getValue() + "\n";
-                    stream.write(h.getBytes());
-                }
-            }  
-            */
+            saveRequestToFile(request_debug, "temp" + "/" + debugfile);           
         }
-        
-       
         
         
         try (CloseableHttpResponse response = client.execute(request)) {
