@@ -31,26 +31,20 @@ import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
-import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.adm.admData;
 import static com.blueseer.hrm.hrmData.getEmpFormalNameByID;
-import static com.blueseer.hrm.hrmData.getEmpNameAll;
-import static com.blueseer.hrm.hrmData.getempmstrlist;
 import static com.blueseer.inv.invData.addInvMetaOperator;
 import static com.blueseer.inv.invData.addRoutingMstr;
 import static com.blueseer.inv.invData.deleteInvMetaOperator;
 import static com.blueseer.inv.invData.deleteRoutingMstr;
 import static com.blueseer.inv.invData.getInvMetaOperators;
-import static com.blueseer.inv.invData.getRoutingMstr;
 import static com.blueseer.inv.invData.getRoutingMstrList;
 import static com.blueseer.inv.invData.updateRoutingMstr;
 import com.blueseer.inv.invData.wf_mstr;
-import static com.blueseer.utl.BlueSeerUtils.ConvertTrueFalseToBoolean;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
-import static com.blueseer.utl.BlueSeerUtils.bsFormatInt;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -67,26 +61,14 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
-import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.IBlueSeerV;
-import static com.blueseer.utl.OVData.canUpdate;
-import static com.blueseer.utl.OVData.getSysMetaData;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -670,76 +652,6 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerV {
         for (String operator : operators) {
             listmodel.addElement(operator);
         } 
-    }
-    
-    public void opchange() {
-         String[] m = new String[2];
-        if (! tbop.getText().isBlank()) {
-        try {
-           Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-              
-                double runhours = 0;
-                double setuphours = 0;
-                 int i = 0;
-                res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + tbkey.getText() + "'"  + " AND " +
-                        " wf_op = " + "'" + tbop.getText() + "'" + ";");
-                        
-                while (res.next()) {
-                    i++;
-                    
-                    if (res.getDouble("wf_run_hours") > 0)
-                        runhours = 1 / res.getDouble("wf_run_hours");
-                    else
-                        runhours = 0;
-                    
-                    
-                    ddwc.setSelectedItem(res.getString("wf_cell"));
-                    tbopdesc.setText(res.getString("wf_desc"));
-                    ddsite.setSelectedItem(res.getString("wf_site"));
-                    tbrunhours.setText(res.getString("wf_run_hours"));
-                    tbsetuphours.setText(res.getString("wf_setup_hours"));
-                    tbrunhoursinverted.setText(String.valueOf(currformatDouble(runhours)));
-                    cbmilestone.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("wf_assert")));
-                }
-                // potentially new op...fields to defaults
-                if (i == 0) {
-                    ddwc.setSelectedIndex(0);
-                    tbopdesc.setText("");
-                    ddsite.setSelectedIndex(0);
-                    tbrunhours.setText("");
-                    tbsetuphours.setText("");
-                    tbrunhoursinverted.setText("");
-                    cbmilestone.setSelected(false);
-                    
-                    btadd.setEnabled(true);
-                    btupdate.setEnabled(false);
-                    btdelete.setEnabled(false);
-                    
-                }
-                
-           } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-        
-        getOperators(tbkey.getText(), tbop.getText());
-        
-        }
     }
     
     public boolean hasOperation(String op) {

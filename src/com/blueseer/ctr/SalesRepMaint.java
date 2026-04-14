@@ -24,8 +24,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 package com.blueseer.ctr;
-
-import com.blueseer.inv.*;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import com.blueseer.adm.admData;
@@ -35,18 +33,12 @@ import static com.blueseer.ctr.cusData.getSlspMstr;
 import com.blueseer.ctr.cusData.slsp_mstr;
 import static com.blueseer.ctr.cusData.updateSlspMstr;
 import com.blueseer.utl.OVData;
-import static com.blueseer.inv.invData.addWareHouseMstr;
-import static com.blueseer.inv.invData.deleteWareHouseMstr;
-import static com.blueseer.inv.invData.getWareHouseMstr;
-import static com.blueseer.inv.invData.updateWareHouseMstr;
-import com.blueseer.inv.invData.wh_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
-import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.isNumeric;
@@ -58,8 +50,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeerT;
-import static com.blueseer.utl.OVData.canUpdate;
+import com.blueseer.utl.IBlueSeerV;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -84,11 +75,18 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class SalesRepMaint extends javax.swing.JPanel implements IBlueSeerT {
+public class SalesRepMaint extends javax.swing.JPanel implements IBlueSeerV {
 
     
     // global variable declarations
-                boolean isLoad = false;
+        boolean isLoad = false;
+        boolean canUpdate = false;
+        boolean isAutoPost = false;
+        ArrayList<String[]> initDataSets = null;
+        String defaultSite = "";
+        String defaultCurrency = "";
+        String defaultCC = "";
+
                 private static slsp_mstr x = null;
     
    // global datatablemodel declarations    
@@ -277,7 +275,7 @@ public class SalesRepMaint extends javax.swing.JPanel implements IBlueSeerT {
        }
     }
     
-    public void setComponentDefaultValues() {
+    public void setComponentDefaultValues(boolean init) {
        isLoad = true;
          tbkey.setText("");
         tbname.setText("");
@@ -286,19 +284,30 @@ public class SalesRepMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbcity.setText("");
         tbzip.setText("");
         
-        String defaultsite = "";
-        ArrayList<String[]> initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "states");
+        if (init) {
+        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "states");
+        }
         
         ddstate.removeAllItems();
         
         
         for (String[] s : initDataSets) {
-           
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1];  
+            }
+            if (s[0].equals("site")) {
+              defaultSite = s[1];  
+            }
+            if (s[0].equals("canupdate")) {
+              canUpdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+            if (s[0].equals("autopost")) {
+              isAutoPost = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+          
             if (s[0].equals("states")) {
               ddstate.addItem(s[1]); 
             }
-            
-            
         }
         
         ddstate.insertItemAt("", 0);
@@ -311,7 +320,7 @@ public class SalesRepMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void newAction(String x) {
        setPanelComponentState(this, true);
-        setComponentDefaultValues();
+        setComponentDefaultValues(false);
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
@@ -339,7 +348,7 @@ public class SalesRepMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public boolean validateInput(dbaction x) {
        
-        if (! canUpdate(this.getClass().getName())) {
+        if (! canUpdate) {
             bsmf.MainFrame.show(getMessageTag(1185));
             return false;
         }
@@ -374,7 +383,7 @@ public class SalesRepMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void initvars(String[] arg) {
        
        setPanelComponentState(this, false); 
-       setComponentDefaultValues();
+       setComponentDefaultValues(initDataSets == null);
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
         
@@ -768,6 +777,7 @@ public class SalesRepMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
         BlueSeerUtils.messagereset();
+        initDataSets = null;
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 

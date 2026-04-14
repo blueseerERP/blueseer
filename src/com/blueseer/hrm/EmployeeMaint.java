@@ -26,44 +26,32 @@ SOFTWARE.
 package com.blueseer.hrm;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.db;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
 import java.awt.Component;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Objects;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import static bsmf.MainFrame.defaultDecimalSeparator;
-import static bsmf.MainFrame.dfdate;
-import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.ds;
-import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
-import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.adm.admData;
 import static com.blueseer.adm.admData.addChangeLog;
 import com.blueseer.fgl.fglData;
-import static com.blueseer.hrm.hrmData.addEmployeeMstr;
 import static com.blueseer.hrm.hrmData.addEmployeeTransaction;
 import static com.blueseer.hrm.hrmData.deleteEmpMstr;
 import com.blueseer.hrm.hrmData.emp_exception;
 import com.blueseer.hrm.hrmData.emp_mstr;
 import static com.blueseer.hrm.hrmData.getEmployeeExceptions;
 import static com.blueseer.hrm.hrmData.getEmployeeMstr;
-import static com.blueseer.hrm.hrmData.updateEmployeeMstr;
 import static com.blueseer.hrm.hrmData.updateEmployeeTransaction;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
@@ -75,6 +63,7 @@ import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.jsonToData;
 import static com.blueseer.utl.BlueSeerUtils.logChange;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -84,24 +73,18 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.IBlueSeerV;
-import static com.blueseer.utl.OVData.canUpdate;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
@@ -123,7 +106,7 @@ import javax.swing.text.StyledDocument;
  *
  * @author vaughnte
  */
-public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
+public class EmployeeMaint extends javax.swing.JPanel  {
 
      // global variable declarations
     boolean canUpdate = false;
@@ -134,6 +117,10 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
     String defaultCC = "";
     String default_payc_payrolltax_acct = "";
     boolean isLoad = false;
+     public String rsData; 
+    Object[][] roData;
+    Object[][] roDeductions;
+    Object[][] roEarnings;
     public static emp_mstr x = null;
     // global datatablemodel declarations
     javax.swing.table.DefaultTableModel excmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -219,15 +206,15 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
     
     // interface functions implemented
    
-    public void executeTask(dbaction x, String[] y) { 
+    public void executeTask(String x, String[] y) { 
       
        class Task extends SwingWorker<String[], Void> {
        
-          String type = "";
+          String action = "";
           String[] key = null;
           
-          public Task(BlueSeerUtils.dbaction type, String[] key) { 
-              this.type = type.name();
+          public Task(String action, String[] key) { 
+              this.action = action;
               this.key = key;
           } 
            
@@ -238,7 +225,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
             message[1] = "";
            
             
-             switch(this.type) {
+             switch(this.action) {
                 case "add":
                     message = addRecord(key);
                     break;
@@ -251,6 +238,17 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
                 case "get":
                     message = getRecord(key);    
                     break;    
+                case "getBrowseDetView":
+                    message = getBrowseDetView(key[0], key[1]);
+                    break;
+                    
+                case "getEarningsView":
+                    message = getEarningsView(key[0], key[1]);
+                    break;
+                    
+                case "getDeductionsView":
+                    message = getDeductionsView(key[0], key[1]);
+                    break;     
                 default:
                     message = new String[]{"1", "unknown action"};
             }
@@ -271,17 +269,32 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
                 }
            
            BlueSeerUtils.endTask(m);
-           if (this.type.equals("delete")) {
+           if (this.action.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && m[0].equals("1")) {
-               updateForm();
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && m[0].equals("0")) {
-               updateForm();
-             tbkey.requestFocus();
-           } else {
+           } 
+           if (this.action.equals("add")) {
              initvars(null);  
            }
+           if (this.action.equals("update")) {
+             initvars(null);  
+           }
+           if (this.action.equals("get")) {
+               updateForm();
+               tbkey.requestFocus();
+           }
+           
+            if (this.action.equals("getBrowseDetView")) {
+                done_getBrowseDetView();
+            }
+            
+            if (this.action.equals("getEarningsView")) {
+                done_getEarningsView();
+            }
+            
+            if (this.action.equals("getDeductionsView")) {
+                done_getDeductionsView();
+            }
+           
             
             } catch (InterruptedException | ExecutionException e) {
                 MainFrame.bslog(e);
@@ -628,7 +641,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask(dbaction.get, arg);
+            executeTask("get", arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -867,6 +880,160 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
     }
     
     // custom funcs
+    public String[] getBrowseDetView(String empnbr, String checknbr) {
+      
+        String jsonString = null;
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "getHRMaintDetView"});
+            list.add(new String[]{"param1", empnbr});
+            list.add(new String[]{"param2", checknbr});
+            try {
+                jsonString = sendServerPost(list, "", null, "dataServFIN"); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getDetail")};
+            }
+        } else {
+            jsonString = fglData.getHRMaintDetView(empnbr, checknbr); 
+        }        
+        roData = jsonToData(jsonString);
+        
+        return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getMessageTag(1125)};
+      
+    }
+   
+    public void done_getBrowseDetView() {
+      modeldetail.setNumRows(0);
+       int i = 0;  
+       if (roData != null) {
+        if (roData.length > 0) {
+            for (Object[] rowData : roData) {
+                roData[i][7] = bsParseDouble(roData[i][7].toString());
+                modeldetail.addRow(rowData);
+                i++;
+            } 
+        }
+       }
+       roData = null;
+    }
+    
+    public String[] getEarningsView(String empnbr, String checknbr) {
+      
+        String jsonString = null;
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "getEarningsByCheckView"});
+            list.add(new String[]{"param1", empnbr});
+            list.add(new String[]{"param2", checknbr});
+            try {
+                jsonString = sendServerPost(list, "", null, "dataServFIN"); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getDetail")};
+            }
+        } else {
+            jsonString = fglData.getEarningsView(new String[]{empnbr, checknbr}); 
+        }        
+        roEarnings = jsonToData(jsonString);
+        
+        return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getMessageTag(1125)};
+      
+    }
+   
+    public void done_getEarningsView() {
+      modelearnings.setNumRows(0);
+      jtpEarnings.setText("");
+      jtpEarnings.setContentType("text/html");
+          
+       int i = 0;  
+       if (roEarnings != null) {
+        if (roEarnings.length > 0) {
+            
+            String html = "<html><body><table><tr><td align='right' style='color:blue;font-size:20px;'>Earnings:</td><td></td></tr></table>";
+            String codedesc = "";
+            html += "<table>";
+            for (Object[] rowData : roEarnings) {
+                roEarnings[i][5] = bsParseDouble(roEarnings[i][5].toString());
+                modelearnings.addRow(rowData);
+                i++;
+                
+                codedesc = roEarnings[i][2].toString();
+                if (codedesc.equals("00") || codedesc.equals("77")) {
+                    codedesc = "Compensation (" + codedesc + "):";
+                } else {
+                    codedesc = roEarnings[i][3].toString();
+                }
+               
+                html += "<tr><td align='right'>" + codedesc + ":" + "</td><td>" + currformatDouble(bsParseDouble(roEarnings[i][5].toString())) + "</td></tr>";  
+                
+                
+            } 
+            html += "</table></body></html>";
+            jtpEarnings.setText(html);
+        }
+       }
+       roEarnings = null;
+    }
+    
+    public String[] getDeductionsView(String empnbr, String amount) {
+      
+        String jsonString = null;
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "getDeductionsbyEmpView"});
+            list.add(new String[]{"param1", empnbr});
+            list.add(new String[]{"param5", amount});
+            try {
+                jsonString = sendServerPost(list, "", null, "dataServFIN"); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getDetail")};
+            }
+        } else {
+            jsonString = fglData.getDeductionsbyEmpView(empnbr, amount); 
+        }        
+        roDeductions = jsonToData(jsonString);
+        
+        return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getMessageTag(1125)};
+      
+    }
+   
+    public void done_getDeductionsView() {
+      modeldeduct.setNumRows(0);
+      jtpDeductions.setText("");
+      jtpDeductions.setContentType("text/html");
+      StyledDocument doc = jtpDeductions.getStyledDocument();
+      SimpleAttributeSet keyWord = new SimpleAttributeSet();
+      StyleConstants.setForeground(keyWord, Color.RED);
+      StyleConstants.setBackground(keyWord, Color.YELLOW);
+      StyleConstants.setBold(keyWord, true);
+      double empexception = 0;
+      double deductamt = 0;
+          
+       int i = 0;  
+       if (roDeductions != null) {
+        if (roDeductions.length > 0) {
+            
+            String html = "<html><body><table><tr><td align='right' style='color:blue;font-size:20px;'>Deductions:</td><td></td></tr></table>";
+            html += "<table>";
+            for (Object[] rowData : roDeductions) {
+                roDeductions[i][5] = bsParseDouble(roDeductions[i][5].toString());
+                modeldeduct.addRow(rowData);
+                i++; 
+               
+                html += "<tr><td align='right'>" + roDeductions[i][3].toString() + ":" + "</td><td>" + currformatDouble(bsParseDouble(roDeductions[i][5].toString())) + "</td></tr>";
+                
+                
+            } 
+            html += "</table></body></html>";
+            jtpDeductions.setText(html);
+        }
+       }
+       roDeductions = null;
+    }
+    
+    /*
     public void getEarnings(String empnbr, String checknbr) {
           modelearnings.setNumRows(0);
           jtpEarnings.setText("");
@@ -1125,105 +1292,24 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
         }
 
     }
-   
+   */
     public void getPayRecords(String empnbr) {
-          try {
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                mymodel.setNumRows(0);
-                int i = 0;
-                double netcheck = 0;
-                    res = st.executeQuery("SELECT pyd_id, pyd_empnbr, pyd_checknbr, pyd_paydate, pyd_tothours, pyd_payamt, " +
-                             " (select sum(pyl_amt) from pay_line where pyl_id = pyd_id and pyl_checknbr = pyd_checknbr and pyl_type = 'deduction' ) as 'deductions' " +
-                            " FROM  pay_det where pyd_empnbr = " + "'" + empnbr + "'" + " order by pyd_paydate desc ;");
-                    while (res.next()) {
-                          netcheck = res.getDouble("pyd_payamt") - res.getDouble("deductions");
-                          mymodel.addRow(new Object []{BlueSeerUtils.clickflag, res.getString("pyd_id"),
-                                            res.getString("pyd_empnbr"),
-                                            res.getString("pyd_checknbr"),
-                                            res.getString("pyd_paydate"),
-                                            res.getString("pyd_tothours"),
-                                            res.getDouble("pyd_payamt"),
-                                            res.getDouble("deductions"),
-                                            netcheck
-                                            } );
-                    }
-            }
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+          
+        ArrayList<String[]> list = hrmData.getPayRecords(empnbr);
+        for (String[] s : list) {
+            mymodel.addRow(new Object []{BlueSeerUtils.clickflag, s[0],
+                                            s[1],
+                                            s[2],
+                                            s[3],
+                                            s[4],
+                                            currformatDouble(bsParseDouble(s[5])),
+                                            currformatDouble(bsParseDouble(s[6])),
+                                            currformatDouble(bsParseDouble(s[7]))
+                                            } ); 
         }
+        
      }
    
-    public void setUsersTable()    {
-         try {
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                int i = 0;
-
-                javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"UserID", "LastName", "FirstName", "Email"});
-              
-               // jTable2.getColumn("Item").setCellRenderer(new ButtonRenderer());
-             //   jTable2.getColumn("Item").setCellEditor(
-               //         new ButtonEditor(new JCheckBox()));
-
-
-
-                res = st.executeQuery("SELECT * FROM  user_mstr order by user_id ;");
-
-                while (res.next()) {
-                    i++;
-
-                    mymodel.addRow(new Object[]{res.getString("user_id"),
-                                res.getString("user_lname"),
-                                res.getString("user_fname"),
-                                res.getString("user_email")
-                            });
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }
          
     class SomeRenderer extends DefaultTableCellRenderer {
         
@@ -1415,7 +1501,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
             }
         });
 
-        jLabel46.setText("Employee Number");
+        jLabel46.setText("Employee ID");
         jLabel46.setName("lblid"); // NOI18N
 
         comments.setColumns(20);
@@ -1647,7 +1733,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
                         .addComponent(lastname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel47))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
+                        .addGap(32, 32, 32)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(firstname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel49))
@@ -1846,19 +1932,6 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanelMainLayout.createSequentialGroup()
-                                .addComponent(jLabel46)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btchangelog, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnew)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btclear)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanelMainLayout.createSequentialGroup()
                                 .addComponent(jLabel15)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane6))
@@ -1868,11 +1941,25 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
                                 .addGap(43, 43, 43)
                                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(49, 49, 49))
+            .addGroup(jPanelMainLayout.createSequentialGroup()
+                .addGap(72, 72, 72)
+                .addComponent(jLabel46)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btchangelog, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnew)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btclear)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelMainLayout.setVerticalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMainLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(12, 12, 12)
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1882,7 +1969,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
                         .addComponent(btclear))
                     .addComponent(btlookup)
                     .addComponent(btchangelog))
-                .addGap(12, 12, 12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelMainLayout.createSequentialGroup()
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -2249,11 +2336,9 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
                         .addComponent(btaddattachment)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdeleteattachment)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 446, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 439, Short.MAX_VALUE)
                         .addComponent(labelmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelAttachmentLayout.createSequentialGroup()
-                        .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane8))
                 .addContainerGap())
         );
         panelAttachmentLayout.setVerticalGroup(
@@ -2266,8 +2351,8 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
                         .addComponent(btaddattachment)
                         .addComponent(btdeleteattachment)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(157, 157, 157))
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         add(panelAttachment);
@@ -2278,7 +2363,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask(dbaction.add, new String[]{tbkey.getText()});
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
@@ -2286,7 +2371,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask(dbaction.update, new String[]{tbkey.getText()});
+        executeTask("update", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
@@ -2294,7 +2379,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask(dbaction.delete, new String[]{tbkey.getText()});  
+        executeTask("delete", new String[]{tbkey.getText()});  
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -2302,7 +2387,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask(dbaction.get, new String[]{tbkey.getText()});
+        executeTask("get", new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
@@ -2350,12 +2435,16 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerV  {
         int col = tablereport.columnAtPoint(evt.getPoint());
         
         if ( col == 0) {
-            getdetail(tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 3).toString() );
+          //  getdetail(tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 3).toString() );
+            executeTask("getBrowseDetView", new String[]{tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 3).toString()});
             summarypanel.setVisible(false);
             detailpanel.setVisible(true);
             chartpanel.setVisible(true);
-            getDeductions(tablereport.getValueAt(row, 2).toString(), bsParseDouble(tablereport.getValueAt(row,6).toString()));
-            getEarnings(tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 3).toString() );
+          //  getDeductions(tablereport.getValueAt(row, 2).toString(), bsParseDouble(tablereport.getValueAt(row,6).toString()));
+            executeTask("getDeductionsView", new String[]{tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 6).toString()});
+          //  getEarnings(tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 3).toString() );
+            executeTask("getEarningsView", new String[]{tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 3).toString()});
+               
         }
         
         

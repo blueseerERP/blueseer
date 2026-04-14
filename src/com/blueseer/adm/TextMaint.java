@@ -25,25 +25,16 @@ SOFTWARE.
  */
 
 package com.blueseer.adm;
-
-import com.blueseer.inv.*;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
-import com.blueseer.adm.admData;
 import static com.blueseer.adm.admData.addUpdateTxtMeta;
 import static com.blueseer.adm.admData.deleteTxtMeta;
 import static com.blueseer.adm.admData.getTxtMeta;
 import com.blueseer.adm.admData.txt_meta;
-import static com.blueseer.inv.invData.addUOMMstr;
-import static com.blueseer.inv.invData.deleteUOMMstr;
-import static com.blueseer.inv.invData.getUOMMstr;
-import com.blueseer.inv.invData.uom_mstr;
-import static com.blueseer.inv.invData.updateUOMMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
-import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -55,21 +46,14 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
-import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.IBlueSeerV;
 import com.blueseer.utl.OVData;
-import static com.blueseer.utl.OVData.canUpdate;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.BorderFactory;

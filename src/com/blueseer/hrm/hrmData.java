@@ -33,8 +33,10 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.jsonToArrayListString;
 import static com.blueseer.utl.BlueSeerUtils.jsonToArrayListStringArray;
 import static com.blueseer.utl.BlueSeerUtils.jsonToBoolean;
 import static com.blueseer.utl.BlueSeerUtils.jsonToStringArray;
@@ -1070,10 +1072,10 @@ public class hrmData {
 
     public static ArrayList getEmpNameAll() {
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
-            ArrayList<String[]> list = new ArrayList<String[]>();
+            ArrayList<String[]> list = new ArrayList<>();
             list.add(new String[]{"id", "getEmpNameAll"});
             try {
-                return jsonToArrayListStringArray(sendServerPost(list, "", null, "dataServHRM"));
+                return jsonToArrayListString(sendServerPost(list, "", null, "dataServHRM"));
             } catch (IOException ex) {
                 bslog(ex);
                 return null;
@@ -1097,6 +1099,65 @@ public class hrmData {
                         " order by emp_lname ;");
                 while (res.next()) {
                     myarray.add(res.getString("emp_lname") + ", " + res.getString("emp_fname"));
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static ArrayList<String[]> getPayRecords(String empnbr) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getPayRecords"});
+            list.add(new String[]{"param1", empnbr});
+            try {
+                return jsonToArrayListStringArray(sendServerPost(list, "", null, "dataServHRM"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
+        
+        ArrayList<String[]> myarray = new ArrayList();
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                double netcheck = 0.00;
+                res = st.executeQuery("SELECT pyd_id, pyd_empnbr, pyd_checknbr, pyd_paydate, pyd_tothours, pyd_payamt, " +
+                             " (select sum(pyl_amt) from pay_line where pyl_id = pyd_id and pyl_checknbr = pyd_checknbr and pyl_type = 'deduction' ) as 'deductions' " +
+                            " FROM  pay_det where pyd_empnbr = " + "'" + empnbr + "'" + " order by pyd_paydate desc ;");
+                while (res.next()) {
+                    netcheck = res.getDouble("pyd_payamt") - res.getDouble("deductions");
+                    myarray.add(new String[]{res.getString("pyd_id"),
+                                            res.getString("pyd_empnbr"),
+                                            res.getString("pyd_checknbr"),
+                                            res.getString("pyd_paydate"),
+                                            res.getString("pyd_tothours"),
+                                            res.getString("pyd_payamt"),
+                                            res.getString("deductions"),
+                                            bsNumber(netcheck)});
                 }
 
             } catch (SQLException s) {

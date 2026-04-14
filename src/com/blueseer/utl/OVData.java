@@ -32,7 +32,6 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.db;
 import com.blueseer.edi.EDI;
-
 import static bsmf.MainFrame.dbtype;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.ds;
@@ -190,11 +189,6 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import net.sf.jasperreports.engine.data.ListOfArrayDataSource;
-
-
-
-
-
 import org.apache.commons.lang3.time.DateUtils;
 import org.icepdf.ri.common.ComponentKeyBinding;
 import org.icepdf.ri.common.SwingController;
@@ -21782,190 +21776,6 @@ MainFrame.bslog(e);
         return m;
         
     }
-/*
-    public static String CreateVoucher(JTable voucherdet, String site, String vend, String invoice, Date effdate, String remarks ) {
-      String messg = "";
-      String nbr = String.valueOf(OVData.getNextNbr("voucher"));
-
-      try {
-
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-            boolean proceed = true;
-            int i = 0;
-             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date now = new java.util.Date();
-
-            // initialize ord and due date if blank
-            if ( effdate == null) {
-                effdate = now;
-            }
-
-
-            Double amt = 0.00;
-            Double baseamt = 0.00;
-            double qty = 0;
-
-
-            // get billto specific data
-            String apacct = "";
-            String apcc = "";
-            String terms = "";
-            String carrier = "";
-            String apbank = "";
-            String curr = "";
-            String basecurr = "";
-
-           res = st.executeQuery("select vd_ap_acct, vd_ap_cc, vd_terms, vd_bank, vd_curr from vd_mstr where vd_addr = " + "'" + vend + "'" + ";");
-            while (res.next()) {
-                i++;
-               apacct = res.getString("vd_ap_acct");
-               apcc = res.getString("vd_ap_cc");
-               terms = res.getString("vd_terms");
-               apbank = res.getString("vd_bank");
-               curr = res.getString("vd_curr");
-            }
-
-            if (i == 0) {
-                messg = "vendor unknown...unable to autovoucher";
-                proceed = false;
-            }
-
-            Date duedate = OVData.getDueDateFromTerms(effdate, terms);
-            if (duedate == null) {
-                duedate = now;
-            }
-
-
-
-            if (proceed) {
-             // "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine"
-              //  "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
-              for (int j = 0; j < voucherdet.getRowCount(); j++) {
-                    qty = bsParseDouble(voucherdet.getValueAt(j,3).toString());
-                    amt += bsParseDouble(voucherdet.getValueAt(j, 3).toString()) * bsParseDouble(voucherdet.getValueAt(j, 4).toString());
-                    st.executeUpdate("insert into vod_mstr "
-                        + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_item, vod_qty, "
-                        + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
-                        + " values ( " + "'" + nbr + "'" + ","
-                            + "'" + vend + "'" + ","
-                        + "'" + voucherdet.getValueAt(j, 0).toString() + "'" + ","
-                        + "'" + voucherdet.getValueAt(j, 1).toString() + "'" + ","
-                        + "'" + voucherdet.getValueAt(j, 2).toString() + "'" + ","
-                        + "'" + formatUS(voucherdet.getValueAt(j, 3).toString()) + "'" + ","
-                        + "'" + formatUS(voucherdet.getValueAt(j, 4).toString()) + "'" + ","
-                        + "'" + setDateDB(effdate) + "'" + ","
-                        + "'" + invoice + "'" + ","
-                        + "'" + apacct + "'" + ","
-                        + "'" + apcc + "'"
-                        + ")"
-                        + ";");
-
-            double voqty = 0.00;
-            double rvqty = 0.00;
-            double rvdvoqty = 0.00;
-            String status = "0";
-
-            res = st.executeQuery("select rvd_voqty, rvd_qty from recv_det " 
-                     + " where rvd_id = " + "'" + voucherdet.getValueAt(j, 0).toString() + "'"
-                    + " AND rvd_rline = " + "'" + voucherdet.getValueAt(j, 1).toString() + "'"
-                    );
-            while (res.next()) {
-                voqty = res.getDouble("rvd_voqty");
-                rvqty = res.getDouble("rvd_qty");
-                if ((voqty + qty) >= rvqty) {
-                    status = "1";
-                }     
-            }
-            res.close();        
-
-               rvdvoqty = voqty + qty;
-
-
-                       if (dbtype.equals("sqlite")) { 
-                        st.executeUpdate("update recv_det  "
-                        + " set rvd_voqty =  " + "'" + rvdvoqty + "'" + ","
-                        + " rvd_status = " + "'" + status + "'"
-                        + " where rvd_id = " + "'" + voucherdet.getValueAt(j, 0).toString() + "'"
-                        + " AND rvd_rline = " + "'" + voucherdet.getValueAt(j, 1).toString() + "'"
-                        );
-                       } else {
-                        st.executeUpdate("update recv_det as r1 inner join recv_det as r2 "
-                        + " set r1.rvd_voqty = r2.rvd_voqty + " +  "'" + qty + "'" + ","
-                        + " r1.rvd_status = case when r1.rvd_qty <= ( r2.rvd_voqty + " + "'" + qty + "'" +  ") then '1' else '0' end " 
-                        + " where r1.rvd_id = " + "'" + voucherdet.getValueAt(j, 0).toString() + "'"
-                        + " AND r1.rvd_rline = " + "'" + voucherdet.getValueAt(j, 1).toString() + "'"
-                        + " AND r2.rvd_id = " + "'" + voucherdet.getValueAt(j, 0).toString() + "'"
-                        + " AND r2.rvd_rline = " + "'" + voucherdet.getValueAt(j, 1).toString() + "'"
-                        );   
-                       }
-
-                 }  //end of for each line
-
-
-              // let's handle the currency exchange...if any
-                basecurr = OVData.getDefaultCurrency();
-
-
-                if (curr.toUpperCase().equals(basecurr.toUpperCase())) {
-                    baseamt = amt;
-                } else {
-                    baseamt = OVData.getExchangeBaseValue(basecurr, curr, amt);
-                }
-
-            // now the header voucher
-                 st.executeUpdate("insert into ap_mstr "
-                    + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_base_amt, ap_type, ap_ref, ap_rmks, "
-                    + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
-                    + "ap_terms, ap_status, ap_bank, ap_curr, ap_base_curr, ap_subtype ) "
-                    + " values ( " + "'" + vend + "'" + ","
-                          + "'" + site + "'" + ","
-                    + "'" + nbr + "'" + ","
-                    + "'" + currformatDoubleUS(amt) + "'" + ","
-                    + "'" + currformatDoubleUS(baseamt) + "'" + ","        
-                    + "'" + "V" + "'" + ","
-                    + "'" + invoice + "'" + ","
-                    + "'" + remarks + "'" + ","
-                    + "'" + dfdate.format(now) + "'" + ","
-                    + "'" + setDateDB(effdate) + "'" + ","
-                    + "'" + setDateDB(duedate) + "'" + ","
-                    + "'" + apacct + "'" + ","
-                    + "'" + apcc + "'" + ","
-                    + "'" + terms + "'" + ","
-                    + "'" + "o" + "'"  + ","
-                    + "'" + apbank + "'" + ","
-                    + "'" + curr + "'" + ","
-                    + "'" + basecurr + "'" + ","
-                    + "'" + "Receipt" + "'"        
-                    + ")"
-                    + ";");
-
-                 fglData._glEntryFromVoucher(nbr, effdate, con, false);
-
-
-
-        } // if proceed       
-
-
-        } catch (SQLException s) {
-            MainFrame.bslog(s);
-        }
-        con.close();
-    } catch (Exception e) {
-        MainFrame.bslog(e);
-    }
-      return messg;
-  } 
- 
-    */
     
     public static String[] CreateSalesOrderByJSON(String jsonString) {
       String[] x = new String[]{"","",""};
@@ -24665,46 +24475,7 @@ return mylist;
         }
         return x;
     }
-
     
-    public static boolean canUpdate(String panelClassName) {
-    boolean myreturn = false;
-    try{
-
-        Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-            res = st.executeQuery("select perm_readonly from perm_mstr inner join menu_mstr on menu_id = perm_menu where perm_user = " + "'" + bsmf.MainFrame.userid + "'" + 
-                    " AND menu_panel = " + "'" + panelClassName + "'" +
-                    ";");
-           while (res.next()) {
-               if (res.getString("perm_readonly").equals("0")) {
-                 myreturn = true;
-               }
-           }
-       }
-        catch (SQLException s){
-             MainFrame.bslog(s);
-        } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-    return myreturn;
-
-}
-
     public static void openFileAttachment(String key, String systype, String filename) {
         if (! Desktop.isDesktopSupported()) {
         return;

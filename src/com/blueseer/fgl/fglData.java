@@ -3207,6 +3207,155 @@ public class fglData {
        return jsonarray.toString(); 
     }
     
+    public static String getEarningsbyCheckView(String[] keys) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            
+            try{
+                
+                String emptype = "";
+                res = st.executeQuery("select emp_type from emp_mstr where emp_nbr = " + "'" + keys[0] + "'" + ";");
+                while (res.next()) {
+                    emptype = res.getString("emp_type");
+                }
+                
+                
+                if (! emptype.equals("Salary")) {
+                    res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.code_id as 't.code_id', " +
+                            "  e.emp_rate as 'e.emp_rate', clc_desc " +
+                           "  FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr inner join clock_code on clc_code = t.code_id " +
+                              " where t.emp_nbr = "  + "'" + keys[0] + "'" +
+                           " and t.checknbr = " + "'" + keys[1] + "'" +
+                                " group by t.code_id " +       
+                                " order by t.code_id " +      
+                               ";" );
+                        while (res.next()) {
+                            JSONArray rowArray = new JSONArray(); 
+                            rowArray.put(res.getString("t.emp_nbr"));
+                            rowArray.put("earnings");
+                            rowArray.put(res.getString("t.code_id"));
+                            rowArray.put(res.getString("clc_desc"));
+                            rowArray.put(res.getString("e.emp_rate"));
+                            rowArray.put(currformatDouble(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")));
+                            jsonarray.put(rowArray);
+                        }
+                } else {
+                    res = st.executeQuery("select pyd_payamt, pyd_tothours, pyd_emprate, emp_payfrequency " +
+                         " from pay_det inner join emp_mstr on emp_nbr = pyd_empnbr where " +
+                        " pyd_empnbr = " + "'" + keys[0] + "'" + " AND pyd_checknbr = " + "'" + keys[1] + "'" +
+                        " order by pyd_paydate desc ;");
+                    while (res.next()) {
+                    JSONArray rowArray = new JSONArray(); 
+                            rowArray.put(keys[0]);
+                            rowArray.put("earnings");
+                            rowArray.put("Salary");
+                            rowArray.put(res.getString("emp_payfrequency"));
+                            rowArray.put(res.getString("pyd_emprate"));
+                            rowArray.put(currformatDouble(res.getDouble("pyd_payamt")));
+                            jsonarray.put(rowArray);
+                    }
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+       return jsonarray.toString(); 
+    }
+    
+    public static String getDeductionsbyEmpView(String empnbr, String amount) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            
+            try{
+                res = st.executeQuery("SELECT paypd_desc, paypd_id, paypd_parentcode, paypd_amt, paypd_amttype from pay_profdet inner join " +
+                             " emp_mstr on emp_profile = paypd_parentcode " +
+                              " where emp_nbr = " + "'" + empnbr + "'" +
+                              " order by paypd_desc " +        
+                               ";" );
+                double deductamt = 0.00;
+                while (res.next()) {
+                    if (res.getString("paypd_amttype").equals("percent")) {
+                     deductamt = bsParseDouble(amount) * (res.getDouble("paypd_amt") / 100);
+                    } else {
+                     deductamt = res.getDouble("paypd_amt");   
+                    }
+                    JSONArray rowArray = new JSONArray(); 
+                            rowArray.put(empnbr);
+                            rowArray.put("deduction");
+                            rowArray.put("");
+                            rowArray.put(res.getString("paypd_desc")); 
+                            rowArray.put(res.getString("paypd_amt"));
+                            rowArray.put(bsNumber(deductamt)); 
+                            jsonarray.put(rowArray);
+                }
+                
+                 // now get specific employee deductions
+                res = st.executeQuery("SELECT empx_desc, empx_amt, empx_amttype from emp_exception " +
+                              " where empx_nbr = " + "'" + empnbr + "'" +
+                              " order by empx_desc " +        
+                               ";" );
+                double empexception = 0.00;
+                while (res.next()) {
+                    if (res.getString("empx_amttype").equals("percent")) {
+                      empexception =  (bsParseDouble(amount) * res.getDouble("empx_amt") / 100);
+                    } else {
+                      empexception = res.getDouble("empx_amt");  
+                    }
+                    JSONArray rowArray = new JSONArray(); 
+                            rowArray.put(empnbr);
+                            rowArray.put("deduction");
+                            rowArray.put("");
+                            rowArray.put(res.getString("empx_desc")); 
+                            rowArray.put(res.getString("empx_amt"));
+                            rowArray.put(bsNumber(deductamt)); 
+                            jsonarray.put(rowArray);
+                }
+                
+                
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+       return jsonarray.toString(); 
+    }
+    
+    
     public static int getGLTranCount() {
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
             ArrayList<String[]> list = new ArrayList<String[]>();
@@ -4362,6 +4511,62 @@ public class fglData {
         return jsonarray.toString(); 
     }
    
+    public static String getHRMaintDetView(String empnbr, String checknbr) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {  
+                res = st.executeQuery("SELECT t.tothrs as 't.tothrs', t.recid as 't.recid', " +
+                           " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', " +
+                           " e.emp_dept as 'e.emp_dept', t.code_id as 't.code_id', t.indate as 't.indate', t.intime as 't.intime', " +
+                           " t.intime_adj as 't.intime_adj', t.outdate as 't.outdate', t.outtime as 't.outtime', " +
+                           " t.outtime_adj as 't.outtime_adj' FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr" +
+                              " where t.emp_nbr = " + "'" + empnbr + "'" +
+                              " and t.checknbr = " + "'" + checknbr + "'" +
+                               " and t.ispaid =  " + "'" + "1" + "'" +       
+                               " order by t.indate" +
+                               ";" );
+                
+                    while (res.next()) {  
+                     
+                    JSONArray rowArray = new JSONArray();
+                        rowArray.put("select");
+                        rowArray.put(res.getString("t.recid"));
+                        rowArray.put(res.getString("t.code_id"));
+                        rowArray.put(res.getString("t.indate"));
+                        rowArray.put(res.getString("t.intime_adj"));
+                        rowArray.put(res.getString("t.outdate"));
+                        rowArray.put(res.getString("t.outtime_adj"));
+                        rowArray.put(bsNumber(res.getDouble("t.tothrs")));
+                        jsonarray.put(rowArray);
+                }
+               
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return jsonarray.toString(); 
+    }
+   
+    
     public static ArrayList<String[]> getPaymentBatch(String batch) {
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
             ArrayList<String[]> list = new ArrayList<>();
