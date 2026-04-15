@@ -27,22 +27,22 @@ SOFTWARE.
 package com.blueseer.eng;
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.ds;
-import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
+import com.blueseer.adm.admData;
 import static com.blueseer.eng.engData.addECNTransaction;
+import static com.blueseer.eng.engData.completeECNTask;
 import static com.blueseer.eng.engData.deleteECNMstr;
 import com.blueseer.eng.engData.ecn_mstr;
 import com.blueseer.eng.engData.ecn_task;
 import static com.blueseer.eng.engData.getECNMstr;
 import static com.blueseer.eng.engData.getECNSequences;
 import static com.blueseer.eng.engData.getECNTask;
+import static com.blueseer.eng.engData.getTaskDet;
+import static com.blueseer.eng.engData.sendECNEmailToAll;
+import com.blueseer.eng.engData.task_det;
+import static com.blueseer.eng.engData.updateECNNotes;
 import static com.blueseer.eng.engData.updateECNTransaction;
-import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
@@ -57,7 +57,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeerT;
+import com.blueseer.utl.IBlueSeerV;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
@@ -67,11 +67,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -110,11 +105,17 @@ import javax.swing.tree.TreeSelectionModel;
  *
  * @author vaughnte
  */
-public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
+public class ECNMaint extends javax.swing.JPanel implements IBlueSeerV  {
   
      
     // global variable declarations
-                boolean isLoad = false;
+        boolean isLoad = false;
+        boolean canUpdate = false;
+        boolean isAutoPost = false;
+        ArrayList<String[]> initDataSets = null;
+        String defaultSite = "";
+        String defaultCurrency = "";
+        String defaultCC = "";
     
     // global datatablemodel declarations     
      javax.swing.table.DefaultTableModel taskmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -612,8 +613,13 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
        }
     }
     
-    public void setComponentDefaultValues() {
+    public void setComponentDefaultValues(boolean init) {
        isLoad = true;
+       
+       if (init) {
+        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "users,items,tasks");
+        }
+       
         tbkey.setText("");
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -625,14 +631,6 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbdrawing.setText("");
         tbdatecreate.setText(dfdate.format(now));
         
-        if (ddengineer.getItemCount() > 0)
-        ddengineer.setSelectedIndex(0);
-        
-        if (ddtask.getItemCount() > 0)
-        ddtask.setSelectedIndex(0);
-        
-        if (ddpart.getItemCount() > 0)
-        ddpart.setSelectedIndex(0);
                 
         ddstatus.removeAllItems();
         ddstatus.addItem(getGlobalProgTag("open"));
@@ -660,36 +658,45 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
        
         ddengineer.removeAllItems();
+        ddtask.removeAllItems();
+        ddpart.removeAllItems();
+        for (String[] s : initDataSets) {
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1];  
+            }
+            if (s[0].equals("site")) {
+              defaultSite = s[1];  
+            }
+            if (s[0].equals("canupdate")) {
+              canUpdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+            if (s[0].equals("autopost")) {
+              isAutoPost = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+            if (s[0].equals("items")) {
+              ddpart.addItem(s[1]); 
+            }
+            if (s[0].equals("users")) {
+              ddengineer.addItem(s[1]); 
+            }
+            if (s[0].equals("tasks")) {
+              ddtask.addItem(s[1]); 
+            }
+        }
+        
         ddengineer.insertItemAt("", 0);
         ddengineer.setSelectedIndex(0);
-        ArrayList poc = OVData.getusermstrlist();
-        for (int i = 0; i < poc.size(); i++) {
-            ddengineer.addItem(poc.get(i));
-        }
-        
-        ddtask.removeAllItems();
         ddtask.insertItemAt("", 0);
         ddtask.setSelectedIndex(0);
-        ArrayList task = engData.getTaskMasterList();
-        for (int i = 0; i < task.size(); i++) {
-            ddtask.addItem(task.get(i));
-        }
-        
-        ddpart.removeAllItems();
         ddpart.insertItemAt("", 0);
         ddpart.setSelectedIndex(0);
-        ArrayList item = invData.getItemMasterAlllist();
-        for (int i = 0; i < item.size(); i++) {
-            ddpart.addItem(item.get(i));
-        }
-        
         
        isLoad = false;
     }
     
     public void newAction(String x) {
        setPanelComponentState(this, true);
-        setComponentDefaultValues();
+        setComponentDefaultValues(false);
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
@@ -737,7 +744,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public void initvars(String[] arg) {
        
        setPanelComponentState(this, false); 
-       setComponentDefaultValues();
+       setComponentDefaultValues(initDataSets == null);
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
         
@@ -908,293 +915,64 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
     
     public void completetask(String myid, String thissequence) {
-        
-        try {
-            int mypo = 0;
-            int mysequence = Integer.valueOf(thissequence);
-            taskmodel.setRowCount(0);
-            int i = 0;
-            int nextsequence = 0;
-            boolean islast = false;
-            boolean isEmail = false;
-            Connection con = null;
-        if (ds != null) {
-          con = ds.getConnection();
-        } else {
-          con = DriverManager.getConnection(url + db, user, pass);  
-        }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            
-            try {
-                // OK...lets determine if last sequence
-                
-               res = st.executeQuery("select * from ecn_task left outer join ecn_ctrl on ecnc_email <> '' where ecnt_nbr = "
-                     + "'" + myid + "'" +  " order by ecnt_seq desc ;"); 
-                 while (res.next()) {
-                   i++;
-                   isEmail = res.getBoolean("ecnc_email");
-                   if (i == 1) {
-                      if (mysequence == Integer.valueOf(res.getString("ecnt_seq"))) {
-                         islast = true;
-                      }
-                   }
-                   
-                   if (! islast && mysequence == i) {
-                       nextsequence = i + 1;
-                       break;
-                   }
-                 }
-                i = 0;
-                
-             
-                
-                // now...lets update task and set to complete 
-                 st.executeUpdate("update ecn_task set ecnt_status = " +
-                         "'" + getGlobalProgTag("complete") + "'" + " where " + 
-                        " ecnt_nbr = " + "'" + myid + "'" + " AND " + 
-                         "ecnt_seq = " + "'" + mysequence + "'" + ";");
+       boolean islast = completeECNTask(myid, thissequence);
+       
+       taskmodel.setRowCount(0); 
+       
+       
+        // reinit the task list
+        ArrayList<ecn_task> etlist = getECNTask(myid);
+                for (ecn_task et : etlist) {
+                  taskmodel.addRow(new Object[]{et.ecnt_seq(), 
+                      et.ecnt_owner(), 
+                      et.ecnt_task(), 
+                      et.ecnt_assigndate(), 
+                      et.ecnt_closedate(), 
+                      et.ecnt_status()});
                  
-                
-                // let's get the next sequence userid for email purposes
-                 if (! islast) {
-                 res = st.executeQuery("select * from ecn_task inner join user_mstr on " +
-                          " user_id = ecnt_owner " + " inner join ecn_mstr on " +
-                          " ecnt_nbr = ecn_nbr " +
-                          "where " +
-                          "ecnt_nbr = " + "'" + myid + "'" + " AND " +
-                          "ecnt_seq = " + "'" + nextsequence + "'" + ";");
-                 while (res.next()) {
-                     String subject = "ECN Notice of Action";
-                     String body = "ECN number " + myid + " requires your completion";
-                     String requestor = "Eng POC = " + res.getString("ecn_poc");
-                     String amount = "Task = " + res.getString("ecnt_task");
-                     body = body + "\n" + requestor + "\n" + amount;
-                     if (! res.getString("user_email").isEmpty())
-                     OVData.sendEmail(res.getString("user_email"), subject, body, "", false);
-                 }
-                 
-                 }
-                 
-                 // now...lets set next sequence to pending....if there is one
-                 if (! islast) {
-                 st.executeUpdate("update ecn_task set ecnt_status = " +
-                         "'" + getGlobalProgTag("pending") + "'" + " where " + 
-                        " ecnt_nbr = " + "'" + myid + "'" + " AND " + 
-                         "ecnt_seq = " + "'" + nextsequence + "'" + ";");
-                 }
-                 
-                 //finally....if is last sequence...then set entire Req to 'approved'
-                 if (islast) {
-                
-                  st.executeUpdate("update ecn_mstr set ecn_status = " +
-                        "'" + getGlobalProgTag("closed") + "'" + " where " + 
-                        " ecn_nbr = " + "'" + myid + "'" +  ";");
-                         ddstatus.setSelectedItem(getGlobalProgTag("closed"));
-                         messglbl.setText("This ECN is now closed");
-                       
-                         if (isEmail)
-                         sendEmailToAll(myid);
-                 }
-                 
-                 if (islast)
-                 bsmf.MainFrame.show(getMessageTag(1132));
-                 
-                 if (! islast)
-                 bsmf.MainFrame.show(getMessageTag(1133));  
-                 
-                 // reinit the task list
-                res = st.executeQuery("select * from ecn_task where ecnt_nbr = " + "'" + myid + "'" + " order by ecnt_seq ;");
-                while (res.next()) {
-                taskmodel.addRow(new Object[]{res.getString("ecnt_seq"), res.getString("ecnt_owner"), res.getString("ecnt_task"), res.getString("ecnt_assigndate"), res.getString("ecnt_closedate"), res.getString("ecnt_status")});
                 }
+               
                 tasktable.setModel(taskmodel);
                 tasktable.getColumn(getGlobalColumnTag("sequence")).setCellRenderer(new ButtonRenderer());
                 tasktable.getColumn(getGlobalColumnTag("sequence")).setCellEditor(
                         new ButtonEditor(new JCheckBox()));
-               
                 
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-               bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+        if (islast) {
+            ddstatus.setSelectedItem(getGlobalProgTag("closed"));
+            messglbl.setText("This ECN is now closed");
+            bsmf.MainFrame.show(getMessageTag(1132));
+            sendECNEmailToAll(myid);
+        } else {
+            bsmf.MainFrame.show(getMessageTag(1133)); 
         }
     }
     
-    public void sendEmailToAll(String myid) {
-        
-       int i = 0;
-        try{
-            Connection con = null;
-        if (ds != null) {
-          con = ds.getConnection();
-        } else {
-          con = DriverManager.getConnection(url + db, user, pass);  
-        }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                res = st.executeQuery("select * from ecn_task " +
-                        " inner join ecn_mstr on ecn_nbr = ecnt_nbr " +
-                        " inner join user_mstr on " +
-                          " user_id = ecnt_owner " +
-                          "where " +
-                          "ecnt_nbr = " + "'" + myid + "'" + 
-                           ";");
-                 while (res.next()) {
-                     String subject = "ECN Notice of Closure";
-                     String body = "ECN number " + myid + " is closed. \n";
-                     body += "ECN Task ID " + res.getString("ecn_mstrtask") + "\n";
-                     body += "Part Number: " + res.getString("ecn_item") + "\n";
-                     
-                     if (! res.getString("user_email").isEmpty())
-                     OVData.sendEmail(res.getString("user_email"), subject, body, "", false);
-                 }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-       
-    }
     
     public void getTasks(String task) {
        
         taskmodel.setNumRows(0);
-        try {
-     
-            int i = 0;
-           
-            Connection con = null;
-        if (ds != null) {
-          con = ds.getConnection();
-        } else {
-          con = DriverManager.getConnection(url + db, user, pass);  
+        ArrayList<task_det> list = getTaskDet(task);
+        for (task_det td : list) {
+           taskmodel.addRow(new Object[]{td.taskd_sequence(), 
+               td.taskd_owner(),
+               td.taskd_desc(), 
+                      "", "", ""}); 
         }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-               
-                res = st.executeQuery("select * from task_det where taskd_id = " + "'" + task + "'" + " order by taskd_sequence;");
-                while (res.next()) {
-                  taskmodel.addRow(new Object[]{res.getString("taskd_sequence"), res.getString("taskd_owner"), res.getString("taskd_desc"), 
-                      "", "", ""});
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        
     }
 
     public void getNotes(String ecn, String seq) {
         tanotes.setText("");
-        try {
-            int i = 0;
-            Connection con = null;
-        if (ds != null) {
-          con = ds.getConnection();
-        } else {
-          con = DriverManager.getConnection(url + db, user, pass);  
-        }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            
-            try {
-               
-                res = st.executeQuery("select * from ecn_task where ecnt_nbr = " + "'" + ecn + "'" 
-                        + " and ecnt_seq = " + "'" + seq + "'" 
-                        + ";");
-                while (res.next()) {
-                  tanotes.setText(res.getString("ecnt_notes"));
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        ecn_task et = getECNTask(ecn, ecn, seq);
+        tanotes.setText(et.ecnt_notes());
+       
     }
       
     public void updateNotes(String ecn, String seq) {
-       
-        try {
-            int i = 0;
-            Connection con = null;
-        if (ds != null) {
-          con = ds.getConnection();
-        } else {
-          con = DriverManager.getConnection(url + db, user, pass);  
-        }
-            Statement st = con.createStatement();
-            try {
-               
-                st.executeUpdate(" update ecn_task " +
-                        " set ecnt_notes = " + "'" + tanotes.getText().replace("'", "") + "'" +
-                        " where ecnt_nbr = " + "'" + ecn + "'" 
-                        + " and ecnt_seq = " + "'" + seq + "'" 
-                        + ";");
-               
-             bsmf.MainFrame.show(getMessageTag(1135,ecn));
-             tanotes.setText("");   
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        updateECNNotes(ecn, seq, tanotes.getText());
+        bsmf.MainFrame.show(getMessageTag(1135,ecn));
+        tanotes.setText(""); 
+        
     }
    
       
@@ -1593,6 +1371,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
         BlueSeerUtils.messagereset();
+        initDataSets = null;
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 

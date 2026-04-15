@@ -35,7 +35,10 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import com.blueseer.utl.OVData;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -1166,6 +1169,199 @@ public class engData {
         return jsonarray.toString(); 
     }
    
+    public static boolean completeECNTask(String id, String sequence) {
+        boolean islast = false;
+        
+        try {
+            
+        int i = 0;
+        int nextsequence = 0;
+        
+        boolean isEmail = false;
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            
+            try {
+                // OK...lets determine if last sequence
+                
+               res = st.executeQuery("select * from ecn_task left outer join ecn_ctrl on ecnc_email <> '' where ecnt_nbr = "
+                     + "'" + id + "'" +  " order by ecnt_seq desc ;"); 
+                 while (res.next()) {
+                   i++;
+                   isEmail = res.getBoolean("ecnc_email");
+                   if (i == 1) {
+                      if (bsParseInt(sequence) == Integer.parseInt(res.getString("ecnt_seq"))) {
+                         islast = true;
+                      }
+                   }
+                   
+                   if (! islast && bsParseInt(sequence) == i) {
+                       nextsequence = i + 1;
+                       break;
+                   }
+                 }
+                i = 0;
+                
+             
+                
+                // now...lets update task and set to complete 
+                 st.executeUpdate("update ecn_task set ecnt_status = " +
+                         "'" + getGlobalProgTag("complete") + "'" + " where " + 
+                        " ecnt_nbr = " + "'" + id + "'" + " AND " + 
+                         "ecnt_seq = " + "'" + sequence + "'" + ";");
+                 
+                
+                // let's get the next sequence userid for email purposes
+                 if (! islast) {
+                 res = st.executeQuery("select * from ecn_task inner join user_mstr on " +
+                          " user_id = ecnt_owner " + " inner join ecn_mstr on " +
+                          " ecnt_nbr = ecn_nbr " +
+                          "where " +
+                          "ecnt_nbr = " + "'" + id + "'" + " AND " +
+                          "ecnt_seq = " + "'" + nextsequence + "'" + ";");
+                 while (res.next()) {
+                     String subject = "ECN Notice of Action";
+                     String body = "ECN number " + id + " requires your completion";
+                     String requestor = "Eng POC = " + res.getString("ecn_poc");
+                     String amount = "Task = " + res.getString("ecnt_task");
+                     body = body + "\n" + requestor + "\n" + amount;
+                     if (! res.getString("user_email").isEmpty())
+                     OVData.sendEmail(res.getString("user_email"), subject, body, "", false);
+                 }
+                 
+                 }
+                 
+                 // now...lets set next sequence to pending....if there is one
+                 if (! islast) {
+                 st.executeUpdate("update ecn_task set ecnt_status = " +
+                         "'" + getGlobalProgTag("pending") + "'" + " where " + 
+                        " ecnt_nbr = " + "'" + id + "'" + " AND " + 
+                         "ecnt_seq = " + "'" + nextsequence + "'" + ";");
+                 }
+                 
+                 //finally....if is last sequence...then set entire Req to 'approved'
+                 if (islast) {
+                
+                  st.executeUpdate("update ecn_mstr set ecn_status = " +
+                        "'" + getGlobalProgTag("closed") + "'" + " where " + 
+                        " ecn_nbr = " + "'" + id + "'" +  ";");
+                         
+                       
+                        // if (isEmail) {
+                       //  sendEmailToAll(id);
+                       //  }
+                 }
+                
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+               bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return islast;
+    }
+    
+    public static void updateECNNotes(String ecn, String seq, String note) {
+       
+        try {
+            int i = 0;
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+            Statement st = con.createStatement();
+            try {
+               
+                st.executeUpdate(" update ecn_task " +
+                        " set ecnt_notes = " + "'" + note.replace("'", "") + "'" +
+                        " where ecnt_nbr = " + "'" + ecn + "'" 
+                        + " and ecnt_seq = " + "'" + seq + "'" 
+                        + ";");
+               
+               
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+   
+    public static void sendECNEmailToAll(String myid) {
+        
+       int i = 0;
+        try{
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select * from ecn_task " +
+                        " inner join ecn_mstr on ecn_nbr = ecnt_nbr " +
+                        " inner join user_mstr on " +
+                          " user_id = ecnt_owner " +
+                          "where " +
+                          "ecnt_nbr = " + "'" + myid + "'" + 
+                           ";");
+                 while (res.next()) {
+                     String subject = "ECN Notice of Closure";
+                     String body = "ECN number " + myid + " is closed. \n";
+                     body += "ECN Task ID " + res.getString("ecn_mstrtask") + "\n";
+                     body += "Part Number: " + res.getString("ecn_item") + "\n";
+                     
+                     if (! res.getString("user_email").isEmpty())
+                     OVData.sendEmail(res.getString("user_email"), subject, body, "", false);
+                 }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+       
+    }
+    
     
     public static ArrayList<String> getECNSequences(String nbr) {
         ArrayList<String> lines = new ArrayList<String>();

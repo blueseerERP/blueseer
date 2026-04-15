@@ -8025,6 +8025,119 @@ public class ordData {
         return jsonarray.toString(); 
     }
     
+    public static String getOrderSourceBrowseView(String[] keys) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+             
+                int i = 0;
+                
+            keys[0] = (keys[0].isBlank()) ? bsmf.MainFrame.lowchar : keys[0]; 
+            keys[1] = (keys[1].isBlank()) ? bsmf.MainFrame.hichar : keys[1];
+            keys[2] = (keys[2].isBlank()) ? bsmf.MainFrame.lowchar : keys[2]; 
+            keys[3] = (keys[3].isBlank()) ? bsmf.MainFrame.hichar : keys[3];
+                
+             res = st.executeQuery("select so_nbr, so_cust, so_ord_date, so_type, so_status, so_issourced, " +
+                      " sum(sod_ord_qty * sod_netprice) as 'total', sum(sod_ord_qty) as 'qty' " +
+                         " from so_mstr inner join sod_det on sod_nbr = so_nbr where " +
+                        " so_cust >= " + "'" + keys[0] + "'" + " AND " +
+                        " so_cust <= " + "'" + keys[1] + "'" + " AND " +
+                     " so_nbr >= " + "'" + keys[2] + "'" + " AND " +
+                        " so_nbr <= " + "'" + keys[3] + "'" + 
+                        " group by so_nbr, so_cust, so_ord_date, so_type, so_status, so_issourced ;");
+                                 
+                
+                    while (res.next()) {
+                    JSONArray rowArray = new JSONArray(); 
+                        rowArray.put("select");
+                        rowArray.put("detail");
+                        rowArray.put(res.getString("so_nbr"));
+                        rowArray.put(res.getString("so_cust"));
+                        rowArray.put(res.getString("so_ord_date"));
+                        rowArray.put(res.getString("so_type"));
+                        rowArray.put(res.getString("so_status"));
+                        rowArray.put(res.getString("qty"));
+                        rowArray.put(res.getString("total"));
+                        rowArray.put(res.getString("so_issourced"));
+                        jsonarray.put(rowArray);
+                   
+                }
+               
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return jsonarray.toString(); 
+    }
+    
+    public static String getOrderSourceBrowseViewDet(String key) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+               
+             res = st.executeQuery("select sod_nbr, sod_item, sod_netprice, sod_ord_qty, sod_shipped_qty, sod_status, sod_wh, sod_loc from sod_det " +
+                        " where sod_nbr = " + "'" + key + "'" +  ";");
+                
+                    while (res.next()) {
+                    JSONArray rowArray = new JSONArray(); 
+                        rowArray.put(res.getString("sod_nbr"));
+                        rowArray.put(res.getString("sod_item"));
+                        rowArray.put(res.getString("sod_netprice"));
+                        rowArray.put(res.getString("sod_ord_qty"));
+                        rowArray.put(res.getString("sod_shipped_qty"));
+                        rowArray.put(res.getString("sod_status"));
+                        rowArray.put(res.getString("sod_wh"));
+                        rowArray.put(res.getString("sod_loc"));
+                        jsonarray.put(rowArray);
+                  
+                }
+               
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return jsonarray.toString(); 
+    }
+    
+    
     public static String getBillBrowseDetail(String order, String detailtype) {
         JSONArray jsonarray = new JSONArray();
         try {

@@ -50,6 +50,8 @@ import static com.blueseer.ord.ordData.getOrderItemBrowseView;
 import static com.blueseer.ord.ordData.getOrderMstr;
 import static com.blueseer.ord.ordData.getOrderMstrSet;
 import static com.blueseer.ord.ordData.getOrderReportData;
+import static com.blueseer.ord.ordData.getOrderSourceBrowseView;
+import static com.blueseer.ord.ordData.getOrderSourceBrowseViewDet;
 import static com.blueseer.ord.ordData.getQuoteBrowseView;
 import static com.blueseer.ord.ordData.getQuoteDet;
 import static com.blueseer.ord.ordData.getQuoteMstr;
@@ -426,6 +428,22 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                request.getHeader("site")
                };     
         response.getWriter().print(getBillBrowseView(x));  
+        break;
+        }
+        
+        case "getOrderSourceBrowseView" : {
+        String[] x = new String[]{
+               request.getHeader("param1"), 
+               request.getHeader("param2"), 
+               request.getHeader("param3"), 
+               request.getHeader("param4")
+               };     
+        response.getWriter().print(getOrderSourceBrowseView(x));  
+        break;
+        }
+        
+        case "getOrderSourceBrowseViewDet" : {
+        response.getWriter().print(getOrderSourceBrowseViewDet(request.getHeader("param1")));  
         break;
         }
         

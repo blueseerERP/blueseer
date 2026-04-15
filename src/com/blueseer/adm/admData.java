@@ -3391,6 +3391,15 @@ public class admData {
                                lines.add(s);
                             }
                         }
+                        if (sd.equals("tasks")) {
+                            res = st.executeQuery("select task_id from task_mstr order by task_id ;"); 
+                            while (res.next()) {
+                               String[] s = new String[2];
+                               s[0] = "tasks";
+                               s[1] = res.getString("task_id");
+                               lines.add(s);
+                            }
+                        }
                         if (sd.equals("autoshipconfirm")) {
                             res = st.executeQuery("select sysm_value from sys_meta where " +
                         " sysm_id = " + "'" + "system" + "'" + " AND " +

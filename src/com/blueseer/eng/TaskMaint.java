@@ -31,14 +31,8 @@ package com.blueseer.eng;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
-import static bsmf.MainFrame.backgroundcolor;
-import static bsmf.MainFrame.backgroundpanel;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.pass;
-import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
+import com.blueseer.adm.admData;
 import static com.blueseer.eng.engData.addTaskTransaction;
 import static com.blueseer.eng.engData.deleteTaskMstr;
 import static com.blueseer.eng.engData.getTaskDet;
@@ -61,24 +55,17 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeerT;
+import com.blueseer.utl.IBlueSeerV;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.GradientPaint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -96,10 +83,16 @@ import javax.swing.SwingWorker;
  */
 
 
-public class TaskMaint extends javax.swing.JPanel implements IBlueSeerT {
+public class TaskMaint extends javax.swing.JPanel implements IBlueSeerV {
 
-    // global variable declarations
-                boolean isLoad = false;
+     // global variable declarations
+        boolean isLoad = false;
+        boolean canUpdate = false;
+        boolean isAutoPost = false;
+        ArrayList<String[]> initDataSets = null;
+        String defaultSite = "";
+        String defaultCurrency = "";
+        String defaultCC = "";
     
     // global datatablemodel declarations   
      javax.swing.table.DefaultTableModel taskmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -292,22 +285,40 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeerT {
        }
     }
     
-    public void setComponentDefaultValues() {
-       isLoad = true;
+    public void setComponentDefaultValues(boolean init) {
+        isLoad = true;
+        if (init) {
+         initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "users");
+        }
+        
         tbkey.setText("");
+        tbdesc.setText("");
+        tbsequence.setText("");
+        tbaction.setText("");
+        cbenabled.setSelected(false);
         taskmodel.setRowCount(0);
-           tabletasks.setModel(taskmodel);
+        tabletasks.setModel(taskmodel);
            
            ddowner.removeAllItems();
-           ArrayList<String> users = OVData.getusermstrlist();
-           for (String user : users) {
-               ddowner.addItem(user);
-           }
-           tbkey.setText("");
-           tbdesc.setText("");
-           tbsequence.setText("");
-           tbaction.setText("");
-           cbenabled.setSelected(false);
+           
+           for (String[] s : initDataSets) {
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1];  
+            }
+            if (s[0].equals("site")) {
+              defaultSite = s[1];  
+            }
+            if (s[0].equals("canupdate")) {
+              canUpdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+            if (s[0].equals("autopost")) {
+              isAutoPost = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+            if (s[0].equals("users")) {
+              ddowner.addItem(s[1]); 
+            }
+        }
+        
            
         
        isLoad = false;
@@ -315,7 +326,7 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void newAction(String x) {
        setPanelComponentState(this, true);
-        setComponentDefaultValues();
+        setComponentDefaultValues(false);
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
@@ -366,7 +377,7 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void initvars(String[] arg) {
        
        setPanelComponentState(this, false); 
-       setComponentDefaultValues();
+       setComponentDefaultValues(initDataSets == null);
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
         
@@ -830,6 +841,7 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
        BlueSeerUtils.messagereset();
+       initDataSets = null;
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
