@@ -35,6 +35,7 @@ import static com.blueseer.lbl.lblData.getLabelSerialDisplay;
 import static com.blueseer.lbl.lblData.getLabelZebraMstr;
 import com.blueseer.lbl.lblData.label_zebra;
 import static com.blueseer.lbl.lblData.updateLabelZebraMstr;
+import static com.blueseer.utl.BlueSeerUtils.ArrayListStringArrayToJson;
 import static com.blueseer.utl.BlueSeerUtils.arrayToJson;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerAuthAPI;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -213,6 +214,11 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         case "getLabelSerialDisplay" : {       
             response.getWriter().print(getLabelSerialDisplay(request.getHeader("param1")));
             break; 
+        }
+        
+        case "getLabelTableRecs" : {
+            response.getWriter().print(ArrayListStringArrayToJson(lblData.getLabelTableRecs(request.getHeader("param1"))));
+            break;
         }
         
         default:

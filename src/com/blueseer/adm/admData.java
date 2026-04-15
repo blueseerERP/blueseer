@@ -3391,6 +3391,33 @@ public class admData {
                                lines.add(s);
                             }
                         }
+                        if (sd.equals("autoshipconfirm")) {
+                            res = st.executeQuery("select sysm_value from sys_meta where " +
+                        " sysm_id = " + "'" + "system" + "'" + " AND " +
+                        " sysm_type = " + "'" + "shippercontrol" + "'" + " AND " +
+                        " sysm_key = " + "'" + "auto_confirm_shipper_build" + "'" +
+                        " order by sysm_value;" );
+                            while (res.next()) {
+                               String[] s = new String[2];
+                               s[0] = "autoshipconfirm";
+                               s[1] = res.getString("sysm_value");
+                               lines.add(s);
+                            }
+                        }
+                        if (sd.equals("autoshipnumber")) {
+                            res = st.executeQuery("select sysm_value from sys_meta where " +
+                        " sysm_id = " + "'" + "system" + "'" + " AND " +
+                        " sysm_type = " + "'" + "shippercontrol" + "'" + " AND " +
+                        " sysm_key = " + "'" + "auto_generate_shipper_number" + "'" +
+                        " order by sysm_value;" );
+                            while (res.next()) {
+                               String[] s = new String[2];
+                               s[0] = "autoshipnumber";
+                               s[1] = res.getString("sysm_value");
+                               lines.add(s);
+                            }
+                        }
+                        
                         if (sd.equals("vendors")) {
                             res = st.executeQuery("select vd_addr from vd_mstr order by vd_addr ;");
                             while (res.next()) {

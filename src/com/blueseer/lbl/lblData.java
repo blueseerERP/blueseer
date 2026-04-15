@@ -35,6 +35,7 @@ import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.jsonToArrayListStringArray;
 import static com.blueseer.utl.BlueSeerUtils.jsonToStringArray;
 import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 import static com.blueseer.utl.BlueSeerUtils.xNull;
@@ -1027,6 +1028,18 @@ public class lblData {
     
     
     public static ArrayList<String[]> getLabelTableRecs(String billto) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getLabelTableRecs"});
+            list.add(new String[]{"param1", billto});
+            try {
+                return jsonToArrayListStringArray(sendServerPost(list, "", null, "dataServLBL"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
+        
         ArrayList<String[]> list = new ArrayList<String[]>();
         try {
             Connection con = null;

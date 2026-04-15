@@ -34,18 +34,19 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags; 
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.adm.admData;
 import com.blueseer.ctr.cusData;
-import static com.blueseer.ctr.cusData.getCustInfo;
-import static com.blueseer.far.farData.addArTransaction;
-import com.blueseer.far.farData.ar_mstr;
-import com.blueseer.far.farData.ard_mstr;
-import com.blueseer.fgl.fglData;
-import com.blueseer.inv.invData;
+import com.blueseer.ctr.cusData.cm_mstr;
+import com.blueseer.ctr.cusData.cms_det;
+import static com.blueseer.ctr.cusData.getCMSDet;
+import static com.blueseer.ctr.cusData.getCustMstr;
 import static com.blueseer.lbl.lblData.getLabelSerialDisplay;
 import static com.blueseer.lbl.lblData.getLabelTableRecs;
 import static com.blueseer.lbl.lblData.updateLabelStatus;
 import static com.blueseer.shp.shpData.addShipperTransaction;
 import static com.blueseer.shp.shpData.confirmShipperTransaction;
+import static com.blueseer.shp.shpData.getShipperMstrSet;
+import com.blueseer.shp.shpData.ship_det;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
@@ -53,7 +54,6 @@ import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
-import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -65,14 +65,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
-import static com.blueseer.utl.OVData.getSysMetaValue;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -81,10 +74,10 @@ import java.awt.event.MouseEvent;
 import java.awt.Color;
 import java.awt.Component;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -104,23 +97,31 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author vaughnte
  */
-public class ShipBuildMaint extends javax.swing.JPanel implements IBlueSeer {
+public class ShipBuildMaint extends javax.swing.JPanel {
 
-    // global variable declarations
-                boolean isLoad = false;
-                String terms = "";
-                String aracct = "";
-                String arcc = "";
-                String arbank = "";
-                double actamt = 0.00;
-                double baseamt = 0.00;
-                double rcvamt = 0.00;
-                String curr = "";
-                String basecurr = "";
-                int j = 0;
-                HashSet<String> assignedlabels = new HashSet<String>();
-                boolean autoconfirm = false;
-                boolean autonumber = true;
+     // global variable declarations
+        boolean isLoad = false;
+        boolean canUpdate = false;
+        boolean isAutoPost = false;
+        ArrayList<String[]> initDataSets = null;
+        String defaultSite = "";
+        String defaultCurrency = "";
+        String defaultCC = "";
+        String terms = "";
+        String aracct = "";
+        String arcc = "";
+        String arbank = "";
+        double actamt = 0.00;
+        double baseamt = 0.00;
+        double rcvamt = 0.00;
+        String curr = "";
+        String basecurr = "";
+        int j = 0;
+        HashSet<String> assignedlabels = new HashSet<String>();
+        boolean autoconfirm = false;
+        boolean autonumber = true;
+        public static shpData.ship_mstr sh = null;
+        public static ArrayList<shpData.ship_det> shdlist = null;
     
     // global datatablemodel declarations 
     javax.swing.table.DefaultTableModel serialmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -373,11 +374,13 @@ public class ShipBuildMaint extends javax.swing.JPanel implements IBlueSeer {
        }
     }
      
-    public void setComponentDefaultValues() {
+    public void setComponentDefaultValues(boolean init) {
        isLoad = true;
         
-        autoconfirm = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "shippercontrol", "auto_confirm_shipper_build"));
-        autonumber = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "shippercontrol", "auto_generate_shipper_number"));
+       if (init) {
+        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "customers,autoshipconfirm,autoshipnumber");
+        }
+       
         cbcomplete.setSelected(false);
          tbkey.setText("");
          terms = "";
@@ -411,23 +414,37 @@ public class ShipBuildMaint extends javax.swing.JPanel implements IBlueSeer {
         dcdate.setDate(now);
               
         ddcust.removeAllItems();
-        ArrayList mycust = cusData.getcustmstrlist();
-        for (int i = 0; i < mycust.size(); i++) {
-            ddcust.addItem(mycust.get(i));
+        ddsite.removeAllItems();
+       
+        
+       for (String[] s : initDataSets) {
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1];  
+            }
+            if (s[0].equals("site")) {
+              defaultSite = s[1];  
+            }
+            if (s[0].equals("canupdate")) {
+              canUpdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+            if (s[0].equals("autopost")) {
+              isAutoPost = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+            if (s[0].equals("autoshipnumber")) {
+              autonumber = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+            if (s[0].equals("autoshipconfirm")) {
+              autoconfirm = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+            if (s[0].equals("customers")) {
+              ddcust.addItem(s[1]); 
+            }
         }
+       
+        ddsite.setSelectedItem(defaultSite);
         ddcust.insertItemAt("", 0);
         ddcust.setSelectedIndex(0);
         ddship.removeAllItems();
-        
-        
-        ddsite.removeAllItems();
-        ArrayList mylist = OVData.getSiteList(bsmf.MainFrame.userid);
-        for (int i = 0; i < mylist.size(); i++) {
-            ddsite.addItem(mylist.get(i));
-        }
-        ddsite.setSelectedItem(OVData.getDefaultSite());
-        
-      
         
         
          
@@ -438,7 +455,7 @@ public class ShipBuildMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public void newAction(String x) {
        setPanelComponentState(this, true);
-        setComponentDefaultValues();
+        setComponentDefaultValues(false);
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
@@ -458,9 +475,9 @@ public class ShipBuildMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
+        if (x[0].equals("0")) {
             m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
@@ -472,7 +489,7 @@ public class ShipBuildMaint extends javax.swing.JPanel implements IBlueSeer {
            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
+        
     }
     
     public boolean validateInput(String x) {
@@ -518,7 +535,7 @@ public class ShipBuildMaint extends javax.swing.JPanel implements IBlueSeer {
     public void initvars(String[] arg) {
        
        setPanelComponentState(this, false); 
-       setComponentDefaultValues();
+       setComponentDefaultValues(initDataSets == null);
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
         
@@ -554,69 +571,10 @@ public class ShipBuildMaint extends javax.swing.JPanel implements IBlueSeer {
      }
       
     public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-        
-       try {
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                int d = 0;
-                res = st.executeQuery("select * from ship_mstr where sh_id = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                  i++;
-                     tbkey.setText(res.getString("sh_id"));
-                     dcdate.setDate(parseDate(res.getString("sh_shipdate")));
-                     tbref.setText(res.getString("sh_ref"));
-                     tbrmks.setText(res.getString("sh_rmks"));
-                     ddcust.setSelectedItem(res.getString("sh_cust"));
-                     ddship.setSelectedItem(res.getString("sh_ship"));
-                     ddsite.setSelectedItem(res.getString("sh_site"));
-                     tbtracking.setText(res.getString("sh_trailer"));
-                }
-                
-                res = st.executeQuery("select * from ship_det where shd_id = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                // line, item, desc, serial, warehouse, loc, qty, price, bom
-                     shipmodel.addRow(new Object[] { res.getString("shd_line"),
-                                              res.getString("shd_item"),
-                                              res.getString("shd_desc"),
-                                              res.getString("shd_serial"),
-                                              res.getString("shd_wh"),
-                                              res.getString("shd_loc"),
-                                              res.getString("shd_qty"),
-                                              res.getString("shd_netprice"),
-                                              res.getString("shd_bom")
-                                              });
-                 
-                  
-                  actamt += (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
-                d++;
-                }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+      shpData.Shipper z = getShipperMstrSet(x);
+      sh = z.sh();
+      shdlist = z.shd();
+      return z.m();
     }
    
     public shpData.ship_mstr createRecord() {
@@ -741,8 +699,60 @@ public class ShipBuildMaint extends javax.swing.JPanel implements IBlueSeer {
         return list;        
     }
     
-    
-     public void lookUpFrame() {
+    public void updateForm() throws ParseException {
+        
+        shipmodel.setRowCount(0);
+        
+        tbkey.setText(sh.sh_id());
+        cbcomplete.setSelected(BlueSeerUtils.ConvertStringToBool(sh.sh_char2()));        
+         dcdate.setDate(parseDate(sh.sh_shipdate()));
+         tbref.setText(sh.sh_ref());
+         tbrmks.setText(sh.sh_rmks());
+         ddcust.setSelectedItem(sh.sh_cust());
+         ddship.setSelectedItem(sh.sh_ship());
+         ddsite.setSelectedItem(sh.sh_site());
+         tbtracking.setText(sh.sh_trailer());
+        
+        
+        
+        for (ship_det shd : shdlist) {
+                      
+        int nbrOfContainers = 0;
+        int remainder = 0;
+        if (shd.shd_packqty() > 0) {
+            nbrOfContainers = ( (int) shd.shd_qty() / (int) shd.shd_packqty());
+            remainder = ( (int) shd.shd_qty() % (int) shd.shd_packqty());
+        } 
+       
+            
+           
+            
+             shipmodel.addRow(new Object[] { shd.shd_line(),
+                                              shd.shd_item(),
+                                              shd.shd_desc(),
+                                              shd.shd_serial(),
+                                              shd.shd_wh(),
+                                              shd.shd_loc(),
+                                              shd.shd_qty(),
+                                              shd.shd_netprice(),
+                                              shd.shd_bom()
+                                              });
+                 
+                  
+                  actamt += (shd.shd_qty() * shd.shd_netprice());
+            
+        }
+        
+       // getAttachments(tbkey.getText());
+        
+        setAction(sh.m()); 
+        
+        //sh = null;
+        //shdlist = null;
+
+    }
+       
+    public void lookUpFrame() {
         
         luinput.removeActionListener(lual);
         lual = new ActionListener() {
@@ -785,15 +795,15 @@ public class ShipBuildMaint extends javax.swing.JPanel implements IBlueSeer {
 
     
     // custom funcs      
-    public void setcustvariables(String cust) {
+    public void setcustvariables(cm_mstr cm) {
        
         // aracct, arcc, currency, bank, terms, carrier, onhold, site
-            String[] custinfo = getCustInfo(cust);
-            aracct = custinfo[0];
-            arcc = custinfo[1];
-            terms = custinfo[4];
-            arbank = custinfo[3];
-            curr = custinfo[2];
+           
+            aracct = cm.cm_ar_acct();
+            arcc = cm.cm_ar_cc();
+            terms = cm.cm_terms();
+            arbank = cm.cm_bank();
+            curr = cm.cm_curr();
             ddship.removeAllItems();
             ArrayList<String> shiptos = cusData.getcustshipmstrlist(ddcust.getSelectedItem().toString());
             for (int i = 0; i < shiptos.size(); i++) {
@@ -801,77 +811,7 @@ public class ShipBuildMaint extends javax.swing.JPanel implements IBlueSeer {
             }
        
     }
-      
-    public void setstatus(javax.swing.JTable mytable) {
-            try {
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-             
-             String sonbr = null;
-             int i = 0;
-             int qty = 0;
-             boolean iscomplete = true;
-             String sodstatus = "";
-             
-        // find the sod record for each line / So pair
-        for (int j = 0; j < mytable.getRowCount(); j++) {
-               //    mytable.getModel().getValueAt(j, 0);  
-             i = 0;
-             String thispart = mytable.getModel().getValueAt(j, 0).toString();
-             String thisorder = mytable.getModel().getValueAt(j, 1).toString();
-             String thispo = mytable.getModel().getValueAt(j, 2).toString();
-             double thisrecvqty = Double.valueOf(mytable.getModel().getValueAt(j, 3).toString());
-             String thislinestatus = "";
-             double thisrecvpedtotal = 0;
-            
-             try {
-            
-                 /* ok....let's get the current state of this line item on the sales order */
-                 res = st.executeQuery("select * from sod_det where sod_nbr = " + "'" + thisorder + "'" + 
-                                     " AND sod_item = " + "'" + thispart + "'" + ";");
-               while (res.next()) {     
-                 i++;
-                   if (Double.valueOf(res.getString("sod_recvped_qty") + thisrecvqty) < Double.valueOf(res.getString("sod_ord_qty")) ) {
-                   thislinestatus = "Partial"; 
-                   }
-                   if (Double.valueOf(res.getString("sod_recvped_qty") + thisrecvqty) >= Double.valueOf(res.getString("sod_ord_qty")) ) {
-                   thislinestatus = "Shipped"; 
-                   }
-                   thisrecvpedtotal = thisrecvqty + Double.valueOf(res.getString("sod_recvped_qty"));
-                   
-                }
-                 
-                 /* ok...now lets update the status of this sod_det line item */
-                 st.executeUpdate("update sod_det set sod_recvped_qty = " + "'" + thisrecvpedtotal + "'" + 
-                                  "," + " sod_status = " + "'" + thislinestatus + "'" +
-                                  " where sod_nbr = " + "'" + thisorder + "'" + 
-                                  " and sod_item = " + "'" + thispart + "'" + 
-                                  " and sod_po = " + "'" + thispo + "'" +
-                     ";");
-                 
-             } catch (SQLException s) {
-                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-             } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-             }
-         }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }
+     
     
     public void sumdollars() {
        
@@ -885,15 +825,6 @@ public class ShipBuildMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
     
-    public String checkqty() {
-        String x = "";
-        for (int j = 0; j < shipdet.getRowCount(); j++) {
-            if (bsParseDouble(shipdet.getModel().getValueAt(j,8).toString()) > invData.getItemQOHBySerial(shipdet.getModel().getValueAt(j,1).toString(), ddsite.getSelectedItem().toString(), shipdet.getModel().getValueAt(j,3).toString()) ) {
-             return shipdet.getModel().getValueAt(j,0).toString();   
-            }
-         }
-        return x;
-    }
     
     public Integer getmaxline() {
         int max = 0;
@@ -1378,8 +1309,9 @@ public class ShipBuildMaint extends javax.swing.JPanel implements IBlueSeer {
         shipmodel.setRowCount(0);
         lbcust.setText("");
         if ( ddcust.getSelectedItem() != null && ! ddcust.getSelectedItem().toString().isEmpty()  && ! isLoad) {
-        lbcust.setText(cusData.getCustName(ddcust.getSelectedItem().toString()));
-        setcustvariables(ddcust.getSelectedItem().toString());
+        cm_mstr cm = getCustMstr(new String[]{ddcust.getSelectedItem().toString()});
+        lbcust.setText(cm.cm_name());
+        setcustvariables(cm);
         }
     }//GEN-LAST:event_ddcustActionPerformed
 
@@ -1423,6 +1355,7 @@ public class ShipBuildMaint extends javax.swing.JPanel implements IBlueSeer {
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
         BlueSeerUtils.messagereset();
+        initDataSets = null;
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
@@ -1444,7 +1377,8 @@ public class ShipBuildMaint extends javax.swing.JPanel implements IBlueSeer {
 
     private void ddshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddshipActionPerformed
        if (! isLoad && ddship != null && ddship.getItemCount() > 0)  {
-        lbship.setText(cusData.getShipName(ddcust.getSelectedItem().toString(), ddship.getSelectedItem().toString()));
+        cms_det cms = getCMSDet(ddship.getSelectedItem().toString(),ddcust.getSelectedItem().toString());
+        lbship.setText(cms.cms_name());
        }
     }//GEN-LAST:event_ddshipActionPerformed
 

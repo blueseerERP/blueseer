@@ -224,34 +224,41 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         break;
         }     
             
-        case "getShipperBrowseDetail" :
+        case "getShipperBrowseDetail" : {
             response.getWriter().print(shpData.getShipperBrowseDetail(request.getHeader("param1")));  
             break; 
+        }
             
-        case "getShipperLineNumbers" :
+        case "getShipperLineNumbers" : {
             response.getWriter().print(ArrayListStringToJson(shpData.getShipperLineNumbers(request.getHeader("param1"))));  
             break;    
+        }
             
-        case "updateShipperSAC" :
+        case "updateShipperSAC" : {
             shpData.updateShipperSAC(request.getHeader("param1"));
             break;   
+        }
             
-        case "getShipperPrintData" :
+        case "getShipperPrintData" : {
             response.getWriter().print(shpData.getShipperPrintData(request.getHeader("param1"), request.getHeader("param2")));  
             break;
+        }
             
-        case "getInvoicePrintData" :
+        case "getInvoicePrintData" : {
             response.getWriter().print(shpData.getInvoicePrintData(request.getHeader("param1"),
                     request.getHeader("param2")));    
             break; 
+        }
             
-        case "getShipperHeader" :
+        case "getShipperHeader" : {
             response.getWriter().print(arrayToJson(shpData.getShipperHeader(request.getHeader("param1"))));  
             break;
+        }
             
-        case "getShipperLines" :
+        case "getShipperLines" : {
             response.getWriter().print(ArrayListStringArrayToJson(shpData.getShipperLines(request.getHeader("param1"))));
             break; 
+        }
             
         case "getShpRptPickerData" : {
         String[] x = new String[]{
