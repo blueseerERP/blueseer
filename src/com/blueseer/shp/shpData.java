@@ -778,6 +778,20 @@ public class shpData {
     public static ship_mstr getShipMstr(String[] x) {
         ship_mstr r = null;
         String[] m = new String[2];
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getShipMstr"});
+            list.add(new String[]{"param1",  x[0]});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(list, "", null, "dataServSHP");
+                r = objectMapper.readValue(returnstring, ship_mstr.class); 
+                return r;
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
         String sql = "select * from ship_mstr where sh_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -1213,6 +1227,18 @@ public class shpData {
     
     
     public static String[] addUpdateSHCtrl(ship_ctrl x) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","addUpdateSHCtrl"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServSHP"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
         int rows = 0;
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  ship_ctrl"; // there should always be only 1 or 0 records 
@@ -1249,6 +1275,20 @@ public class shpData {
     public static ship_ctrl getSHCtrl(String[] x) {
         ship_ctrl r = null;
         String[] m = new String[2];
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getSHCtrl"});
+            list.add(new String[]{"param1",  x[0]});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(list, "", null, "dataServSHP");
+                r = objectMapper.readValue(returnstring, ship_ctrl.class); 
+                return r;
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
         String sql = "select * from ship_ctrl;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
