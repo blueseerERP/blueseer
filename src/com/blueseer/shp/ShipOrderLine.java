@@ -975,7 +975,10 @@ public class ShipOrderLine extends javax.swing.JPanel {
                      "", // loc
                      "CONT",
                      "", // type
-                     cms.cms_shipto()
+                     cms.cms_shipto(),
+                     "0", // scan
+                     "0",  // void
+                     "0"  // post
                     );
              mstr.add(x);
              assignedlabels.add(serialno_str);
@@ -1023,7 +1026,10 @@ public class ShipOrderLine extends javax.swing.JPanel {
                      "", // loc
                      "CONT",
                      "", // type
-                     cms.cms_shipto()
+                     cms.cms_shipto(),
+                     "0", // scan
+                     "0",  // void
+                     "0"  // post
                     );
              mstr.add(x);
              assignedlabels.add(serialno_str);

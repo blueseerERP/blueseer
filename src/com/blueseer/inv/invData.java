@@ -7712,6 +7712,62 @@ public class invData {
 
 }
 
+    public static ArrayList<String[]> getItemInvInfo(String item) {
+       if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getItemInvInfo"});
+            list.add(new String[]{"param1",  item});
+            try {
+                return jsonToArrayListStringArray(sendServerPost(list, "", null, "dataServINV"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
+        ArrayList<String[]> myarray = new ArrayList();
+        try{
+
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+            res = st.executeQuery("select * from in_mstr inner join item_mstr on it_item = in_item where in_item = " + "'" + item + "'" 
+                        + ";");
+           while (res.next()) {               
+            myarray.add(new String[]{res.getString("in_item"),
+                res.getString("it_desc"),
+                res.getString("in_serial"),
+                res.getString("in_wh"),
+                res.getString("in_loc"),
+                res.getString("in_expire"),
+                res.getString("in_qoh"),
+                res.getString("it_uom"),
+                res.getString("it_sell_price")
+            });                    
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
 
     public static double getItemOperationalCost(String item, String set, String site) {
     double cost = 0; 

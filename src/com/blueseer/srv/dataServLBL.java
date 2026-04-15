@@ -31,6 +31,8 @@ import static com.blueseer.lbl.lblData.addLabelZebraMstr;
 import static com.blueseer.lbl.lblData.deleteLabelZebraMstr;
 import static com.blueseer.lbl.lblData.getLabelBrowseDetView;
 import static com.blueseer.lbl.lblData.getLabelBrowseView;
+import static com.blueseer.lbl.lblData.getLabelMstr;
+import static com.blueseer.lbl.lblData.getLabelMstrByStrID;
 import static com.blueseer.lbl.lblData.getLabelSerialDisplay;
 import static com.blueseer.lbl.lblData.getLabelZebraMstr;
 import com.blueseer.lbl.lblData.label_zebra;
@@ -210,7 +212,24 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         response.getWriter().print(r);
         break;
         }
-                
+        
+        case "getLabelMstr" : {       
+        lblData.label_mstr lm = getLabelMstr(request.getHeader("param1"));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String r = objectMapper.writeValueAsString(lm);
+        response.getWriter().print(r);
+        break;
+        }
+         
+        case "getLabelMstrByStrID" : {       
+        lblData.label_mstr lm = getLabelMstrByStrID(request.getHeader("param1"));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String r = objectMapper.writeValueAsString(lm);
+        response.getWriter().print(r);
+        break;
+        }
+        
+        
         case "getLabelSerialDisplay" : {       
             response.getWriter().print(getLabelSerialDisplay(request.getHeader("param1")));
             break; 

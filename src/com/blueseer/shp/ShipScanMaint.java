@@ -27,44 +27,22 @@ package com.blueseer.shp;
 
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
-import static bsmf.MainFrame.ds;
-import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
-import java.io.File;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
 import javax.swing.JTable;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
-import static com.blueseer.ctr.cusData.getCustInfo;
-import com.blueseer.inv.invData;
-import static com.blueseer.inv.invData.getWHLOCfromSerialNumber;
-import com.blueseer.inv.invData.inv_ctrl;
+import com.blueseer.adm.admData;
+import com.blueseer.ctr.cusData.cm_mstr;
+import static com.blueseer.ctr.cusData.getCustMstr;
 import static com.blueseer.lbl.lblData.getLabelMstrByStrID;
 import static com.blueseer.lbl.lblData.getLabelSerialDisplay;
-import static com.blueseer.lbl.lblData.getLabelStatus;
 import com.blueseer.lbl.lblData.label_mstr;
 import static com.blueseer.lbl.lblData.updateLabelStatus;
 import static com.blueseer.ord.ordData.getOrderLineInfo;
-import com.blueseer.sch.schData;
-import static com.blueseer.sch.schData.getPlanDetHistory;
-import com.blueseer.sch.schData.plan_mstr;
 import static com.blueseer.shp.shpData.addShipperTransaction;
 import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.utl.BlueSeerUtils;
@@ -73,13 +51,8 @@ import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
-import static com.blueseer.utl.OVData.getSysMetaValue;
-import static com.blueseer.utl.OVData.getpsmstrcompSerialized;
 import java.awt.Component;
-import java.sql.Connection;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -89,7 +62,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingWorker;
-import net.sf.jasperreports.view.JasperViewer;
 import java.util.HashSet;
 
 /**
@@ -98,17 +70,22 @@ import java.util.HashSet;
  */
 public class ShipScanMaint extends javax.swing.JPanel {
 
- // global variable declarations
-                boolean isLoad = false;
+ boolean isLoad = false;
+        boolean canUpdate = false;
+        boolean isAutoPost = false;
+        ArrayList<String[]> initDataSets = null;
+        String defaultSite = "";
+        String defaultCurrency = "";
+        String defaultCC = "";
                 
                 int j = 0;
                 HashSet<String> assignedlabels = new HashSet<String>();
                 HashSet<String> assigneditems = new HashSet<String>();
                 String firstshipto = "";
                 String firstbillto = "";
-                String[] custinfo = null;
                 String shipper = "";
                 boolean autoconfirm = false;
+                cm_mstr cm = null;
     
     // global datatablemodel declarations 
     javax.swing.table.DefaultTableModel serialmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -244,8 +221,11 @@ public class ShipScanMaint extends javax.swing.JPanel {
             }
     } 
     
-    public void setComponentDefaultValues() {
-      autoconfirm = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "shippercontrol", "auto_confirm_shipper_scan"));
+    public void setComponentDefaultValues(boolean init) {
+      if (init) {
+        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "autoshipconfirm");
+        }
+       
         
       tbscan.setText("");
        
@@ -257,14 +237,36 @@ public class ShipScanMaint extends javax.swing.JPanel {
       itemdet.setModel(itemmodel);
       itemdet.getTableHeader().setReorderingAllowed(false);
       firstshipto = "";
-      custinfo = null; 
        
       assigneditems.clear();
       assignedlabels.clear();
       lblmessage.setText("");
       shipper = "";
+      cm = null;
       
       btcommit.setEnabled(false);
+      
+      for (String[] s : initDataSets) {
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1];  
+            }
+            if (s[0].equals("site")) {
+              defaultSite = s[1];  
+            }
+            if (s[0].equals("canupdate")) {
+              canUpdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+            if (s[0].equals("autopost")) {
+              isAutoPost = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+            
+            if (s[0].equals("autoshipconfirm")) {
+              autoconfirm = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+            
+        }
+       
+      
         
       tbscan.requestFocusInWindow();
     }
@@ -318,12 +320,12 @@ public class ShipScanMaint extends javax.swing.JPanel {
                 "", // remarks
                 bsmf.MainFrame.userid,
                 serialdet.getValueAt(0,16).toString(),
-                custinfo[2], // currency
+                cm.cm_curr(), // currency
                 "", // wh
-                custinfo[4],  // terms
+                cm.cm_terms(),  // terms
                 "", // taxcode
-                custinfo[0],  // aracct
-                custinfo[1],  // arcc
+                cm.cm_ar_acct(),  // aracct
+                cm.cm_ar_cc(),  // arcc
                 "S", // type
                 "", // sh_so 
                 serialdet.getValueAt(0,16).toString(),
@@ -459,7 +461,7 @@ public class ShipScanMaint extends javax.swing.JPanel {
         label_mstr label = getLabelMstrByStrID(scan);
         if (label.m()[0].equals("0")) {
             
-            if (getLabelStatus(label.lbl_id()) > 0) {
+            if (bsParseInt(label.lbl_scan()) > 0) {
             tbscan.setText("");
             lblmessage.setText("Label already scanned: " + scan);
             lblmessage.setForeground(Color.red);
@@ -469,7 +471,7 @@ public class ShipScanMaint extends javax.swing.JPanel {
             
             if (firstshipto.isEmpty()) {
                   firstshipto = label.lbl_shipto();
-                  custinfo = getCustInfo(label.lbl_billto());
+                  cm = getCustMstr(new String[]{label.lbl_billto()});
                   btcommit.setEnabled(true);
             }
             
@@ -592,7 +594,7 @@ public class ShipScanMaint extends javax.swing.JPanel {
     
     public void initvars(String[] arg) {
        setPanelComponentState(this, true); 
-       setComponentDefaultValues();
+       setComponentDefaultValues(initDataSets == null);
     }
     
    
@@ -782,7 +784,7 @@ public class ShipScanMaint extends javax.swing.JPanel {
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
         // aracct, arcc, currency, bank, terms, carrier, onhold, site, taxcode
-        if (custinfo == null) {
+        if (cm == null) {
             bsmf.MainFrame.show(getMessageTag(1104)); 
             return;
         }
@@ -832,6 +834,7 @@ public class ShipScanMaint extends javax.swing.JPanel {
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
         BlueSeerUtils.messagereset();
+        initDataSets = null;
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 

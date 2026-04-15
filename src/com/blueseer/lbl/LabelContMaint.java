@@ -408,7 +408,10 @@ String syslabeldir = "";
                  "", 
                  "CONT",
                  "flat",
-                 soset.cms().cms_shipto()
+                 soset.cms().cms_shipto(),
+                     "0", // scan
+                     "0",  // void
+                     "0"  // post
                 );
         return x;
     }

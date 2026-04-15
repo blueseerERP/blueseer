@@ -76,6 +76,7 @@ import static com.blueseer.inv.invData.getItemCostElements;
 import static com.blueseer.inv.invData.getItemDataInit;
 import static com.blueseer.inv.invData.getItemDetail;
 import static com.blueseer.inv.invData.getItemImagesFile;
+import static com.blueseer.inv.invData.getItemInvInfo;
 import static com.blueseer.inv.invData.getItemMaintInit;
 import static com.blueseer.inv.invData.getItemMasterSchedlist;
 import static com.blueseer.inv.invData.getItemMstr;
@@ -1022,6 +1023,11 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         
         case "getInventoryQtyByItem" : { 
             response.getWriter().print(ArrayListStringArrayToJson(getInventoryQtyByItem(request.getHeader("param1"))));
+            break;  
+        }
+        
+        case "getItemInvInfo" : { 
+            response.getWriter().print(ArrayListStringArrayToJson(getItemInvInfo(request.getHeader("param1"))));
             break;  
         }
         

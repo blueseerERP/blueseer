@@ -494,7 +494,10 @@ String carrier = "";
                  "", 
                  "CONT",
                  "flat",
-                 shipto
+                 shipto,
+                     "0", // scan
+                     "0",  // void
+                     "0"  // post
                 );
         return x;
     }

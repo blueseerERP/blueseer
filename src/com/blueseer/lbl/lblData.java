@@ -359,6 +359,20 @@ public class lblData {
     public static label_mstr getLabelMstr(String x) {
         label_mstr r = null;
         String[] m = new String[2];
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getLabelMstr"});
+            list.add(new String[]{"param1", x});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(list, "", null, "dataServLBL");
+                r = objectMapper.readValue(returnstring, label_mstr.class); 
+                return r;
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
         String sql = "select * from label_mstr where lbl_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -402,7 +416,10 @@ public class lblData {
                             res.getString("lbl_loc"),
                             res.getString("lbl_trantype"),
                             res.getString("lbl_type"),
-                            res.getString("lbl_shipto")
+                            res.getString("lbl_shipto"),
+                            res.getString("lbl_scan"),
+                            res.getString("lbl_void"),
+                            res.getString("lbl_post")
                         );
                     }
                 }
@@ -418,6 +435,20 @@ public class lblData {
     public static label_mstr getLabelMstrByStrID(String x) {
         label_mstr r = null;
         String[] m = new String[2];
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getLabelMstrByStrID"});
+            list.add(new String[]{"param1", x});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(list, "", null, "dataServLBL");
+                r = objectMapper.readValue(returnstring, label_mstr.class); 
+                return r;
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
         String sql = "select * from label_mstr where lbl_id_str = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -461,7 +492,10 @@ public class lblData {
                             res.getString("lbl_loc"),
                             res.getString("lbl_trantype"),
                             res.getString("lbl_type"),
-                            res.getString("lbl_shipto")
+                            res.getString("lbl_shipto"),
+                            res.getString("lbl_scan"),
+                            res.getString("lbl_void"),
+                            res.getString("lbl_post")
                         );
                     }
                 }
@@ -1515,12 +1549,13 @@ public class lblData {
         String lbl_addr1, String lbl_addr2, String lbl_addrcity, String lbl_addrstate, 
         String lbl_addrzip, String lbl_addrcountry, String lbl_crt_date, String lbl_ship_date, 
         String lbl_userid, String lbl_printer, String lbl_prog, String lbl_site, 
-        String lbl_loc, String lbl_trantype, String lbl_type, String lbl_shipto) {
+        String lbl_loc, String lbl_trantype, String lbl_type, String lbl_shipto,
+        String lbl_scan, String lbl_void, String lbl_post) {
         public label_mstr(String[]m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
                     "", "", "", "", "", "", "", "", "", "",
                     "", "", "", "", "", "", "", "", "", "",
-                    "", "", "");
+                    "", "", "","","","");
         }
     }
     
