@@ -424,6 +424,9 @@ public class ShipBuildMaint extends javax.swing.JPanel {
             if (s[0].equals("site")) {
               defaultSite = s[1];  
             }
+            if (s[0].equals("sites")) {
+              ddsite.addItem(s[1]); 
+            }
             if (s[0].equals("canupdate")) {
               canUpdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
             }

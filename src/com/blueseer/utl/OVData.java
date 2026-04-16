@@ -19941,10 +19941,17 @@ return mystring;
         
         
         String[] rec;
+        /*
         String columnnames = "sh_id,shd_so,lbl_id,lbl_id_str,lbl_item,shd_desc,lbl_qty," +
                 "sh_cust,sh_shipvia,lbl_po,shd_uom,cm_code,cm_name,cm_line1,cm_line2," +
                 "cms_name,cms_line1,cms_line2,cms_zip,cms_plantcode,site_desc,site_line1," +
                 "site_city,site_state,site_zip,site_country,ov_jasper_directory,color,size";
+        */
+        String columnnames = "sh_id,shd_so,lbl_id,lbl_id_str,lbl_item,shd_desc,lbl_qty," +
+                "sh_cust,sh_shipvia,lbl_po,shd_uom,cm_code,cm_name,cm_line1,cm_line2," +
+                "cms_name,cms_line1,cms_line2,cms_city,cms_state,cms_zip,cms_country,cms_plantcode,site_desc,site_line1," +
+                "site_city,site_state,site_zip,site_country,ov_jasper_directory,color,size";
+        
         String[] columnnamesarray = columnnames.split(",", -1);
         JRDataSource datasource = new ListOfArrayDataSource(list, columnnamesarray);
         Path imagepath = FileSystems.getDefault().getPath(cleanDirString(imagedir) + logo);
