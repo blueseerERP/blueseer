@@ -77,6 +77,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -119,7 +120,66 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     
     switch (id) {
         
-     case "addCarrierMstr" : {
+    case "addCFOTransaction" : {
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            reader.close();
+            ObjectMapper objectMapper = new ObjectMapper();
+            String[] ca = sb.toString().split("=_=", -1);
+            frtData.cfo_det[] sdarray = objectMapper.readValue(ca[0], frtData.cfo_det[].class);
+            ArrayList<frtData.cfo_det> xdet = new ArrayList<frtData.cfo_det>(Arrays.asList(sdarray)); 
+            frtData.cfo_mstr xh = objectMapper.readValue(ca[1], frtData.cfo_mstr.class);  
+            frtData.cfo_item[] oiarray = objectMapper.readValue(ca[2], frtData.cfo_item[].class);
+            ArrayList<frtData.cfo_item> oidet = new ArrayList<frtData.cfo_item>(Arrays.asList(oiarray)); 
+            frtData.cfo_sos[] osarray = objectMapper.readValue(ca[3], frtData.cfo_sos[].class);
+            ArrayList<frtData.cfo_sos> osdet = new ArrayList<frtData.cfo_sos>(Arrays.asList(osarray));  
+            response.getWriter().print(arrayToJson(frtData.addCFOTransaction(xdet, xh, oidet, osdet)));  
+            break;
+    }
+    
+    case "updateCFOTransaction" : {
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            reader.close();
+            ObjectMapper objectMapper = new ObjectMapper();
+            String[] ca = sb.toString().split("=_=", -1);
+            String s = objectMapper.readValue(ca[0], String.class);
+            String v = objectMapper.readValue(ca[1], String.class);
+            ArrayList<String> lines = objectMapper.readValue(ca[2], ArrayList.class); 
+            frtData.cfo_det[] sdarray = objectMapper.readValue(ca[3], frtData.cfo_det[].class);
+            ArrayList<frtData.cfo_det> xdet = new ArrayList<frtData.cfo_det>(Arrays.asList(sdarray)); 
+            frtData.cfo_mstr xh = objectMapper.readValue(ca[4], frtData.cfo_mstr.class);  
+            frtData.cfo_item[] oiarray = objectMapper.readValue(ca[5], frtData.cfo_item[].class);
+            ArrayList<frtData.cfo_item> oidet = new ArrayList<frtData.cfo_item>(Arrays.asList(oiarray)); 
+            frtData.cfo_sos[] osarray = objectMapper.readValue(ca[6], frtData.cfo_sos[].class);
+            ArrayList<frtData.cfo_sos> osdet = new ArrayList<frtData.cfo_sos>(Arrays.asList(osarray));  
+            response.getWriter().print(arrayToJson(frtData.updateCFOTransaction(s, v, lines, xdet, xh, oidet, osdet)));  
+            break;
+    }
+    
+    case "deleteCFOMstr" : {
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            reader.close();
+            ObjectMapper objectMapper = new ObjectMapper();
+            frtData.cfo_mstr xh = objectMapper.readValue(sb.toString(), frtData.cfo_mstr.class);            
+            response.getWriter().print(arrayToJson(frtData.deleteCFOMstr(xh)));  
+            break;
+    }
+    
+    case "addCarrierMstr" : {
       String line;
       StringBuilder sb = new StringBuilder();  
       BufferedReader reader = request.getReader();  // as string

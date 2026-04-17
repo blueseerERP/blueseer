@@ -3382,6 +3382,15 @@ public class admData {
             
             if (datasetsarray != null) {
                 for (String sd : datasetsarray) {
+                        if (sd.equals("frtc_function")) {
+                            res = st.executeQuery("select * from frt_ctrl;");
+                            while (res.next()) {
+                               String[] s = new String[2];
+                               s[0] = "frtc_function";
+                               s[1] = res.getString("frtc_function");
+                               lines.add(s);
+                            }
+                        }
                         if (sd.equals("depts")) {
                             res = st.executeQuery("select dept_id from dept_mstr ;");
                             while (res.next()) {

@@ -1871,6 +1871,22 @@ public class frtData {
     
     
     public static String[] addCFOTransaction(ArrayList<cfo_det> cfod, cfo_mstr cfo, ArrayList<cfo_item> cfoi, ArrayList<cfo_sos> cfos) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","addCFOTransaction"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(cfod);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(cfo);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(cfoi);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(cfos);
+                System.out.println("HERE: " + jsonString);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFRT"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;

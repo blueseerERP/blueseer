@@ -399,7 +399,7 @@ public class CFOBrowse extends javax.swing.JPanel {
     }
     
     public String[] getInitialization() {
-        initDataSets = frtData.getCFOInit(this.getClass().getName(), bsmf.MainFrame.userid);
+        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "customers,currencies,frtc_function");
         if (initDataSets.isEmpty()) {
            return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.dataInitError}; 
         } else {
@@ -444,10 +444,9 @@ public class CFOBrowse extends javax.swing.JPanel {
         
         for (String[] s : initDataSets) {
             
-            if (s[0].equals("pov")) {
+            if (s[0].equals("frtc_function")) {
               carrierPOV = BlueSeerUtils.ConvertStringToBool(s[1]); 
             }
-            
             if (s[0].equals("sites")) {
               ddsite.addItem(s[1]); 
             }
