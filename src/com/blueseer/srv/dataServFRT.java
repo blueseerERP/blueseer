@@ -52,6 +52,7 @@ import static com.blueseer.frt.frtData.getCFOBrowseViewDet;
 import static com.blueseer.frt.frtData.getCFOCtrl;
 import static com.blueseer.frt.frtData.getCFODet;
 import static com.blueseer.frt.frtData.getCFOLines;
+import static com.blueseer.frt.frtData.getCFOMaintInit;
 import static com.blueseer.frt.frtData.getCFOMstr;
 import static com.blueseer.frt.frtData.getCFOStatus;
 import static com.blueseer.frt.frtData.getCFOStatusInit;
@@ -533,6 +534,10 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         break;
     } 
         
+    case "getCFOMaintInit" : { 
+            response.getWriter().print(ArrayListStringArrayToJson(getCFOMaintInit(request.getHeader("param1"))));
+            break;  
+        }
         
         default:
         response.getWriter().print("");

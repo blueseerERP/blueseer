@@ -1493,6 +1493,17 @@ public class frtData {
     }
     
     public static ArrayList<String[]> getCFOMaintInit(String appfunc) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getCFOMaintInit"});
+            list.add(new String[]{"param1", appfunc});
+            try {
+                return jsonToArrayListStringArray(sendServerPost(list, "", null, "dataServFRT"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        } 
         String defaultsite = "";
         ArrayList<String[]> lines = new ArrayList<String[]>();
         try{
