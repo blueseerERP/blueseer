@@ -38,7 +38,12 @@ import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.jsonToStringArray;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 import com.blueseer.utl.OVData;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -159,6 +164,20 @@ public class engData {
     }
     
     public static String[] addECNTransaction(ArrayList<ecn_task> ecnt, ecn_mstr ecn) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","addECNTransaction"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(ecnt);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(ecn);
+                System.out.println("HERE: " + jsonString);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServENG"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -320,6 +339,22 @@ public class engData {
     }
         
     public static String[] updateECNTransaction(String x, ArrayList<String> lines, ArrayList<ecn_task> ecnt, ecn_mstr ecn) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","updateECNTransaction"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(lines);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(ecnt);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(ecn);
+                System.out.println("HERE: " + jsonString);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServENG"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -375,6 +410,20 @@ public class engData {
     public static ecn_mstr getECNMstr(String[] x) {
         ecn_mstr r = null;
         String[] m = new String[2];
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getECNMstr"});
+            list.add(new String[]{"param1",  x[0]});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(list, "", null, "dataServENG");
+                r = objectMapper.readValue(returnstring, ecn_mstr.class); 
+                return r;
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
         String sql = "select * from ecn_mstr where ecn_nbr = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -405,6 +454,21 @@ public class engData {
         ecn_task r = null;
         String[] m = new String[2];
         ArrayList<ecn_task> list = new ArrayList<ecn_task>();
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> paramlist = new ArrayList<String[]>();
+            paramlist.add(new String[]{"id", "getECNTask"});
+            paramlist.add(new String[]{"param1",  code});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(paramlist, "", null, "dataServENG");
+                list = objectMapper.readValue(returnstring, new TypeReference<ArrayList<ecn_task>>() {});
+                return list;
+            } catch (IOException ex) {
+                bslog(ex);
+                return list;
+            }
+        }
+        
         String sql = "select * from ecn_task where ecnt_nbr = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -432,9 +496,25 @@ public class engData {
         return list;
     }
     
-    public static ecn_task getECNTask(String nbr, String masterid, String seq) {
+    public static ecn_task getECNTaskSeq(String nbr, String masterid, String seq) {
         ecn_task r = null;
         String[] m = new String[2];
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> paramlist = new ArrayList<String[]>();
+            paramlist.add(new String[]{"id", "getECNTaskSeq"});
+            paramlist.add(new String[]{"param1",  nbr});
+            paramlist.add(new String[]{"param2",  masterid});
+            paramlist.add(new String[]{"param3",  seq});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(paramlist, "", null, "dataServENG");
+                r = objectMapper.readValue(returnstring, ecn_task.class); 
+                return r;
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
         String sql = "select * from ecn_task where ecnt_nbr = ? and ecnt_mstrid = ? and ecnt_seq = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -464,6 +544,18 @@ public class engData {
         
     
     public static String[] deleteECNMstr(ecn_mstr x) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","deleteECNMstr"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServENG"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
@@ -626,6 +718,20 @@ public class engData {
     }
     
     public static String[] addTaskTransaction(ArrayList<task_det> td, task_mstr tm) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","addTaskTransaction"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(td);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(tm);
+                System.out.println("HERE: " + jsonString);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServENG"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -767,6 +873,22 @@ public class engData {
     }
         
     public static String[] updateTaskTransaction(String x, ArrayList<String> lines, ArrayList<task_det> td, task_mstr tm) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","updateTaskTransaction"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(lines);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(td);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(tm);
+                System.out.println("HERE: " + jsonString);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServENG"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -821,6 +943,20 @@ public class engData {
     public static task_mstr getTaskMstr(String[] x) {
         task_mstr r = null;
         String[] m = new String[2];
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getTaskMstr"});
+            list.add(new String[]{"param1",  x[0]});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(list, "", null, "dataServENG");
+                r = objectMapper.readValue(returnstring, task_mstr.class); 
+                return r;
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
         String sql = "select * from task_mstr where task_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -855,6 +991,21 @@ public class engData {
         task_det r = null;
         String[] m = new String[2];
         ArrayList<task_det> list = new ArrayList<task_det>();
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> paramlist = new ArrayList<String[]>();
+            paramlist.add(new String[]{"id", "getTaskDet"});
+            paramlist.add(new String[]{"param1",  code});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(paramlist, "", null, "dataServENG");
+                list = objectMapper.readValue(returnstring, new TypeReference<ArrayList<task_det>>() {});
+                return list;
+            } catch (IOException ex) {
+                bslog(ex);
+                return list;
+            }
+        }
+        
         String sql = "select * from task_det where taskd_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -880,9 +1031,24 @@ public class engData {
         return list;
     }
     
-    public static task_det getTaskDet(String id, String sequence) {
+    public static task_det getTaskDetSeq(String id, String sequence) {
         task_det r = null;
         String[] m = new String[2];
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> paramlist = new ArrayList<String[]>();
+            paramlist.add(new String[]{"id", "getTaskDetSeq"});
+            paramlist.add(new String[]{"param1",  id});
+            paramlist.add(new String[]{"param2",  sequence});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(paramlist, "", null, "dataServENG");
+                r = objectMapper.readValue(returnstring, task_det.class); 
+                return r;
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
         String sql = "select * from task_det where taskd_id = ? and taskd_sequence = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -908,6 +1074,18 @@ public class engData {
     }
         
     public static String[] deleteTaskMstr(task_mstr x) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","deleteTaskMstr"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServENG"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};

@@ -38,6 +38,7 @@ import com.blueseer.eng.engData.ecn_task;
 import static com.blueseer.eng.engData.getECNMstr;
 import static com.blueseer.eng.engData.getECNSequences;
 import static com.blueseer.eng.engData.getECNTask;
+import static com.blueseer.eng.engData.getECNTaskSeq;
 import static com.blueseer.eng.engData.getTaskDet;
 import static com.blueseer.eng.engData.sendECNEmailToAll;
 import com.blueseer.eng.engData.task_det;
@@ -963,7 +964,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerV  {
 
     public void getNotes(String ecn, String seq) {
         tanotes.setText("");
-        ecn_task et = getECNTask(ecn, ecn, seq);
+        ecn_task et = getECNTaskSeq(ecn, ecn, seq);
         tanotes.setText(et.ecnt_notes());
        
     }
