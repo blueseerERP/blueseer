@@ -490,7 +490,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     isCFOCommitted = false;
        
-       fc = getCFOCtrl(null);
+       fc = getCFOCtrl(new String[]{""});
        // note:  fc.frtc_function() = 1 for Trucking POV...and 0 for Customer POV
        carrierPOV = (fc.frtc_function().equals("1"));
        
