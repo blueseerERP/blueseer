@@ -942,6 +942,50 @@ public class hrmData {
 
     }
 
+    public static String updateEmpClockStatus(String myid, String status) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "updateEmpClockStatus"});
+            list.add(new String[]{"param1",  myid});
+            list.add(new String[]{"param1",  status});
+            try {
+                return sendServerPost(list, "", null, "dataServHRM"); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return "";
+            }
+        }
+        String x = "";
+        
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            try {
+                st.executeUpdate("update emp_mstr " +
+                        " set emp_clockin = " + "'" + status + "'" +
+                        " where emp_nbr = " + "'" + myid + "'" + ";");
+                
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+
+    }
+    
     
     public static String getEmpIDByFormalName(String formalname) {
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {

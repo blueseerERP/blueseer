@@ -26,42 +26,33 @@ SOFTWARE.
 package com.blueseer.tca;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.db;
 import com.blueseer.utl.OVData;
-import java.awt.FileDialog;
-import java.awt.Frame;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.ds;
-import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.adm.admData;
 import com.blueseer.hrm.hrmData;
+import com.blueseer.prd.prdData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.jsonToData;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 import java.awt.Component;
-import java.sql.Connection;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -71,6 +62,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -78,6 +70,8 @@ import javax.swing.JTabbedPane;
  */
 public class ClockDetRpt extends javax.swing.JPanel {
  
+    String defaultSite = "";
+    String defaultCurrency = "";
          
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object [][] {},
             new String [] {
@@ -174,19 +168,39 @@ public class ClockDetRpt extends javax.swing.JPanel {
          
         ddempfrom.removeAllItems();
         ddempto.removeAllItems();
-        ArrayList myemp = hrmData.getempmstrlist();
-        for (int i = 0; i < myemp.size(); i++) {
-            ddempfrom.addItem(myemp.get(i));
-            ddempto.addItem(myemp.get(i));
-        }
-        if (ddempto.getItemCount() > 0)
-        ddempto.setSelectedIndex(ddempto.getItemCount() - 1);
+        
+        labelcount.setText(""); 
+        labelhours.setText("");
+        
+        ArrayList<String[]> initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "employees");
+        
          
-         labelcount.setText(""); 
-         labelhours.setText("");
+         
+         
+         for (String[] s : initDataSets) {
+            
+            
+            if (s[0].equals("site")) {
+              defaultSite = s[1]; 
+            }
+            if (s[0].equals("employees")) {
+              ddempfrom.addItem(s[1]);
+              ddempto.addItem(s[1]); 
+            }
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1]; 
+            }
+            
+        }
+         
+         if (ddempto.getItemCount() > 0)
+        ddempto.setSelectedIndex(ddempto.getItemCount() - 1);
           
           
     }
+    
+   
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -379,7 +393,54 @@ public class ClockDetRpt extends javax.swing.JPanel {
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
 
         mymodel.setRowCount(0);
-    
+         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        String jsonString = null; 
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        list.add(new String[]{"id","getClockDetView"});
+        list.add(new String[]{"param1",ddempfrom.getSelectedItem().toString()});
+        list.add(new String[]{"param2",ddempto.getSelectedItem().toString()});
+        list.add(new String[]{"param3",dfdate.format(dcFrom.getDate())});
+        list.add(new String[]{"param4",dfdate.format(dcTo.getDate())});
+        
+        try {
+                jsonString = sendServerPost(list, "", null, "dataServTCA"); 
+            } catch (IOException ex) {
+                bslog(ex);
+            }
+        } else {
+            jsonString = tcaData.getClockDetView(new String[]{
+                ddempfrom.getSelectedItem().toString(),
+                ddempto.getSelectedItem().toString(),
+                dfdate.format(dcFrom.getDate()),
+                dfdate.format(dcTo.getDate())
+            });
+        }
+      
+        
+      Object[][] roData = jsonToData(jsonString);
+      
+      int i = 0;
+      double tothours = 0.0;
+      
+      if (roData != null) {
+        for (Object[] rowData : roData) {   
+            if (! cbpaid.isSelected() && roData[i][14].toString().equals("1")) { continue;}
+            if (! cbunpaid.isSelected() && roData[i][14].toString().equals("0")) { continue;}
+            roData[i][13] = bsParseDouble(roData[i][13].toString());
+            tothours = tothours + bsParseDouble(roData[i][13].toString());
+            mymodel.addRow(rowData);
+            i++;
+        }
+        } 
+      
+       labelcount.setText(String.valueOf(i));
+       labelhours.setText(String.valueOf(tothours));
+        
+        
+        
+        
+    /*
 try {
             Connection con = null;
             if (ds != null) {
@@ -455,7 +516,7 @@ try {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-       
+       */
     }//GEN-LAST:event_btRunActionPerformed
 
     private void btcsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcsvActionPerformed

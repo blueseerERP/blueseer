@@ -33,18 +33,18 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.tca.tcaData.getTimeClockSet;
+import static com.blueseer.tca.tcaData.updateTimeClock;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import com.blueseer.utl.OVData;
+import java.awt.Color;
 import java.awt.Component;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -53,7 +53,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -118,66 +117,33 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
     }
     
     
-    public void getClockRecord(String rec) {
-        try{
-
-         Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-        
-
-        int i = 0;
-
-        res = st.executeQuery("SELECT * FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr " +
-                              " where recid = " + "'" + rec + "'" +
-                              ";" );
-        while (res.next()) {
-            i++;
-            if (res.getString("t.code_id").equals("01") ) {
+    public void getClockRecord(String recid) {
+       
+        tcaData.TimeClockSet tcs = getTimeClockSet(new String[]{recid}); 
+        if (tcs.m()[0].equals("0")) {
+            tbrecid.setText(recid);
+            tbrecid.setEditable(false);
+            tbrecid.setForeground(Color.blue); 
+            
+            if (tcs.tc().code_id().equals("01") ) {
                 bsmf.MainFrame.show(getMessageTag(1159));
             } else {
-            tbrecid.setText(res.getString("t.recid"));
-            lblemployee.setText(res.getString("t.emp_nbr") + "  " + res.getString("e.emp_fname") + 
-                               "  " + res.getString("e.emp_lname"));
-            dcindate.setDate(parseDate(res.getString("t.indate")));
-            dcoutdate.setDate(parseDate(res.getString("t.outdate")));
-            tbintime.setText(res.getString("t.intime"));
-            tbintimeadj.setText(res.getString("t.intime_adj"));
-            tbouttime.setText(res.getString("t.outtime"));
-            tbouttimeadj.setText(res.getString("t.outtime_adj"));
-            tbtothrs.setText(res.getString("t.tothrs"));
-            tacomment.setText(res.getString("t.comment"));
-            ddcode.setSelectedItem(res.getString("t.code_id"));
+             tbempnbr.setText(tcs.em().emp_nbr());
+             lblemployee.setText(tcs.em().emp_fname() + "  " + 
+                               "  " + tcs.em().emp_lname());
+            dcindate.setDate(parseDate(tcs.tc().indate()));
+            dcoutdate.setDate(parseDate(tcs.tc().outdate()));
+            tbintime.setText(tcs.tc().intime());
+            tbintimeadj.setText(tcs.tc().intime_adj());
+            tbouttime.setText(tcs.tc().outtime());
+            tbouttimeadj.setText(tcs.tc().outtime_adj());
+            tbtothrs.setText(bsNumber(tcs.tc().tothrs()));
+            ddcode.setSelectedItem(tcs.tc().code_id());
             }
-        }
-
-        if (i == 0) {
+        } else {
             bsmf.MainFrame.show(getMessageTag(1001));
         }
-
-        }
-      catch (SQLException s){
-          MainFrame.bslog(s);
-       bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-      } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-    }
-    catch (Exception e){
-      MainFrame.bslog(e);
-    }
+       
     }
     
     public String getclocktime(int hour, int minutes) {
@@ -225,6 +191,39 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
         
     }
     
+    public tcaData.time_clock createRecord() { 
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+        String clockdate = dfdate.format(now);
+        String clocktime = dftime.format(now);
+         
+        tcaData.time_clock x = new tcaData.time_clock(null, 
+                 tbempnbr.getText(),
+                 dfdate.format(dcindate.getDate()), // indate
+                 dfdate.format(dcoutdate.getDate()),  // outdate
+                 tbintime.getText(), // intime
+                 tbouttime.getText(), // outtime
+                 "", // dept
+                 ddcode.getSelectedItem().toString(), // code_id
+                 tbintimeadj.getText(), // intime adj
+                 tbouttimeadj.getText(), // outtime adj
+                 bsParseDouble(tbtothrs.getText()), // tothours
+                 bsParseInt(tbrecid.getText()), // recid
+                 bsmf.MainFrame.userid, // userid
+                 clockdate, //changed
+                 "", //fld1
+                "", // fld2
+                "", //fld3
+                tacomment.getText().substring(0, 200), //comment
+                "00", // code_orig
+                bsmf.MainFrame.userid, //whochanged
+                "0", // ispaid
+                "" // checknbr
+                );
+        return x;
+    }
+   
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -261,6 +260,8 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
         tacomment = new javax.swing.JTextArea();
         jLabel10 = new javax.swing.JLabel();
         btcalc = new javax.swing.JButton();
+        tbempnbr = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -347,6 +348,8 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
             }
         });
 
+        jLabel11.setText("EmpNbr");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -384,12 +387,16 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
                                         .addComponent(dcoutdate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(32, 32, 32)
-                                .addComponent(jLabel1)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel11))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblemployee, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(tbrecid, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(tbempnbr, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(tbrecid, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btget)))))
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -406,7 +413,11 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
                     .addComponent(btget)
                     .addComponent(tbrecid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addGap(2, 2, 2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbempnbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblemployee, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -466,8 +477,10 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
             DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
             String clockdate = cdate.format(now);
         
+        updateTimeClock(createRecord());
+        bsmf.MainFrame.show(getMessageTag(1008));
         
-        
+        /*
         try{
 
         Connection con = null;
@@ -549,6 +562,8 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
     catch (Exception e){
       MainFrame.bslog(e);
     }
+        */
+        
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void tbintimeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbintimeFocusLost
@@ -613,6 +628,7 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
     private javax.swing.JComboBox ddcode;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -625,6 +641,7 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblemployee;
     private javax.swing.JTextArea tacomment;
+    private javax.swing.JTextField tbempnbr;
     private javax.swing.JTextField tbintime;
     private javax.swing.JTextField tbintimeadj;
     private javax.swing.JTextField tbouttime;

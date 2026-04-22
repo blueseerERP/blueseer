@@ -23,23 +23,41 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
+
 package com.blueseer.tca;
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.ds;
-import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
+import com.blueseer.adm.admData;
+import static com.blueseer.tca.tcaData.addClockCode;
+import com.blueseer.tca.tcaData.clock_code;
+import static com.blueseer.tca.tcaData.deleteClockCode;
+import static com.blueseer.tca.tcaData.getClockCode;
+import static com.blueseer.tca.tcaData.updateClockCode;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import com.blueseer.utl.DTData;
+import com.blueseer.utl.IBlueSeerV;
+import com.blueseer.utl.OVData;
+import java.awt.Color;
 import java.awt.Component;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -48,21 +66,163 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class ClockCodeMaint extends javax.swing.JPanel {
+public class ClockCodeMaint extends javax.swing.JPanel implements IBlueSeerV { 
 
+    // global variable declarations
+    boolean isLoad = false;
+    ArrayList<String[]> initDataSets = null;
+    String defaultSite = "";
+    String defaultCurrency = "";
+    boolean canupdate = false;
+    
+    // global datatablemodel declarations    
+                
     /**
-     * Creates new form GenericCodeMstr
+     * Creates new form CarrierMaintPanel
      */
     public ClockCodeMaint() {
         initComponents();
         setLanguageTags(this);
     }
 
+    public void executeTask(dbaction x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type;
+          String[] key = null;
+          
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+             switch(this.type) {
+                case "add" :
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
     public void setLanguageTags(Object myobj) {
        JPanel panel = null;
         JTabbedPane tabpane = null;
@@ -106,60 +266,179 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                 }
        }
     }
+         
+    public void setComponentDefaultValues(boolean init) {
+       isLoad = true;
+       if (init) {
+       initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "");
+       } 
+       for (String[] s : initDataSets) {
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1];  
+            }
+            if (s[0].equals("canupdate")) {
+              canupdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }            
+            if (s[0].equals("site")) {
+              defaultSite = s[1]; 
+            }
+           
+        }
+        tbkey.setText("");
+        tbdesc.setText("");
+        cbsyscode.setSelected(false);
+        cbpayable.setSelected(false);
+       isLoad = false;
+    }
     
+    public void newAction(String x) {
+        setPanelComponentState(this, true);
+        setComponentDefaultValues(false);
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public void setAction(String[] x) {
+        if (x[0].equals("0")) { 
+           setPanelComponentState(this, true);
+           btadd.setEnabled(false);
+           tbkey.setEditable(false);
+           tbkey.setForeground(Color.blue);
+        } else {
+           tbkey.setForeground(Color.red); 
+        }
+    }
+    
+    public boolean validateInput(dbaction x) {
+        if (! canupdate) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
+        
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"clock_code"});
+        int fc;        
+        fc = checkLength(f,"uom_id");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+        bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+        tbkey.requestFocus();
+        return false;
+        } 
+                
+        fc = checkLength(f,"uom_desc");
+        if (tbdesc.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        tbdesc.requestFocus();
+        return false;
+        } 
+        
+        return true;
+    }
     
     public void initvars(String[] arg) {
-        tbcode.setText("");
-       cbpayable.setSelected(false);
-        tbdesc.setText("");
-         if (arg != null && arg.length > 0) {
-            getCode(arg[0]);
+       
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues(initDataSets == null);
+        btnew.setEnabled(true);
+        btlookup.setEnabled(true);
+        
+        if (arg != null && arg.length > 0) {
+            executeTask(dbaction.get,arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
         }
     }
     
-      public void getCode(String mycode) {
-        initvars(null);
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                res = st.executeQuery("select * from clock_code where clc_code = " + "'" + mycode + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbcode.setText(mycode);
-                    tbdesc.setText(res.getString("clc_desc"));
-                    cbpayable.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("clc_payable")));
-                    
-                }
-               
-                if (i == 0)
-                    bsmf.MainFrame.show(getMessageTag(1143,mycode));
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+    public String[] addRecord(String[] x) {
+     String[] m = addClockCode(createRecord());
+     return m;
+     }
+     
+    public String[] updateRecord(String[] x) {
+     String[] m = updateClockCode(createRecord());
+     return m;
+     }
+     
+    public String[] deleteRecord(String[] x) {
+      String[] m;
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+        if (proceed) {
+         m = deleteClockCode(createRecord()); 
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-
+         return m;
+     }
+      
+    public String[] getRecord(String[] key) {
+      clock_code x = getClockCode(key);
+      tbkey.setText(x.clc_code());
+      tbdesc.setText(x.clc_desc());
+      cbpayable.setEnabled(BlueSeerUtils.ConvertStringToBool(x.clc_payable()));
+      cbsyscode.setEnabled(BlueSeerUtils.ConvertStringToBool(x.clc_syscode()));
+      setAction(x.m());
+      return x.m();  
     }
+    
+     public clock_code createRecord() {
+        clock_code x = new clock_code(null, 
+           tbkey.getText(),
+           tbdesc.getText(),
+           BlueSeerUtils.boolToString(cbpayable.isSelected()),
+           BlueSeerUtils.boolToString(cbsyscode.isSelected())
+        );
+        return x;
+    }
+    
+     public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getUOMBrowseUtil(luinput.getText(),0, "uom_id");
+        } else {
+         luModel = DTData.getUOMBrowseUtil(luinput.getText(),0, "uom_desc");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle(getMessageTag(1001));
+        } else {
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
+        
+    }
+
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -171,33 +450,31 @@ public class ClockCodeMaint extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        tbcode = new javax.swing.JTextField();
-        btupdate = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        tbdesc = new javax.swing.JTextField();
         btdelete = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
-        tbdesc = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        btget = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
+        tbkey = new javax.swing.JTextField();
+        btnew = new javax.swing.JButton();
+        btlookup = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
         cbpayable = new javax.swing.JCheckBox();
+        cbsyscode = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Clock Code Maintenance"));
         jPanel1.setName("panelmain"); // NOI18N
 
-        btupdate.setText("Update");
-        btupdate.setName("btupdate"); // NOI18N
-        btupdate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btupdateActionPerformed(evt);
-            }
-        });
+        jLabel1.setText("Code:");
+        jLabel1.setName("lblid"); // NOI18N
 
-        jLabel1.setText("Code");
-        jLabel1.setName("lblcode"); // NOI18N
+        jLabel2.setText("Description:");
+        jLabel2.setName("lbldesc"); // NOI18N
 
-        btdelete.setText("Delete");
+        btdelete.setText("delete");
         btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -205,7 +482,7 @@ public class ClockCodeMaint extends javax.swing.JPanel {
             }
         });
 
-        btadd.setText("Add");
+        btadd.setText("add");
         btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -213,66 +490,107 @@ public class ClockCodeMaint extends javax.swing.JPanel {
             }
         });
 
-        jLabel3.setText("Description");
-        jLabel3.setName("lbldesc"); // NOI18N
-
-        btget.setText("Get");
-        btget.setName("btget"); // NOI18N
-        btget.addActionListener(new java.awt.event.ActionListener() {
+        btupdate.setText("update");
+        btupdate.setName("btupdate"); // NOI18N
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btgetActionPerformed(evt);
+                btupdateActionPerformed(evt);
+            }
+        });
+
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
+            }
+        });
+
+        btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
+        btnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewActionPerformed(evt);
+            }
+        });
+
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupActionPerformed(evt);
+            }
+        });
+
+        btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
             }
         });
 
         cbpayable.setText("Payable");
         cbpayable.setName("cbpayable"); // NOI18N
 
+        cbsyscode.setText("Syscode");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btadd)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btdelete)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btupdate)
+                .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cbpayable)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btadd)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(13, 13, 13)
+                        .addComponent(btnew)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btclear))
+                    .addComponent(tbdesc)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btdelete)
-                            .addComponent(btupdate)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btget)))
-                .addGap(0, 17, Short.MAX_VALUE))
+                            .addComponent(cbsyscode)
+                            .addComponent(cbpayable))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(btget))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnew)
+                        .addComponent(btclear))
+                    .addComponent(btlookup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addComponent(cbpayable)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btupdate)
-                    .addComponent(btadd))
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btdelete)
+                .addComponent(cbpayable)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbsyscode)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btadd)
+                    .addComponent(btdelete)
+                    .addComponent(btupdate))
                 .addContainerGap())
         );
 
@@ -280,211 +598,61 @@ public class ClockCodeMaint extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-         try {
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                int i = 0;
-                
-                // check the code field
-                if (tbcode.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbcode.requestFocus();
-                    return;
-                }
-                
-                if (tbcode.getText().length() > 2) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1032,"2"));
-                }
-                
-                String payable = "0";
-                if (cbpayable.isSelected()) 
-                    payable = "1";
-                
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT clc_code FROM  clock_code where clc_code = " + "'" + tbcode.getText() + "'"  + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into clock_code "
-                            + "(clc_code, clc_desc, clc_payable ) "
-                            + " values ( " + "'" + tbcode.getText().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString() + "'" + ","
-                            + "'" + payable + "'"
-                            + ")"
-                            + ";");
-                        bsmf.MainFrame.show(getMessageTag(1007));
-                    } else {
-                        bsmf.MainFrame.show(getMessageTag(1014));
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput(dbaction.add)) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        try {
-            boolean proceed = true;
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;   
-                // check the code field
-                if (tbcode.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                }
-                
-                if (tbcode.getText().length() > 2) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1032,"2"));
-                }
-                
-                String payable = "0";
-                if (cbpayable.isSelected()) 
-                    payable = "1";
-                
-                res = st.executeQuery("SELECT clc_code FROM  clock_code where clc_code = " + "'" + tbcode.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                
-                if (i == 0) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1143,tbcode.getText()));
-                }
-                
-                if (proceed) {
-                    st.executeUpdate("update clock_code set clc_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + " clc_payable = " + "'" + payable + "'"
-                            + " where clc_code = " + "'" + tbcode.getText() + "'"
-                            + ";");
-                    bsmf.MainFrame.show(getMessageTag(1008));
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput(dbaction.update)) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-        boolean check = bsmf.MainFrame.warn("Are you sure?");
-        if (check) {
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                
-                   res = st.executeQuery("select clc_syscode from clock_code where clc_code = " + "'" + tbcode.getText() + "'");
-              
-                    while (res.next()) {
-                       if (res.getInt("clc_syscode") > 0) {
-                           bsmf.MainFrame.show(getMessageTag(1046));
-                           proceed = false;
-                       }
-                    }
-                   
-                   
-                   if (proceed) {
-                   int i = st.executeUpdate("delete from clock_code where clc_code = " + "'" + tbcode.getText() + "'" +
-                           " AND clc_syscode <> '1' " + ";");
-                    if (i > 0) {
-                    bsmf.MainFrame.show(getMessageTag(1045) );
-                    initvars(null);
-                    }
-                    
-                    }
-                   
-                   
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        }
+          if (! validateInput(dbaction.delete)) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
-    private void btgetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btgetActionPerformed
-       getCode(tbcode.getText());
-    }//GEN-LAST:event_btgetActionPerformed
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+       newAction("");
+    }//GEN-LAST:event_btnewActionPerformed
+    
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame();
+    }//GEN-LAST:event_btlookupActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initDataSets = null;
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
-    private javax.swing.JButton btget;
+    private javax.swing.JButton btlookup;
+    private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbpayable;
+    private javax.swing.JCheckBox cbsyscode;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField tbcode;
     private javax.swing.JTextField tbdesc;
+    private javax.swing.JTextField tbkey;
     // End of variables declaration//GEN-END:variables
 }

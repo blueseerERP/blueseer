@@ -26,11 +26,7 @@ SOFTWARE.
 package com.blueseer.tca;
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
 import com.blueseer.adm.admData;
 import static com.blueseer.tca.tcaData.addUpdateCLKCtrl;
 import com.blueseer.tca.tcaData.clock_ctrl;
@@ -64,7 +60,7 @@ public class ClockControl extends javax.swing.JPanel implements IBlueSeerc {
         String defaultSite = "";
         String defaultCurrency = "";
         boolean canUpdate = false;
-        private static ArrayList<String> accounts = null;
+        private static ArrayList<String> accounts = new ArrayList<>();
         private static clock_ctrl x = null;
     
     public ClockControl() {

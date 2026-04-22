@@ -46,6 +46,7 @@ import static com.blueseer.utl.OVData.addMenuToAllUsers;
 import static com.blueseer.utl.OVData.addMenuToUser;
 import static com.blueseer.utl.OVData.addSysMetaDataNoUnique;
 import static com.blueseer.utl.OVData.addUpdateSysMeta;
+import static com.blueseer.utl.OVData.autoclock;
 import static com.blueseer.utl.OVData.copyUserPerms;
 import static com.blueseer.utl.OVData.createMRPByLevel;
 import static com.blueseer.utl.OVData.createMRPZeroLevel;
@@ -57,6 +58,7 @@ import static com.blueseer.utl.OVData.deleteMenuToAllUsers;
 import static com.blueseer.utl.OVData.deleteMenuToUser;
 import static com.blueseer.utl.OVData.deleteSysMeta;
 import static com.blueseer.utl.OVData.getChartRptPickerData;
+import static com.blueseer.utl.OVData.getClockCodes;
 import static com.blueseer.utl.OVData.getCodeDescByCode;
 import static com.blueseer.utl.OVData.getCodeKeyByCode;
 import static com.blueseer.utl.OVData.getCodeMstrKeyList;
@@ -273,7 +275,11 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             
         case "getCodeMstrKeyList" :        
             response.getWriter().print(ArrayListStringToJson(getCodeMstrKeyList(request.getHeader("code"))));
-            break;    
+            break;
+            
+        case "getClockCodes" :        
+            response.getWriter().print(ArrayListStringToJson(getClockCodes()));
+            break;     
             
         case "getOperationsByItem" :        
             response.getWriter().print(ArrayListStringToJson(getOperationsByItem(request.getHeader("param1"))));
@@ -639,6 +645,11 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 request.getHeader("param2"),
                 request.getHeader("param3"),
                 request.getHeader("param4")))); 
+        break;   
+        }
+        
+        case "autoclock" : {
+        response.getWriter().println(boolToJson(autoclock(bsParseInt(request.getHeader("param1"))))); 
         break;   
         }
         

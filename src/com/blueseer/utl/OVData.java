@@ -23591,6 +23591,16 @@ MainFrame.bslog(e);
      }
     
     public static ArrayList getClockCodes() {
+    if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getClockCodes"});
+            try {
+                return jsonToArrayListString(sendServerPost(list, "", null, "dataServOV"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }    
     ArrayList<String> mylist = new ArrayList<String>();
 
     try{
@@ -23984,12 +23994,25 @@ return mylist;
         return myreturn;
     }
     
-    public static void autoclock(int days) {
-         
+    public static boolean autoclock(int days) {
+        
+        boolean r = false;
+        
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "autoclock"});
+            list.add(new String[]{"param1", bsNumber(days)});
+            try {
+                return jsonToBoolean(sendServerPost(list, "", null, "dataServOV")); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return false;
+            }
+        }  
          
          // return if days is not negative
          if (days > 0)
-             return;
+             return false;
          
          ArrayList myarray = new ArrayList();
          Calendar c = Calendar.getInstance();
@@ -24049,10 +24072,13 @@ return mylist;
                      }
                      
                     } 
+                   
+                   r = true;
                 }
                
            }
             catch (SQLException s){
+                 r = false;
                  bslog(s);
             } finally {
                 if (res != null) {
@@ -24068,7 +24094,7 @@ return mylist;
             MainFrame.bslog(e);
         }
         
-        
+       return r; 
     }
    
     public static Path checkForCustomPath(String dir, String jasperfile) {

@@ -177,8 +177,14 @@ public class ClockAutoMaint extends javax.swing.JPanel {
         
         days = (-1 * days);
         
-        OVData.autoclock(days);
+        boolean rstatus = OVData.autoclock(days);
+        
+        if (rstatus) {
         bsmf.MainFrame.show(getMessageTag(1125));
+        } else {
+            bsmf.MainFrame.show("transaction failed");
+        }
+        
     }//GEN-LAST:event_btsubmitActionPerformed
 
 
