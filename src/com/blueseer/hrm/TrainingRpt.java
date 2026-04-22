@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.hrm;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
@@ -62,8 +63,13 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.adm.admData;
+import com.blueseer.tca.tcaData;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.jsonToData;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 
 import static com.blueseer.utl.ReportPanel.TableReport;
 import java.sql.Connection;
@@ -81,7 +87,8 @@ import javax.swing.JTabbedPane;
  * @author vaughnte
  */
 public class TrainingRpt extends javax.swing.JPanel {
-
+    String defaultSite = "";
+    String defaultCurrency = "";
      javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{
                             getGlobalColumnTag("id"), 
@@ -156,18 +163,26 @@ public class TrainingRpt extends javax.swing.JPanel {
         dcfrom.setDate(now);
         dcto.setDate(now);
         
+        ArrayList<String[]> initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "employees");
         
-        ArrayList<String> mylist = new ArrayList();
-        if (ddempid.getItemCount() == 0) {
-        mylist = hrmData.getempmstrlist();
-        for (String emp : mylist) {
-            ddempid.addItem(emp);
+         
+         
+         
+         for (String[] s : initDataSets) {
+            
+            
+            if (s[0].equals("site")) {
+              defaultSite = s[1]; 
+            }
+            if (s[0].equals("employees")) {
+              ddempid.addItem(s[1]);
+            }
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1]; 
+            }
+            
         }
-        ddempid.insertItemAt("ALL", 0);
-        ddempid.setSelectedIndex(0);
-        } else {
-            ddempid.setSelectedIndex(0);
-        }
+         
     }
     
      class MyTableModel extends DefaultTableModel {  
@@ -377,74 +392,42 @@ public class TrainingRpt extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btviewActionPerformed
+       
+        
+        mymodel.setRowCount(0);
+         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        String jsonString = null; 
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        list.add(new String[]{"id","getEmpTrainingView"});
+        list.add(new String[]{"param1",ddempid.getSelectedItem().toString()});
+        list.add(new String[]{"param3",dfdate.format(dcfrom.getDate())});
+        list.add(new String[]{"param4",dfdate.format(dcto.getDate())});
         
         try {
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
+                jsonString = sendServerPost(list, "", null, "dataServHRM"); 
+            } catch (IOException ex) {
+                bslog(ex);
             }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                int i = 0;
-
-               
-                tablereport.setModel(mymodel);
-                tablereport.getColumnModel().getColumn(0).setCellRenderer(new SomeRenderer());              
-                
-// ReportPanel.TableReport.getColumn("CallID").setCellRenderer(new ButtonRenderer());
-      //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
-                 //       new ButtonEditor(new JCheckBox()));
-
-
-                if (! ddempid.getSelectedItem().toString().equals("ALL")) {
-                res = st.executeQuery("SELECT emptrid, empid, title, startdate, enddate, hours, instructor, location, emp_lname, emp_fname FROM  emp_train inner join emp_mstr on emp_nbr = emp_train.empid where " + 
-                              " startdate >= " + "'" + BlueSeerUtils.setDateFormat(dcfrom.getDate()) + "'" +
-                              " AND startdate <= " + "'" + BlueSeerUtils.setDateFormat(dcto.getDate()) + "'" +
-                              " And empid = " + "'" + ddempid.getSelectedItem().toString() + "'" +
-                              " order by startdate desc;"
-                              );
-                } else {
-                    res = st.executeQuery("SELECT emptrid, empid, title, startdate, enddate, hours, instructor, location, emp_lname, emp_fname FROM  emp_train inner join emp_mstr on emp_nbr = emp_train.empid where " + 
-                              " startdate >= " + "'" + BlueSeerUtils.setDateFormat(dcfrom.getDate()) + "'" +
-                              " AND startdate <= " + "'" + BlueSeerUtils.setDateFormat(dcto.getDate()) + "'" +
-                              " order by startdate desc;"
-                              );
-                }
-
-                while (res.next()) {
-                    i++;
-
-                    mymodel.addRow(new Object[]{res.getString("emptrid"), res.getString("empid"),
-                                res.getString("emp_lname"),
-                                res.getString("emp_fname"),
-                                res.getString("title"),
-                                res.getString("startdate"),
-                                res.getString("enddate"),
-                                res.getString("hours"),
-                                res.getString("instructor"),
-                                res.getString("location")
-                            });
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+        } else {
+            jsonString = hrmData.getEmpTrainingView(new String[]{
+                ddempid.getSelectedItem().toString(),
+                dfdate.format(dcfrom.getDate()),
+                dfdate.format(dcto.getDate())
+            });
         }
+      
+        
+      Object[][] roData = jsonToData(jsonString);
+      
+      int i = 0;
+      if (roData != null) {
+        for (Object[] rowData : roData) { 
+            mymodel.addRow(rowData);
+            i++;
+        }
+        } 
+      
     }//GEN-LAST:event_btviewActionPerformed
 
     private void btcsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcsvActionPerformed

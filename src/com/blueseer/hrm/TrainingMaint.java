@@ -51,11 +51,18 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.adm.admData;
+import static com.blueseer.hrm.hrmData.addEmpTrain;
+import static com.blueseer.hrm.hrmData.deleteEmpTrain;
+import com.blueseer.hrm.hrmData.emp_train;
+import static com.blueseer.hrm.hrmData.getEmpTrainByCourse;
+import static com.blueseer.hrm.hrmData.updateEmpTrain;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerV;
 import java.sql.Connection;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -72,14 +79,18 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
+public class TrainingMaint extends javax.swing.JPanel  {
 
     
     
    
       // global variable declarations
+                ArrayList<String[]> initDataSets = null;
+                String defaultSite = "";
+                String defaultCurrency = "";
+                boolean canUpdate = false;
                 boolean isLoad = false;
-                String trid = "";
+                public static ArrayList<emp_train> emplist = null;
     
     // global datatablemodel declarations 
     javax.swing.table.DefaultTableModel empmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -163,12 +174,9 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
             String[] message = get();
            
             BlueSeerUtils.endTask(message);
-           if (this.type.equals("delete")) {
-             initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbdesc.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
-             tbdesc.requestFocus();
+           if (this.type.equals("get")) {
+             updateForm();
+             tbdesc.requestFocus();          
            } else {
              initvars(null);  
            }
@@ -294,7 +302,7 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
        }
     }
     
-    public void setComponentDefaultValues() {
+    public void setComponentDefaultValues(boolean init) {
        isLoad = true;
         tbdesc.setText("");
           java.util.Date now = new java.util.Date();
@@ -314,21 +322,33 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.setText("");
                
         empmodel.setRowCount(0);
-         emptable.setModel(empmodel);
-         
-        ArrayList<String> mylist = new ArrayList();
+        emptable.setModel(empmodel);
         ddempid.removeAllItems();
-        mylist = hrmData.getempmstrlist();
-        for (String emp : mylist) {
-            ddempid.addItem(emp);
-        } 
+        
+         if (init) {
+        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "employees");
+        }
+        for (String[] s : initDataSets) {
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1];  
+            }
+            if (s[0].equals("canupdate")) {
+              canUpdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }            
+            if (s[0].equals("site")) {
+              defaultSite = s[1]; 
+            }
+            if (s[0].equals("employees")) {
+              ddempid.addItem(s[1]);  
+            }
+        }
         
        isLoad = false;
     }
     
     public void newAction(String x) {
        setPanelComponentState(this, true);
-        setComponentDefaultValues();
+        setComponentDefaultValues(false);
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
@@ -404,7 +424,7 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
     public void initvars(String[] arg) {
        
        setPanelComponentState(this, false); 
-       setComponentDefaultValues();
+       setComponentDefaultValues(initDataSets == null);
         btnew.setEnabled(true);
         btbrowse.setEnabled(true);
         
@@ -418,110 +438,12 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                boolean proceed = true;
-                int i = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-
-                    
-                 
-                        for (i = 0; i < emptable.getRowCount(); i++) {
-                        st.executeUpdate("insert into emp_train "
-                        + "(empid, coursenum, instructor,"
-                        + "startdate, enddate, location, title, hours, comments) "
-                        + "values ( " + "'" + emptable.getValueAt(i, 0) + "'" + ","
-                        + "'" + tbkey.getText().toString() + "'" + ","
-                        + "'" + tbinstructor.getText().toString().replace("'", "") + "'" + ","
-                        + "'" + dfdate.format(startdate.getDate()) + "'" + ","
-                        + "'" + dfdate.format(enddate.getDate()) + "'" + ","
-                        + "'" + tblocation.getText().toString().replace("'", "") + "'" + ","
-                        + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
-                        + "'" + tbhours.getText().toString().replace("'", "") + "'" + ","
-                        + "'" + comments.getText().toString().replace("'", "") + "'"
-                        + ")"
-                        + ";");
-                    }
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                  
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
+     String[] m = addEmpTrain(createRecord());
      return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-         
-            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            boolean proceed = true;
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            try {
-                    for (int i = 0; i < emptable.getRowCount(); i++) {
-                    st.executeUpdate("update emp_train "
-                        + " set coursenum = " +  "'" + tbkey.getText().toString() + "'" + ","
-                        + " instructor = " + "'" + tbinstructor.getText().toString().replace("'", "") + "'" + ","
-                        + "startdate = " +  "'" + dfdate.format(startdate.getDate()) + "'" + ","
-                        + "enddate = " +  "'" + dfdate.format(enddate.getDate()) + "'" + ","
-                        + "location = " + "'" + tblocation.getText().toString().replace("'", "") + "'" + ","
-                        + "title = " + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
-                        + "hours = " + "'" + tbhours.getText().toString().replace("'", "") + "'" + ","
-                        + "comments = " + "'" + comments.getText().toString().replace("'", "") + "'"
-                        + " where emptrid = " + "'" + trid + "'"
-                        + ";");
-                    }
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-               
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-     
+     String[] m = updateEmpTrain(x[0], createRecord());
      return m;
      }
      
@@ -529,35 +451,7 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
      String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn("Are you sure?");
         if (proceed) {
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            try {
-                   int i =  st.executeUpdate("delete FROM  emp_train where emptrid = " + "'" + x[0] + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    } else {
-                    m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};    
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
+          m = deleteEmpTrain(x[0]);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
@@ -565,60 +459,50 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
      }
       
     public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                res = st.executeQuery("SELECT empid, emp_lname, emp_fname, coursenum, instructor, startdate, enddate, location, title, hours, comments " +
-                            " from emp_train inner join emp_mstr on empid = emp_nbr where emptrid = " + "'" + 
-                            x[0] + "'" + ";");
-                    while (res.next()) {
-                      ddempid.setSelectedItem(res.getString("empid"));
-                      tbdesc.setText(res.getString("title"));
-                      tbinstructor.setText(res.getString("instructor"));
-                      tbkey.setText(res.getString("coursenum"));
-                      tblocation.setText(res.getString("location"));
-                      tbhours.setText(res.getString("hours"));
-                      comments.setText(res.getString("comments"));
-                      startdate.setDate(parseDate(res.getString("startdate")));
-                      enddate.setDate(parseDate(res.getString("enddate")));
-                      trid = x[0];
-                      empmodel.addRow(new Object[]{res.getInt("empid"), res.getString("emp_lname"), res.getString("emp_fname")}); 
-                    }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+       ArrayList<emp_train> z = getEmpTrainByCourse(x);  
+        emplist = z;
+        return new String[]{"0", "success"};       
     }
     
+    public ArrayList<emp_train> createRecord() {
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        ArrayList<emp_train> list = new ArrayList<>();
+        
+         for (int i = 0; i < emptable.getRowCount(); i++) {
+                        emp_train x = new emp_train(null,
+                        "0",
+                        emptable.getValueAt(i, 0).toString(),
+                        tbkey.getText(),
+                        tbinstructor.getText().replace("'", ""),
+                        dfdate.format(startdate.getDate()),
+                        dfdate.format(enddate.getDate()),
+                        tblocation.getText().replace("'", ""),
+                        tbdesc.getText().replace("'", ""),
+                        tbhours.getText().replace("'", ""),
+                        comments.getText().replace("'", "")
+                         );
+                        list.add(x);
+                    }
+        
+       
+        return list;
+    }
+    
+    public void updateForm() {
+        for (emp_train et : emplist) {
+          ddempid.setSelectedItem(et.empid());
+          tbdesc.setText(et.title());
+          tbinstructor.setText(et.instructor());
+          tbkey.setText(et.coursenum());
+          tblocation.setText(et.location());
+          tbhours.setText(et.hours());
+          comments.setText(et.comments());
+          startdate.setDate(parseDate(et.startdate()));
+          enddate.setDate(parseDate(et.enddate()));
+          empmodel.addRow(new Object[]{et.empid(),"",""}); 
+        }
+        
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1012,6 +896,7 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
         BlueSeerUtils.messagereset();
+        initDataSets = null;
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 

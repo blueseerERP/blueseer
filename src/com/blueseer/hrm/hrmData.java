@@ -41,6 +41,7 @@ import static com.blueseer.utl.BlueSeerUtils.jsonToArrayListStringArray;
 import static com.blueseer.utl.BlueSeerUtils.jsonToBoolean;
 import static com.blueseer.utl.BlueSeerUtils.jsonToStringArray;
 import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.sql.Connection;
@@ -669,6 +670,20 @@ public class hrmData {
     public static ArrayList<emp_exception> getEmployeeExceptions(String[] x) {
         ArrayList<emp_exception> list = new ArrayList<emp_exception>();
         emp_exception r = null;
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> paramlist = new ArrayList<>();
+            paramlist.add(new String[]{"id","getEmployeeExceptions"});
+            paramlist.add(new String[]{"param1",x[0]});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(paramlist, "", null, "dataServHRM");
+                list = objectMapper.readValue(returnstring, new TypeReference<ArrayList<emp_exception>>() {});
+                return list;
+            } catch (IOException ex) {
+                bslog(ex);
+                return list;
+            }
+        }
         String[] m = new String[2];
         String sql = "select * from emp_exception where empx_nbr = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
@@ -702,7 +717,461 @@ public class hrmData {
         return list;
     }
    
+    public static String[] addEmpTrain(ArrayList<emp_train> x) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","addEmpTrain"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServHRM"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        String[] m = new String[2];
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                int i = 0;
+                String[] ld = null;
+
+                // now loop through comma delimited list and insert into item master table
+                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                for (emp_train et : x) {
+                   
+
+                    res = st.executeQuery("select empid from emp_train where "
+                            + " empid = " + "'" + et.empid() + "'"  
+                            + " and coursenum = " + "'" + et.coursenum() + "'" +
+                                    ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+
+                    if (j == 0) {
+                        st.executeUpdate(" insert into emp_train "
+                                + "(empid, coursenum, instructor, startdate, enddate, location, title, " 
+                                + "hours, comments ) "
+                                + " values ( "
+                                + "'" + et.empid() + "'" + ","
+                                + "'" + et.coursenum() + "'" + ","
+                                + "'" + et.instructor() + "'" + ","
+                                + "'" + et.startdate() + "'" + ","
+                                + "'" + et.enddate() + "'" + ","
+                                + "'" + et.location() + "'" + ","
+                                + "'" + et.title() + "'" + ","
+                                + "'" + et.hours() + "'" + ","
+                                + "'" + et.comments() + "'" 
+                                + " );"
+                        );
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    }
+                }
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return m;
+    }
+    
+    public static String[] updateEmpTrain(String coursenum, ArrayList<emp_train> x) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","updateEmpTrain"});
+            list.add(new String[]{"param1",coursenum});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServHRM"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        String[] m = new String[2];
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                // first delete all emptrain recs for coursenum
+                 st.executeUpdate(" delete from emp_train where coursenum = " + "'" + coursenum + "'");
+                 
+                 
+                for (emp_train et : x) {
+                    
+                   
+                        st.executeUpdate(" insert into emp_train "
+                                + "(empid, coursenum, instructor, startdate, enddate, location, title, " 
+                                + "hours, comments ) "
+                                + " values ( "
+                                + "'" + et.empid() + "'" + ","
+                                + "'" + et.coursenum() + "'" + ","
+                                + "'" + et.instructor() + "'" + ","
+                                + "'" + et.startdate() + "'" + ","
+                                + "'" + et.enddate() + "'" + ","
+                                + "'" + et.location() + "'" + ","
+                                + "'" + et.title() + "'" + ","
+                                + "'" + et.hours() + "'" + ","
+                                + "'" + et.comments() + "'" 
+                                + " );"
+                        );
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    
+                }
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return m;
+    }
+    
+    public static String[] deleteEmpTrain(String coursenum) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","deleteEmpTrain"});
+            list.add(new String[]{"param1",coursenum});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                return jsonToStringArray(sendServerPost(list, "", null, "dataServHRM"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        String[] m = new String[2];
+        if (coursenum == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            _deleteEmpTrainByCourse(coursenum, con, ps, res);  // add cms_det
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static void _deleteEmpTrain(emp_train x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException { 
+       
+        String sql = "delete from emp_train where empid = ? and coursenum = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.empid);
+        ps.setString(2, x.coursenum);
+        ps.executeUpdate();        
+    }
+    
+    private static void _deleteEmpTrainByCourse(String x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException { 
+       
+        String sql = "delete from emp_train where coursenum = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.executeUpdate();        
+    }
+    
+    
+    public static emp_train getEmpTrain(String[] x) {
+        emp_train r = null;
+        String[] m = new String[2];
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "getEmpTrain"});
+            list.add(new String[]{"param1",  x[0]});
+            list.add(new String[]{"param2",  x[1]});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(list, "", null, "dataServHRM");
+                r = objectMapper.readValue(returnstring, emp_train.class); 
+                return r;
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
+        String sql = "select * from emp_train where empid = ? and coursenum = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new emp_train(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                       
+                        r = new emp_train(m, 
+                        res.getString("emptrid"),        
+                        res.getString("empid"), 
+                        res.getString("coursenum"),
+                        res.getString("instructor"),
+                        res.getString("startdate"),
+                        res.getString("enddate"),
+                        res.getString("location"),
+                        res.getString("title"),
+                        res.getString("hours"),
+                        res.getString("comments") 
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new emp_train(m);
+        }
+        return r;
+    }
+   
+    public static ArrayList<emp_train> getEmpTrainRecords(String[] x) {
+        ArrayList<emp_train> list = new ArrayList<emp_train>();
+        emp_train r = null;
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> paramlist = new ArrayList<>();
+            paramlist.add(new String[]{"id","getEmpTrainRecords"});
+            paramlist.add(new String[]{"param1",x[0]});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(paramlist, "", null, "dataServHRM");
+                list = objectMapper.readValue(returnstring, new TypeReference<ArrayList<emp_train>>() {});
+                return list;
+            } catch (IOException ex) {
+                bslog(ex);
+                return list;
+            }
+        }
+        
+        String[] m = new String[2];
+        String sql = "select * from emp_train where empid = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new emp_train(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new emp_train(m, 
+                        res.getString("emptrid"),        
+                        res.getString("empid"), 
+                        res.getString("coursenum"),
+                        res.getString("instructor"),
+                        res.getString("startdate"),
+                        res.getString("enddate"),
+                        res.getString("location"),
+                        res.getString("title"),
+                        res.getString("hours"),
+                        res.getString("comments") 
+                        );
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new emp_train(m);
+        }
+        return list;
+    }
+   
+    public static ArrayList<emp_train> getEmpTrainByCourse(String[] x) {
+        ArrayList<emp_train> list = new ArrayList<emp_train>();
+        emp_train r = null;
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> paramlist = new ArrayList<>();
+            paramlist.add(new String[]{"id","getEmpTrainByCourse"});
+            paramlist.add(new String[]{"param1",x[0]});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(paramlist, "", null, "dataServHRM");
+                list = objectMapper.readValue(returnstring, new TypeReference<ArrayList<emp_train>>() {});
+                return list;
+            } catch (IOException ex) {
+                bslog(ex);
+                return list;
+            }
+        }
+        
+        String[] m = new String[2];
+        String sql = "select * from emp_train where coursenum = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new emp_train(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new emp_train(m, 
+                        res.getString("emptrid"),        
+                        res.getString("empid"), 
+                        res.getString("coursenum"),
+                        res.getString("instructor"),
+                        res.getString("startdate"),
+                        res.getString("enddate"),
+                        res.getString("location"),
+                        res.getString("title"),
+                        res.getString("hours"),
+                        res.getString("comments") 
+                        );
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new emp_train(m);
+        }
+        return list;
+    }
+   
+    
     // misc
+    public static String getEmpTrainingView(String[] keys) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                if (! keys[0].equals("ALL")) {
+                res = st.executeQuery("SELECT emptrid, empid, title, startdate, enddate, hours, instructor, location, emp_lname, emp_fname FROM  emp_train inner join emp_mstr on emp_nbr = emp_train.empid where " + 
+                              " startdate >= " + "'" + keys[1] + "'" +
+                              " AND startdate <= " + "'" + keys[2] + "'" +
+                              " And empid = " + "'" + keys[0] + "'" +
+                              " order by startdate desc;"
+                              );
+                } else {
+                    res = st.executeQuery("SELECT emptrid, empid, title, startdate, enddate, hours, instructor, location, emp_lname, emp_fname FROM  emp_train inner join emp_mstr on emp_nbr = emp_train.empid where " + 
+                              " startdate >= " + "'" + keys[0] + "'" +
+                              " AND startdate <= " + "'" + keys[2] + "'" +
+                              " order by startdate desc;"
+                              );
+                }    
+                
+                    while (res.next()) {                  
+                    JSONArray rowArray = new JSONArray(); 
+                        rowArray.put(res.getString("emptrid"));
+                        rowArray.put(res.getString("empid"));
+                        rowArray.put(res.getString("emp_lname"));
+                        rowArray.put(res.getString("emp_fname"));
+                        rowArray.put(res.getString("title"));
+                        rowArray.put(res.getString("startdate"));
+                        rowArray.put(res.getString("enddate"));
+                        rowArray.put(res.getString("hours"));
+                        rowArray.put(res.getString("instructor"));
+                        rowArray.put(res.getString("location"));
+                        jsonarray.put(rowArray);
+                }
+               
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return jsonarray.toString(); 
+    }
+   
     public static String getHrmRptPickerData(String[] keys) {
         JSONArray jsonarray = new JSONArray();
         try {
@@ -1290,6 +1759,14 @@ public class hrmData {
         String empx_acct, String empx_cc, String empx_amttype, String empx_amt) {
         public emp_exception(String[] m) {
             this(m, "", "", "", "", "", "", "");
+        }
+    }
+    
+    public record emp_train(String[] m, String emptrid, String empid, String coursenum,
+        String instructor, String startdate, String enddate, String location, String title,
+        String hours, String comments) {
+        public emp_train(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "");
         }
     }
     
