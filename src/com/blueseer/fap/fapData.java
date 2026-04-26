@@ -34,12 +34,15 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
+import com.blueseer.rcv.rcvData;
 import static com.blueseer.rcv.rcvData._updateReceiverLinesByVoucher;
+import static com.blueseer.rcv.rcvData.addReceiverTransaction;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.ConvertIntToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
@@ -53,6 +56,8 @@ import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.OVData;
 import com.blueseer.vdr.venData;
+import static com.blueseer.vdr.venData.getVendMstr;
+import com.blueseer.vdr.venData.vd_mstr;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.sql.Connection;
@@ -61,6 +66,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JTable;
@@ -911,6 +918,142 @@ public class fapData {
     }
      
     // misc
+    public static String[] cashBuy(ArrayList<String[]> details, String[] headers) {
+        // headers = vendorid, expensenbr, effdate, ref, po, site, currency
+        // details = item, qty, price
+       if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","cashBuy"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(details);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(headers);
+                System.out.println("HERE: " + jsonString);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAP"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        
+       String[] m = new String[2];
+       vd_mstr vd = getVendMstr(new String[]{headers[0]});     
+       int receiverNbr = OVData.getNextNbr("receiver");
+       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+       // create vod list
+        ArrayList<fapData.vod_mstr> vodlist = new ArrayList<fapData.vod_mstr>();
+        ArrayList<rcvData.recv_det> recvlist = new ArrayList<rcvData.recv_det>();
+        String[] terms = OVData.getTermsResults(parseDate(headers[2]), vd.vd_terms());
+        int batchid = OVData.getNextNbr("batch");
+        double totamt = 0.00;
+         
+          int j = 0;
+          for (String[] d : details) {
+             fapData.vod_mstr x = new fapData.vod_mstr(null, 
+                headers[1], // id
+                String.valueOf(receiverNbr),  // rvid
+                bsParseInt(String.valueOf(j + 1)), // rvdline
+                d[0], // item
+                bsParseDouble(d[1]), // qty
+                bsParseDouble(d[2]), // price
+                headers[2], // date
+                headers[0], // vend
+                headers[3], // invoice 
+                vd.vd_ap_acct(),
+                vd.vd_ap_cc(),
+                headers[4], // po
+                bsParseInt(String.valueOf(j + 1)), // poline
+                "1"    // auto approved
+                );
+        vodlist.add(x);
+         
+         
+          
+         // create receiver det       
+        
+             rcvData.recv_det rvd = new rcvData.recv_det(null, 
+                String.valueOf(receiverNbr), // receiver
+                headers[4], // po
+                bsParseInt(String.valueOf(j + 1)), // poline
+                headers[3], // packingslip
+                d[0], // item
+                bsParseDouble(d[1]),  // qty
+                headers[2],
+                bsParseDouble(d[2]),
+                bsParseDouble(d[2]),
+                0,  
+                "", // lot
+                "", // wh
+                "", // serial
+                "",  // loc
+                "", // jobnbr
+                headers[5],
+                "", // status
+                bsParseInt(String.valueOf(j + 1)), // rline
+                0, // voqty
+                bsParseDouble(d[2]), // cost
+                "EA" // uom    
+                );
+        recvlist.add(rvd);
+        
+        totamt += bsParseDouble(d[1]) * bsParseDouble(d[2]);
+        j++;
+        } // end of detail loop
+          
+         // create AP 
+         fapData.ap_mstr ap = new fapData.ap_mstr(null, 
+                "", //ap_id
+                headers[0], // ap_vend, 
+                headers[1], // ap_nbr
+                totamt, // ap_amt
+                totamt, // ap_base_amt
+                headers[2], // ap_effdate 
+                headers[2], // ap_entdate        
+                terms[0],   
+                "V", // ap_type
+                "auto-voucher", //ap_rmks
+                String.valueOf(receiverNbr), //ap_ref
+                vd.vd_terms(), //ap_terms
+                vd.vd_ap_acct(), //ap_acct
+                vd.vd_ap_cc(), //ap_cc
+                "0", //ap_applied
+                "o", //ap_status
+                vd.vd_bank(), //ap_bank
+                vd.vd_curr(), //ap_curr
+                headers[6], //ap_base_curr
+                headers[1], //ap_check // in this case voucher number is reference field
+                String.valueOf(batchid), //ap_batch
+                headers[5], //ap_site
+                "Receipt",
+                "",
+                "1",
+                "",
+                0,
+                0); 
+         
+         // recv_mstr
+         rcvData.recv_mstr rv = new rcvData.recv_mstr(null, 
+                String.valueOf(receiverNbr),
+                headers[0],
+                headers[2],
+                "", // status
+                headers[3],
+                bsmf.MainFrame.userid,
+                vd.vd_ap_acct(),
+                vd.vd_ap_cc(),
+                vd.vd_terms(),
+                headers[5],
+                "", // confdate
+                "", // ref
+                "" // remarks
+                );
+       
+       //fapData.ap_mstr ap = createAPMstr(expensenbr.getText(), vd);
+       m = addReceiverTransaction(recvlist, rv, ap, vodlist);
+       return m;
+    }
+    
+    
     public static String getVoucherBrowseView(String[] keys) {
         JSONArray jsonarray = new JSONArray();
         try {

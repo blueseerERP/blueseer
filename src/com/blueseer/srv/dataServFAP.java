@@ -102,6 +102,23 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
     String id = request.getHeader("id"); 
     
     switch (id) {
+        
+        case "cashBuy" : {
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            reader.close();
+            ObjectMapper om = new ObjectMapper();
+            String[] ca = sb.toString().split("=_=", -1);
+            ArrayList<String[]> details = om.readValue(ca[0], ArrayList.class);
+            String[] headers = om.readValue(ca[1], String[].class); 
+            response.getWriter().print(arrayToJson(fapData.cashBuy(details, headers))); 
+            break;
+            }
+        
         case "VoucherTransaction" : {
             String line;
             StringBuilder sb = new StringBuilder();  

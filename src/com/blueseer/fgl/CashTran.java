@@ -40,7 +40,11 @@ import com.blueseer.adm.admData;
 import com.blueseer.ctr.cusData;
 import com.blueseer.fap.fapData;
 import static com.blueseer.fap.fapData.VouchAndPayTransaction;
+import static com.blueseer.fap.fapData.cashBuy;
 import com.blueseer.inv.invData;
+import static com.blueseer.rcv.RecvMaint.vd;
+import com.blueseer.rcv.rcvData;
+import static com.blueseer.rcv.rcvData.addReceiverTransaction;
 import com.blueseer.shp.shpData;
 import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.utl.BlueSeerUtils;
@@ -103,6 +107,8 @@ import javax.swing.tree.TreePath;
 import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import com.blueseer.vdr.venData;
 import static com.blueseer.vdr.venData.getVendInfo;
+import static com.blueseer.vdr.venData.getVendMstr;
+import com.blueseer.vdr.venData.vd_mstr;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -143,7 +149,14 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class CashTran extends javax.swing.JPanel {
 
+        boolean canUpdate = false;
+        boolean isAutoPost = false;
+        ArrayList<String[]> initDataSets = null;
+        String defaultSite = "";
+        String defaultCurrency = "";
+        String defaultCC = "";
                
+        /*
                 String terms = "";
                 String apacct = "";
                 String apcc = "";
@@ -151,7 +164,7 @@ public class CashTran extends javax.swing.JPanel {
                 String curr = "";
                 double actamt = 0;
                 double actqty = 0;
-               
+               */
                 int voucherline = 0;
                 int incomeline = 0;
                 boolean isLoad = false;
@@ -797,6 +810,22 @@ public class CashTran extends javax.swing.JPanel {
         return message;
     }
     
+    public String[] addBuyNew() {
+       ArrayList<String[]> details = new ArrayList<>();
+       String[] headers = new String[]{ddentityExpense.getSelectedItem().toString(),
+           tbKeyExpense.getText(), 
+           dfdate.format(dcdateExpense.getDate()), 
+           tbref.getText(), 
+           tbpo.getText(), 
+           defaultSite, 
+           defaultCurrency};       
+       for (int j = 0; j < detailtable.getRowCount(); j++) {
+           details.add(new String[]{detailtable.getValueAt(j, 1).toString(), detailtable.getValueAt(j, 2).toString(), detailtable.getValueAt(j, 3).toString()});
+       }
+       String[] m = cashBuy(details, headers);
+       return m;
+    }
+    
     public String[] addSell() {
           
         String[] message = new String[2];
@@ -831,9 +860,7 @@ public class CashTran extends javax.swing.JPanel {
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
                  setvendorvariables(entity);
-                    
-                curr = OVData.getDefaultCurrency();
-                String site = OVData.getDefaultSite();   
+                 
                 String acct = OVData.getDefaultARAcct();
                 String cc = OVData.getDefaultARCC();
                 String po = tbpo1.getText();
@@ -847,7 +874,7 @@ public class CashTran extends javax.swing.JPanel {
                  
                           int shipperid = OVData.getNextNbr("shipper");   
                           key = String.valueOf(shipperid);
-                             boolean iserror = shpData.CreateShipperHdr(key, site,
+                             boolean iserror = shpData.CreateShipperHdr(key, defaultSite,
                              String.valueOf(key), 
                               entity, // sh_cust
                               entity,  // sh_ship
@@ -867,7 +894,7 @@ public class CashTran extends javax.swing.JPanel {
                          for (int j = 0; j < detailtable1.getRowCount(); j++) {
                              shpData.CreateShipperDet(String.valueOf(shipperid), detailtable1.getValueAt(j, 1).toString(), "", "", "", "", "1", "EA", 
                                      detailtable1.getValueAt(j, 3).toString(), "0", detailtable1.getValueAt(j, 3).toString(), dfdate.format(now), 
-                                     detailtable1.getValueAt(j, 4).toString(), detailtable1.getValueAt(j, 0).toString(), site, "", "", "0");
+                                     detailtable1.getValueAt(j, 4).toString(), detailtable1.getValueAt(j, 0).toString(), defaultSite, "", "", "0");
                          }
                     
 
@@ -955,7 +982,7 @@ public class CashTran extends javax.swing.JPanel {
                      st.executeUpdate("insert into pos_mstr "
                         + "(pos_nbr, pos_site, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_totamt ) "
                         + " values ( " + "'" + expensenbr1.getText() + "'" + ","
-                        + "'" + site + "'" + ","          
+                        + "'" + defaultSite + "'" + ","          
                         + "'" + dfdate.format(dcdate1.getDate()) + "'" + "," 
                         + "'" + entity + "'" + ","
                         + "'" + lbname1.getText() + "'" + ","
@@ -1161,8 +1188,8 @@ public class CashTran extends javax.swing.JPanel {
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
                     
-                curr = OVData.getDefaultCurrency();
-                String basecurr = curr;
+                
+                String basecurr = defaultCurrency;
                 
                 String site = OVData.getDefaultSite();   
                 String cashacct = OVData.getDefaultBankAcct(OVData.getDefaultARBank());
@@ -1183,7 +1210,7 @@ public class CashTran extends javax.swing.JPanel {
                         + "'" + dfdate.format(dcdateIncome.getDate()) + "'" + ","
                         + "'" + currformatDouble(bsParseDouble(incomeTable.getValueAt(j, 3).toString()) * -1).replace(defaultDecimalSeparator,'.') + "'" + ","
                         + "'" + currformatDouble(bsParseDouble(incomeTable.getValueAt(j, 3).toString()) * -1).replace(defaultDecimalSeparator,'.') + "'" + ","
-                        + "'" + curr + "'" + ","
+                        + "'" + defaultCurrency + "'" + ","
                         + "'" + basecurr + "'" + ","        
                         + "'" + tbKeyIncome.getText().toString() + "'" + ","
                         + "'" + site + "'" + ","
@@ -1204,7 +1231,7 @@ public class CashTran extends javax.swing.JPanel {
                         + "'" + dfdate.format(dcdateIncome.getDate()) + "'" + ","
                         + "'" + currformatDouble(bsParseDouble(incomeTable.getValueAt(j, 3).toString())).replace(defaultDecimalSeparator,'.') + "'" + ","
                         + "'" + currformatDouble(bsParseDouble(incomeTable.getValueAt(j, 3).toString())).replace(defaultDecimalSeparator,'.') + "'" + ","
-                        + "'" + curr + "'" + ","
+                        + "'" + defaultCurrency + "'" + ","
                         + "'" + basecurr + "'" + ","    
                         + "'" + tbKeyIncome.getText().toString() + "'" + ","
                         + "'" + site + "'" + ","
@@ -2153,50 +2180,6 @@ public class CashTran extends javax.swing.JPanel {
          tbincometotal.setText(currformatDouble(total));
     }
     
-    
-    public void setvendorvariables(String vendor) {
-        
-        try {
-     
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            int i = 0;
-            int d = 0;
-            String uniqpo = null;
-            try {
-
-                res = st.executeQuery("select vd_ap_acct, vd_ap_cc, vd_terms, vd_bank, vd_curr from vd_mstr where vd_addr = " + "'" + vendor + "'" + ";");
-                while (res.next()) {
-                    i++;
-                   apacct = res.getString("vd_ap_acct");
-                   apcc = res.getString("vd_ap_cc");
-                   terms = res.getString("vd_terms");
-                   apbank = res.getString("vd_bank");
-                   curr = res.getString("vd_curr");
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }
       
    public static void lookUpFrameAcctDesc() {
         if (dialog != null) {
