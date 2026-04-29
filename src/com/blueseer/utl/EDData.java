@@ -1875,6 +1875,21 @@ public class EDData {
     
     public static ArrayList<String> getEDIInvoices(String fromnbr, String tonbr, String fromdate, String todate, boolean override) {
        ArrayList mylist = new ArrayList();
+       if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getEDIInvoices"});
+            list.add(new String[]{"param1", fromnbr});
+            list.add(new String[]{"param2", tonbr});
+            list.add(new String[]{"param3", fromdate});
+            list.add(new String[]{"param4", todate});
+            list.add(new String[]{"param5", BlueSeerUtils.boolToString(override)});
+            try {
+                return jsonToArrayListString(sendServerPost(list, "", null, "dataServEDI"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return mylist;
+            }
+        }
         try{
             Class.forName(driver);
             Connection con = null;
@@ -1969,6 +1984,21 @@ public class EDData {
     
     public static ArrayList<String> getEDIASNs(String fromnbr, String tonbr, String fromdate, String todate, boolean override) {
        ArrayList mylist = new ArrayList();
+       if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getEDIASNs"});
+            list.add(new String[]{"param1", fromnbr});
+            list.add(new String[]{"param2", tonbr});
+            list.add(new String[]{"param3", fromdate});
+            list.add(new String[]{"param4", todate});
+            list.add(new String[]{"param5", BlueSeerUtils.boolToString(override)});
+            try {
+                return jsonToArrayListString(sendServerPost(list, "", null, "dataServEDI"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return mylist;
+            }
+        }
         try{
             Class.forName(driver);
             Connection con = null;
@@ -2062,7 +2092,23 @@ public class EDData {
         
     public static ArrayList<String> getEDIPOs(String fromnbr, String tonbr, String fromdate, String todate, boolean override) {
        ArrayList mylist = new ArrayList();
-        try{
+       if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getEDIPOs"});
+            list.add(new String[]{"param1", fromnbr});
+            list.add(new String[]{"param2", tonbr});
+            list.add(new String[]{"param3", fromdate});
+            list.add(new String[]{"param4", todate});
+            list.add(new String[]{"param5", BlueSeerUtils.boolToString(override)});
+            try {
+                return jsonToArrayListString(sendServerPost(list, "", null, "dataServEDI"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return mylist;
+            }
+        }
+        
+       try{
             Class.forName(driver);
             Connection con = null;
             if (ds != null) {
@@ -2115,6 +2161,21 @@ public class EDData {
 
     public static ArrayList<String> getEDIACKs(String fromnbr, String tonbr, String fromdate, String todate, boolean override) {
        ArrayList mylist = new ArrayList();
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getEDIACKs"});
+            list.add(new String[]{"param1", fromnbr});
+            list.add(new String[]{"param2", tonbr});
+            list.add(new String[]{"param3", fromdate});
+            list.add(new String[]{"param4", todate});
+            list.add(new String[]{"param5", BlueSeerUtils.boolToString(override)});
+            try {
+                return jsonToArrayListString(sendServerPost(list, "", null, "dataServEDI"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return mylist;
+            }
+        }
         try{
             Class.forName(driver);
             Connection con = null;

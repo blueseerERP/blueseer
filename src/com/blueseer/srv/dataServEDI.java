@@ -735,7 +735,43 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         case "getEDIAttributesList" :
             response.getWriter().print(ArrayListStringToJson(EDData.getEDIAttributesList(request.getHeader("param1"), 
                     request.getHeader("param2"), request.getHeader("param3"))));
-            break;     
+            break;   
+            
+        case "getEDIInvoices" : {
+            response.getWriter().print(ArrayListStringToJson(EDData.getEDIInvoices(request.getHeader("param1"), 
+                    request.getHeader("param2"),
+                    request.getHeader("param3"),
+                    request.getHeader("param4"),
+                    BlueSeerUtils.ConvertStringToBool(request.getHeader("param5")))));
+            break;    
+        }
+        
+        case "getEDIASNs" : {
+            response.getWriter().print(ArrayListStringToJson(EDData.getEDIASNs(request.getHeader("param1"), 
+                    request.getHeader("param2"),
+                    request.getHeader("param3"),
+                    request.getHeader("param4"),
+                    BlueSeerUtils.ConvertStringToBool(request.getHeader("param5")))));
+            break;    
+        }
+        
+        case "getEDIPOs" : {
+            response.getWriter().print(ArrayListStringToJson(EDData.getEDIPOs(request.getHeader("param1"), 
+                    request.getHeader("param2"),
+                    request.getHeader("param3"),
+                    request.getHeader("param4"),
+                    BlueSeerUtils.ConvertStringToBool(request.getHeader("param5")))));
+            break;    
+        }
+        
+        case "getEDIACKs" : {
+            response.getWriter().print(ArrayListStringToJson(EDData.getEDIACKs(request.getHeader("param1"), 
+                    request.getHeader("param2"),
+                    request.getHeader("param3"),
+                    request.getHeader("param4"),
+                    BlueSeerUtils.ConvertStringToBool(request.getHeader("param5")))));
+            break;    
+        }
             
         case "readEDIRawFile" :
             response.getWriter().print(ArrayListStringToJson(EDData.readEDIRawFile(request.getHeader("param1"), 
