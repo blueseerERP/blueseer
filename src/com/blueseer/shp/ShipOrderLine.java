@@ -488,7 +488,8 @@ public class ShipOrderLine extends javax.swing.JPanel {
         }
         
         // now add shipper
-        m = addShipperTransaction(createDetRecord(orderSet.so(), orderSet.cm()), createRecord(orderSet.so(), orderSet.cm()), createTreeRecord(orderSet.so(), orderSet.cm(), lmarray));
+        ArrayList<ship_det> sdarray = createDetRecord(orderSet.so(), orderSet.cm());
+        m = addShipperTransaction(sdarray, createRecord(orderSet.so(), orderSet.cm()), createTreeRecord(orderSet.so(), orderSet.cm(), lmarray, sdarray));
         for (String label : assignedlabels) {
             updateLabelStatus(label, "1");
         }
@@ -604,7 +605,7 @@ public class ShipOrderLine extends javax.swing.JPanel {
         return list;        
     }
     
-    public ArrayList<shpData.ship_tree> createTreeRecord(so_mstr so, cm_mstr cm, ArrayList<label_mstr> lmarray) {
+    public ArrayList<shpData.ship_tree> createTreeRecord(so_mstr so, cm_mstr cm, ArrayList<label_mstr> lmarray, ArrayList<ship_det> sdarray) {
         ArrayList<shpData.ship_tree> list = new ArrayList<shpData.ship_tree>();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         
@@ -637,7 +638,7 @@ public class ShipOrderLine extends javax.swing.JPanel {
                     so.so_site(),
                     "i",
                     tbkey.getText(),
-                    String.valueOf(j),
+                    getShipDetLine(sdarray, lm.lbl_order(), lm.lbl_line()),
                     lm.lbl_order(),
                     lm.lbl_line(),
                     lm.lbl_po(),
@@ -1039,6 +1040,15 @@ public class ShipOrderLine extends javax.swing.JPanel {
         return mstr;
     }
    
+    public String getShipDetLine(ArrayList<ship_det> sdarray, String soorder, String soline) {
+        String r = "0";
+        for (ship_det sd : sdarray ) { 
+            if (sd.shd_so().equals(soorder) && sd.shd_soline() == bsParseInt(soline)) {
+                r = bsNumber(sd.shd_line());
+            }
+        }
+        return r;
+    }
     public boolean changed() {
         boolean r = false;
         int i = 0;

@@ -387,22 +387,31 @@ public class POSMaint extends javax.swing.JPanel {
         return max;
     }
     
+   
+    
+    
     public pos_mstr createRecord() {
         String bank = OVData.getPOSBank(); 
         String aracct = OVData.getDefaultARAcct();
         String arcc = OVData.getDefaultARCC();
         pos_mstr x = new pos_mstr(null, 
-                ordernbr.getText().toString(),
-                clockdate.toString(),
-                clocktime.toString(),
+                ordernbr.getText(),
+                "", // key
+                "", // type
+                "", // entity
+                "", // entityname
+                clockdate,
+                clocktime,
                 aracct,
-                arcc,
-                bank,
+                arcc,                
                 tbtotqty.getText().replace(defaultDecimalSeparator, '.'),
-                tbtotlines.getText(),
-                currformatDouble(bsParseDouble(tbtotgross.getText())).replace(defaultDecimalSeparator, '.'),
+                tbtotlines.getText(),                
                 currformatDouble(bsParseDouble(tbtottax.getText())).replace(defaultDecimalSeparator, '.'),
-                currformatDouble(bsParseDouble(tbtotnet.getText())).replace(defaultDecimalSeparator, '.')
+                currformatDouble(bsParseDouble(tbtotnet.getText())).replace(defaultDecimalSeparator, '.'),
+                bank,
+                currformatDouble(bsParseDouble(tbtotgross.getText())).replace(defaultDecimalSeparator, '.'),
+                "", // status
+                "" // site
                 );
         return x;
     }
@@ -414,11 +423,15 @@ public class POSMaint extends javax.swing.JPanel {
                 orddet.getValueAt(j, 0).toString(),
                 orddet.getValueAt(j, 1).toString(),
                 orddet.getValueAt(j, 2).toString(),
+                "", // desc
+                "", // ref
                 orddet.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'),
                 orddet.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'),
                 orddet.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'),
                 orddet.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'),
-                orddet.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.')
+                orddet.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.'),
+                OVData.getDefaultARAcct(),
+                OVData.getDefaultARCC()
                 );  
                 list.add(x);
             } 

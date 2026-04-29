@@ -887,7 +887,7 @@ public class ShipperMaint extends javax.swing.JPanel implements IBlueSeerT {
                         ", " + cms.cms_state() + " " + cms.cms_zip());
         
         for (ship_det shd : shdlist) {
-                    myshipdetmodel.addRow(new Object[]{shd.shd_soline(), shd.shd_item(), 
+                    myshipdetmodel.addRow(new Object[]{shd.shd_line(), shd.shd_item(), 
                       shd.shd_so(),
                       shd.shd_soline(),
                       shd.shd_po(), 

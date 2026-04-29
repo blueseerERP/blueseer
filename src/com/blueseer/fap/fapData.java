@@ -34,9 +34,14 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
+import com.blueseer.ord.ordData;
+import static com.blueseer.ord.ordData.addPOSTransaction;
+import com.blueseer.ord.ordData.pos_det;
 import com.blueseer.rcv.rcvData;
 import static com.blueseer.rcv.rcvData._updateReceiverLinesByVoucher;
 import static com.blueseer.rcv.rcvData.addReceiverTransaction;
+import com.blueseer.shp.shpData;
+import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.ConvertIntToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
@@ -48,6 +53,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.jsonToArrayListStringArray;
+import static com.blueseer.utl.BlueSeerUtils.jsonToDouble;
 import static com.blueseer.utl.BlueSeerUtils.jsonToStringArray;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
@@ -56,6 +62,7 @@ import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.OVData;
 import com.blueseer.vdr.venData;
+import static com.blueseer.vdr.venData.getVendInfo;
 import static com.blueseer.vdr.venData.getVendMstr;
 import com.blueseer.vdr.venData.vd_mstr;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -591,7 +598,7 @@ public class fapData {
         return m;
      }
     
-    public static String[] APExpense(int batchid, String basecurr, Date effdate, int checknbr, String voucher, String invoice, String vend, Double amount, String ctype) {
+    public static String[] APExpense(int batchid, String basecurr, Date effdate, int checknbr, String voucher, String invoice, String vend, double amount, String ctype) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -917,6 +924,371 @@ public class fapData {
           return list;
     }
      
+    public static String[] addExpMstr(exp_mstr x) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","addExpMstr"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAP"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        String[] m = new String[2];
+        String sqlSelect = "select * from exp_mstr where exp_id = ?";
+        String sqlInsert = "insert into exp_mstr (exp_id, exp_site, exp_entity, exp_name," +
+        "exp_acct, exp_cc, exp_createdate, exp_changedate, exp_userid," +
+        "exp_desc, exp_ref, exp_amt, exp_active)  " +
+                " values (?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.exp_id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.exp_id);
+            psi.setString(2, x.exp_site);
+            psi.setString(3, x.exp_entity);
+            psi.setString(4, x.exp_name);
+            psi.setString(5, x.exp_acct);
+            psi.setString(6, x.exp_cc);
+            psi.setString(7, x.exp_createdate);
+            psi.setString(8, x.exp_changedate);
+            psi.setString(9, x.exp_userid);
+            psi.setString(10, x.exp_desc);
+            psi.setString(11, x.exp_ref);
+            psi.setDouble(12, x.exp_amt);            
+            psi.setString(13, x.exp_active);
+            
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } 
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] updateExpMstr(exp_mstr x) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","updateExpMstr"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAP"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        String[] m = new String[2];
+        String sql = "update exp_mstr set exp_site = ?, exp_entity = ?, exp_name = ?," +
+        "exp_acct = ?, exp_cc = ?, exp_createdate = ?, exp_changedate = ?, exp_userid = ?," +
+        "exp_desc = ?, exp_ref = ?, exp_amt = ?, exp_active = ? where exp_id =  = ? ; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, x.exp_site);
+            ps.setString(2, x.exp_entity);
+            ps.setString(3, x.exp_name);
+            ps.setString(4, x.exp_acct);
+            ps.setString(5, x.exp_cc);
+            ps.setString(6, x.exp_createdate);
+            ps.setString(7, x.exp_changedate);
+            ps.setString(8, x.exp_userid);
+            ps.setString(9, x.exp_desc);
+            ps.setString(10, x.exp_ref);
+            ps.setDouble(11, x.exp_amt);            
+            ps.setString(12, x.exp_active);
+            ps.setString(13, x.exp_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] deleteExpMstr(exp_mstr x) {
+     if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","deleteExpMstr"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(x);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAP"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        String[] m = new String[2];
+        String sql = "delete from exp_mstr where exp_id = ?; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.exp_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static exp_mstr getExpMstr(String[] x) {
+        exp_mstr r = null;
+        String[] m = new String[2];
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","getExpMstr"});
+            list.add(new String[]{"key",x[0]});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(list, "", null, "dataServFAP");
+                r = objectMapper.readValue(returnstring, exp_mstr.class); 
+                return r;
+            } catch (IOException ex) {
+                bslog(ex);
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+                r = new exp_mstr(m);
+                return r;
+            }
+        }
+        String sql = "select * from exp_mstr where exp_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new exp_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};             
+                        r = new exp_mstr(m, res.getString("exp_id"), 
+                            res.getString("exp_site"),    
+                            res.getString("exp_entity"),
+                            res.getString("exp_name"),
+                            res.getString("exp_acct"),
+                            res.getString("exp_cc"),
+                            res.getString("exp_createdate"),    
+                            res.getString("exp_changedate"),
+                            res.getString("exp_userid"),
+                            res.getString("exp_desc"),
+                            res.getString("exp_ref"),
+                            res.getDouble("exp_amt"),
+                            res.getString("exp_active")
+                        );
+                    }
+                }
+            } 
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new exp_mstr(m);
+        }
+        return r;
+    }
+    
+
+    public static ArrayList<String[]> getRecurringExpenseRecords(String site, String showall) {
+         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getRecurringExpenseRecords"});
+            list.add(new String[]{"param1",  site});
+            list.add(new String[]{"param2",  showall});
+            try {
+                return jsonToArrayListStringArray(sendServerPost(list, "", null, "dataServFAP"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
+         ArrayList<String[]> myarray = new ArrayList<String[]>();
+         try{
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date now = new java.util.Date();
+        
+                if (showall.equals("1")) {                
+                res = st.executeQuery("select * from exp_mstr left outer join pos_mstr on pos_key = exp_id " +
+                                  " and pos_entrydate like " + "'" + dfdate.format(now).substring(0,8) + "%" + "'" +
+                                  " where exp_entity <> '' and exp_site =  " + "'" + site + "'" +
+                                  ";");
+                } else {
+                res = st.executeQuery("select * from exp_mstr left outer join pos_mstr on pos_key = exp_id " +
+                                  " and pos_entrydate like " + "'" + dfdate.format(now).substring(0,8) + "%" + "'" +
+                                  " where exp_entity <> '' and exp_active = '1' " +
+                                  " and exp_site = " + "'" + site + "'" +
+                                  ";");    
+                }
+                
+                 
+                
+               while (res.next()) {
+                myarray.add(new String[]{res.getString("exp_id"),
+                    res.getString("exp_site"),
+                    res.getString("exp_entity"),
+                    res.getString("exp_name"),
+                    res.getString("exp_desc"),
+                    res.getString("exp_acct"),
+                    res.getString("exp_amt"),
+                    res.getString("pos_totamt")
+                });                    
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }   
+
+    public static ArrayList<String[]> getRecurringExpenseHistory(String key) {
+         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getRecurringExpenseHistory"});
+            list.add(new String[]{"param1",  key});
+            try {
+                return jsonToArrayListStringArray(sendServerPost(list, "", null, "dataServFAP"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
+         ArrayList<String[]> myarray = new ArrayList<String[]>();
+         try{
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date now = new java.util.Date();
+        
+                res = st.executeQuery("select * from pos_mstr where pos_key = " + "'" + key + "'" + " order by pos_entrydate desc;");                
+                
+               while (res.next()) {
+                myarray.add(new String[]{res.getString("pos_key"),
+                    res.getString("pos_nbr"),
+                    res.getString("pos_entity"),
+                    res.getString("pos_entityname"),
+                    res.getString("pos_entrydate"),
+                    res.getString("pos_aracct"),
+                    res.getString("pos_totamt")
+                });                    
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }   
+    
+    
+    public static double getRecurringIncomeTotal(String site) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "getRecurringIncomeTotal"});
+            list.add(new String[]{"param1",  site});
+            try {
+                return jsonToDouble(sendServerPost(list, "", null, "dataServFAP")); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return 0.00;
+            }
+        }
+        
+        double totincome = 0.00;
+
+        try {
+            
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select * from exp_mstr where exp_id = 'bsint' " +
+                        " and exp_entity = '' " +
+                        " and exp_site = " + "'" + site + "'" + ";");
+                while (res.next()) {
+                totincome += bsParseDouble(res.getString("exp_amt"));
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return totincome;
+
+    }
+
+
+    
     // misc
     public static String[] cashBuy(ArrayList<String[]> details, String[] headers) {
         // headers = vendorid, expensenbr, effdate, ref, po, site, currency
@@ -943,9 +1315,11 @@ public class fapData {
        // create vod list
         ArrayList<fapData.vod_mstr> vodlist = new ArrayList<fapData.vod_mstr>();
         ArrayList<rcvData.recv_det> recvlist = new ArrayList<rcvData.recv_det>();
+        ArrayList<ordData.pos_det> posdlist = new ArrayList<ordData.pos_det>();
         String[] terms = OVData.getTermsResults(parseDate(headers[2]), vd.vd_terms());
         int batchid = OVData.getNextNbr("batch");
         double totamt = 0.00;
+        double totqty = 0.00;
          
           int j = 0;
           for (String[] d : details) {
@@ -969,8 +1343,7 @@ public class fapData {
          
          
           
-         // create receiver det       
-        
+         // create receiver det 
              rcvData.recv_det rvd = new rcvData.recv_det(null, 
                 String.valueOf(receiverNbr), // receiver
                 headers[4], // po
@@ -995,8 +1368,26 @@ public class fapData {
                 "EA" // uom    
                 );
         recvlist.add(rvd);
+                
+            // create pos_det
+            ordData.pos_det posd = new ordData.pos_det(null,
+                headers[0],
+                bsNumber(j),
+                d[0],
+                "", // desc
+                "", // ref
+                d[1],
+                d[2],
+                "0",
+                d[2],
+                "0",
+                "", // acct
+                "" // cc
+            );
+            posdlist.add(posd);
         
         totamt += bsParseDouble(d[1]) * bsParseDouble(d[2]);
+        totqty += bsParseDouble(d[1]);
         j++;
         } // end of detail loop
           
@@ -1047,11 +1438,864 @@ public class fapData {
                 "", // ref
                 "" // remarks
                 );
+         
+         // pos_mstr         
+         ordData.pos_mstr pos = new ordData.pos_mstr(null, 
+                headers[1],
+                String.valueOf(receiverNbr),
+                "buy",
+                vd.vd_addr(),
+                vd.vd_name(),
+                headers[2],
+                "", // time
+                vd.vd_ap_acct(),
+                vd.vd_ap_cc(), 
+                bsNumber(totqty),
+                bsNumber(j),
+                "0", // tax
+                currformatDouble(totamt),
+                vd.vd_bank(),
+                currformatDouble(totamt),
+                "", // status
+                headers[5]
+                );
+         
+         addPOSTransaction(posdlist, pos);
        
        //fapData.ap_mstr ap = createAPMstr(expensenbr.getText(), vd);
        m = addReceiverTransaction(recvlist, rv, ap, vodlist);
        return m;
     }
+        
+    public static String[] cashSell(ArrayList<String[]> details, String[] headers) {
+         // headers = cust, transnbr, po, site, currency, remarks
+        // details = "Line", "Item", "Qty", "Price", "Desc", "Ref"
+       if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","cashSell"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(details);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(headers);
+                System.out.println("HERE: " + jsonString);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAP"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        
+        String[] message = new String[2];
+        message[0] = "";
+        message[1] = ""; 
+        try {
+
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                boolean proceed = true;
+                boolean error = false;
+                String key = "";
+                
+                
+              
+                int i = 0;
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date now = new java.util.Date();
+                
+                 
+                String acct = OVData.getDefaultARAcct();
+                String cc = OVData.getDefaultARCC();
+                                    
+                    
+                 if (proceed) {
+                     
+                 
+                          int shipperid = OVData.getNextNbr("shipper");   
+                          key = String.valueOf(shipperid);
+                             boolean iserror = shpData.CreateShipperHdr(key, headers[3],
+                             String.valueOf(key), 
+                              headers[0], // sh_cust
+                              headers[0],  // sh_ship
+                              headers[1].replace("'", ""), // sh_so
+                              headers[2].replace("'", ""),  // sh_po
+                              headers[2].replace("'", ""),  // sh_ref
+                              dfdate.format(now), // duedate
+                              dfdate.format(now),  // orddate
+                              headers[5].replace("'", ""), // sh_rmks
+                              "", "A");  // shipvia, ShipType
+
+                     if (iserror) {
+                         return message = new String[]{"1", "Error creating shipper header"};
+                     }        
+                             
+                         int j = 0;
+                         double totamt = 0.00;
+                         double totqty = 0.00;
+                         // details = "Line", "Item", "Qty", "Price", "Desc", "Ref"
+                         for (String[] d : details) {
+                             shpData.CreateShipperDet(String.valueOf(shipperid), d[1], "", "", "", "", d[2], "EA", 
+                                     d[3], "0", d[3], dfdate.format(now), 
+                                     d[4], d[0], headers[3], "", "", "0");
+                             totamt += bsParseDouble(d[2]) * bsParseDouble(d[3]);
+                             totqty += bsParseDouble(d[2]);
+                             j++;
+                         }
+                    
+
+                     // now confirm shipment
+                    message = confirmShipperTransaction("cash", String.valueOf(shipperid), now);
+                     if (message[0].equals("1")) { // if error
+                       error = true;
+                       return message;
+                     } 
+                     
+                                     
+                     // now emulate AR payment
+                     if (! error) {
+                     String batchnbr = String.valueOf(OVData.getNextNbr("ar"));
+                      st.executeUpdate("insert into ar_mstr "
+                        + "(ar_cust, ar_nbr, ar_amt, ar_type, ar_ref, ar_rmks, "
+                        + "ar_entdate, ar_effdate, ar_paiddate, ar_acct, ar_cc, "
+                        + "ar_status, ar_bank, ar_curr, ar_base_curr, ar_site ) "
+                        + " values ( " + "'" + headers[0] + "'" + ","
+                        + "'" + batchnbr + "'" + ","
+                        + "'" + currformatDouble(totamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + "P" + "'" + ","
+                        + "'" + shipperid + "'" + ","
+                        + "'" + headers[5] + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + acct + "'" + ","
+                        + "'" + cc + "'" + ","
+                        + "'" + "c" + "'"  + ","
+                        + "'" + OVData.getDefaultARBank() + "'" + ","
+                        + "'" + headers[4] + "'" + ","     
+                        + "'" + headers[4] + "'" + ","         
+                        + "'" + headers[3] + "'"
+                        + ")"
+                        + ";");
+                      
+                      
+                     
+                      
+                        j = 0;                        
+                        for (String[] d : details) {
+                            st.executeUpdate("insert into ard_mstr "
+                                + "(ard_nbr, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax, ard_acct, ard_cc ) "
+                                + " values ( " + "'" + batchnbr + "'" + ","
+                                    + "'" + headers[0] + "'" + ","
+                                + "'" + shipperid + "'" + ","
+                                + "'" + (j + 1) + "'" + ","
+                                + "'" + dfdate.format(now) + "'" + ","
+                                + "'" + currformatDouble(bsParseDouble(d[2]) * bsParseDouble(d[3])) + "'"  + ","
+                                + "'" + "0" + "'" + ","
+                                + "'" + acct + "'" + ","
+                                + "'" + cc + "'"   
+                                + ")"
+                                + ";");                            
+                            
+                            
+                            j++;
+                        }
+                    
+                         // update AR entry for original invoices with status and open amt  
+                        error = OVData.ARUpdate(batchnbr);
+                        if (! error) {
+                        error = fglData.glEntryFromARPayment(batchnbr, now);
+                        }
+                     }
+                    // end of emulate AR Payment
+                     
+                    
+                    // now POS
+                     ordData.pos_mstr pos = new ordData.pos_mstr(null, 
+                            headers[1],
+                            key,
+                            "buy",
+                            headers[0], // cust
+                            "", // name
+                            dfdate.format(now), // date
+                            "", // time
+                            acct,
+                            cc, 
+                            bsNumber(totqty),
+                            bsNumber(j),
+                            "0", // tax
+                            currformatDouble(totamt),
+                            OVData.getDefaultARBank(),
+                            currformatDouble(totamt),
+                            "", // status
+                            headers[5]
+                            );
+                            // create pos_det
+                            ArrayList<ordData.pos_det> posdlist = new ArrayList<ordData.pos_det>();         
+                            j = 0;         
+                            for (String[] d : details) {         
+                            ordData.pos_det posd = new ordData.pos_det(null,
+                                headers[0],
+                                bsNumber(j),
+                                d[1],
+                                "", // desc
+                                "", // ref
+                                d[2],
+                                d[3],
+                                "0",
+                                d[3],
+                                "0",
+                                acct, // acct
+                                cc // cc
+                            );
+                            posdlist.add(posd);
+                            j++;
+                            }
+
+                     addPOSTransaction(posdlist, pos);
+
+                    
+                    
+                     
+                     if (! error) {
+                        message = new String[]{"0", "sell complete"};
+                     } else {
+                         message = new String[]{"1", "Unable to complete sell transaction"};
+                     }
+                    
+                 }  // proceed
+                  
+                   
+                  
+                if (OVData.isAutoPost()) {
+                    fglData.PostGL();
+                }     
+                    
+            } catch (SQLException s) {
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        
+        return message;
+
+    }
+    
+    public static String[] cashExpense(ArrayList<String[]> details, String[] headers) {
+        // headers = vendorid, expensenbr, effdate, ref, po, site, currency, remarks
+        // details = "Line", "Item", "Qty", "Price", "Ref", "Acct"
+        
+        String[] vi = getVendInfo(headers[0]);  // addr, acct, cc, currency, bank, terms, site
+        
+        int j = 0;
+        double totamt = 0.00;
+        double totqty = 0.00;
+        
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        
+        ArrayList<fapData.vod_mstr> list = new ArrayList<fapData.vod_mstr>();
+         for (String[] d : details) {
+             fapData.vod_mstr y = new fapData.vod_mstr(null, 
+                headers[1],
+                "expense",
+                bsParseInt(d[0]),
+                d[1],
+                bsParseDouble(d[2].replace(defaultDecimalSeparator, '.')),
+                bsParseDouble(d[3].replace(defaultDecimalSeparator, '.')),
+                headers[2],
+                headers[0],
+                headers[1], 
+                d[5],
+                vi[2],
+                headers[4],
+                bsParseInt(d[0]),
+                "1"
+                );
+             j++;
+             totamt += ((bsParseDouble(d[2]) * bsParseDouble(d[3])));
+             totqty += bsParseDouble(d[2]);
+        list.add(y);
+        
+         }
+        
+        fapData.ap_mstr x = new fapData.ap_mstr(null, 
+                "", //ap_id
+                headers[0], // ap_vend, 
+                headers[1], // ap_nbr
+                totamt, // ap_amt
+                totamt, // ap_base_amt
+                headers[2], // ap_effdate
+                headers[2], // ap_entdate
+                headers[2], // ap_duedate        
+                "V", // ap_type
+                headers[7], //ap_rmks
+                headers[4], //ap_ref
+                vi[5], //ap_terms
+                vi[1], //ap_acct
+                vi[2], //ap_cc
+                "0", //ap_applied
+                "o", //ap_status
+                vi[4], //ap_bank
+                vi[3], //ap_curr
+                vi[3], //ap_base_curr
+                headers[1], //ap_check // in this case voucher number is reference field
+                "", //ap_batch
+                headers[5], //ap_site
+                "Expense",
+                "",
+                "1",
+                "",
+                0,
+                0); 
+        
+        // now POS
+                     ordData.pos_mstr pos = new ordData.pos_mstr(null, 
+                            headers[1],
+                            headers[1],
+                            "expense",
+                            headers[0], // entity
+                            "", // name
+                            headers[2], // date
+                            "", // time
+                            vi[1],
+                            vi[2], 
+                            bsNumber(totqty),
+                            bsNumber(j),
+                            "0", // tax
+                            currformatDouble(totamt),
+                            vi[4],
+                            currformatDouble(totamt),
+                            "", // status
+                            headers[5]
+                            );
+                            // create pos_det
+                            ArrayList<ordData.pos_det> posdlist = new ArrayList<ordData.pos_det>();         
+                            j = 0;         
+                            for (String[] d : details) {         
+                            ordData.pos_det posd = new ordData.pos_det(null,
+                                headers[0],
+                                bsNumber(j),
+                                d[1],
+                                "", // desc
+                                "", // ref
+                                d[2],
+                                d[3],
+                                "0",
+                                d[3],
+                                "0",
+                                vi[1], // acct
+                                vi[2] // cc
+                            );
+                            posdlist.add(posd);
+                            j++;
+                            }
+
+                     addPOSTransaction(posdlist, pos);
+        
+        
+        String[] m = VouchAndPayTransaction("AP-Cash", list, x, false);
+               
+        return m;
+    }
+    
+    public static String[] cashIncome(ArrayList<String[]> details, String[] headers) {
+         // headers = cust, transnbr, effdate, desc, site, currency, ref
+        // details = "Line", "Item", "Qty", "Price", "Ref", "Acct"
+       if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","cashSell"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(details);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(headers);
+                System.out.println("HERE: " + jsonString);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAP"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        
+        String[] message = new String[2];
+        message[0] = "";
+        message[1] = ""; 
+        try {
+
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                boolean proceed = true;
+                boolean error = false;
+                String key = "";
+                
+                
+              
+                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date now = new java.util.Date();
+                    
+                
+                
+                String bank = OVData.getDefaultARBank();
+                String cashacct = OVData.getDefaultBankAcct(bank);
+                String cc = OVData.getDefaultCC();
+                     
+                     
+               
+               // "Line", "Item", "Qty", "Price", "Ref", "Acct"
+                    int i = 0;
+                    for (String[] d : details) {
+                       
+                          // Credit Income Account
+                       st.executeUpdate("insert into gl_tran "
+                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
+                        + " values ( " 
+                        + "'" + d[0] + "'" + ","
+                        + "'" + d[5] + "'" + ","
+                        + "'" + cc + "'" + ","
+                        + "'" + headers[2] + "'" + ","
+                        + "'" + currformatDouble(bsParseDouble(d[3]) * -1).replace(defaultDecimalSeparator,'.') + "'" + ","
+                        + "'" + currformatDouble(bsParseDouble(d[3]) * -1).replace(defaultDecimalSeparator,'.') + "'" + ","
+                        + "'" + headers[5] + "'" + ","
+                        + "'" + headers[5] + "'" + ","        
+                        + "'" + headers[1] + "'" + ","
+                        + "'" + headers[4] + "'" + ","
+                        + "'" + "JL" + "'" + ","
+                        + "'" + d[1].replace(",", "") + "'" + ","
+                        + "'" + bsmf.MainFrame.userid + "'" + ","
+                         + "'" + dfdate.format(now) + "'"
+                                + ")"
+                        + ";" );
+                    
+                       // Debit Cash Account
+                        st.executeUpdate("insert into gl_tran "
+                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
+                        + " values ( " 
+                        + "'1'" + ","
+                        + "'" + cashacct + "'" + ","
+                        + "'" + cc + "'" + ","
+                        + "'" + headers[2] + "'" + ","
+                        + "'" + currformatDouble(bsParseDouble(d[3])).replace(defaultDecimalSeparator,'.') + "'" + ","
+                        + "'" + currformatDouble(bsParseDouble(d[3])).replace(defaultDecimalSeparator,'.') + "'" + ","
+                        + "'" + headers[5] + "'" + ","
+                        + "'" + headers[5] + "'" + ","    
+                        + "'" + headers[1] + "'" + ","
+                        + "'" + headers[4] + "'" + ","
+                        + "'" + "JL" + "'" + ","
+                        + "'" + d[1].replace(",", "") + "'" + ","
+                        + "'" + bsmf.MainFrame.userid + "'" + ","
+                         + "'" + dfdate.format(now) + "'"
+                                + ")"
+                        + ";" );  
+                        
+                        i++;
+                    }
+                    
+                    if (i > 0) {
+                        
+                        // now POS
+                     // create pos_det
+                            double totamt = 0.00;
+                            ArrayList<ordData.pos_det> posdlist = new ArrayList<ordData.pos_det>();         
+                            int j = 0;         
+                            for (String[] d : details) {         
+                            ordData.pos_det posd = new ordData.pos_det(null,
+                                headers[0],
+                                bsNumber(j),
+                                d[1],
+                                "", // desc
+                                "", // ref
+                                d[2],
+                                d[3],
+                                "0",
+                                d[3],
+                                "0",
+                                d[5], // acct
+                                cc // cc
+                            );
+                            totamt += bsParseDouble(d[3]);
+                            posdlist.add(posd);
+                            j++;
+                            }   
+                     ordData.pos_mstr pos = new ordData.pos_mstr(null, 
+                            headers[1],
+                            key,
+                            "income",
+                            headers[0], // cust
+                            "", // name
+                            dfdate.format(now), // date
+                            "", // time
+                            cashacct,
+                            cc, 
+                            bsNumber(j),
+                            bsNumber(j),
+                            "0", // tax
+                            currformatDouble(totamt),
+                            bank,
+                            currformatDouble(totamt),
+                            "", // status
+                            headers[4] // site
+                            );
+                     addPOSTransaction(posdlist, pos);
+                        
+                    }
+                    
+                      
+                    if (i == 0) {
+                        message = new String[]{"1", "An Error Occurred in Income"};
+                    } else {
+                    message = new String[]{"0", "income complete"};
+                    }
+                    
+                  
+                   
+                  
+                if (OVData.isAutoPost()) {
+                    fglData.PostGL();
+                }     
+                    
+            } catch (SQLException s) {
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        
+        return message;
+
+    }
+    
+    public static String[] cashExpenseRecurring(ArrayList<String[]> details, String[] headers) {
+         // headers = site
+        // details = "History", "ID", "Site", "Entity", "Name", "Desc", "Acct", "Amt", "ThisMonth?", "ExactAmt", "Pay?", "dummyyesno"
+       if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","cashExpenseRecurring"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(details);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(headers);
+                System.out.println("HERE: " + jsonString);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAP"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        
+        String[] message = new String[2];
+        message[0] = "";
+        message[1] = ""; 
+        try {
+
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                boolean proceed = true;
+                boolean error = false;
+                String key = "";
+                
+                
+              
+                int i = 0;
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date now = new java.util.Date();
+                String[] vi = getVendInfo(headers[0]);  // addr, acct, cc, currency, bank, terms, site
+                    
+               
+                String po = "cashtran";
+                     // loop from here through end of selected items to be paid
+                     double totamt = 0.00;
+                     double totqty = 0.00;
+                     
+                     for (String[] d : details) {
+                     
+                         if (! Boolean.valueOf(d[10])) {  // if not selected in checkbox
+                             continue;
+                         }
+                     
+                         
+                         int exp = OVData.getNextNbr("expensenumber");
+                         totamt = bsParseDouble(d[9]); // qty = 1
+                         totqty = 1;
+                         key = String.valueOf(exp);
+                         // "History", "ID", "Site", "Entity", "Name", "Desc", "Acct", "Amt", "ThisMonth?", "ExactAmt", "Pay?", "dummyyesno"
+                       st.executeUpdate("insert into ap_mstr "
+                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
+                        + "ap_entdate, ap_effdate, ap_duedate, ap_curr, ap_acct, ap_cc, "
+                        + "ap_terms, ap_status, ap_bank ) "
+                        + " values ( " + "'" + d[3] + "'" + ","
+                              + "'" + d[2] + "'" + ","
+                        + "'" + key + "'" + ","
+                        + "'" + d[9].replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + "V" + "'" + ","
+                        + "'" + d[3].replace("'", "''") + "'" + ","
+                        + "'" + "" + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + vi[3] + "'" + ","
+                        + "'" + vi[1] + "'" + ","
+                        + "'" + vi[2] + "'" + ","
+                        + "'" + vi[5] + "'" + ","
+                        + "'" + "o" + "'"  + ","
+                        + "'" + vi[4] + "'"
+                        + ")"
+                        + ";");
+               
+                        // "History", "ID", "Site", "Entity", "Name", "Desc", "Acct", "Amt", "ThisMonth?", "ExactAmt", "Pay?", "dummyyesno"          
+                        st.executeUpdate("insert into vod_mstr "
+                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_item, vod_qty, "
+                            + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
+                            + " values ( " + "'" + key + "'" + ","
+                                + "'" + d[3] + "'" + ","
+                            + "'" + "expense" + "'" + ","
+                            + "'" + "1" + "'" + ","
+                            + "'" + d[5] + "'" + ","
+                            + "'" + "1" + "'" + ","
+                            + "'" + d[9].replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + dfdate.format(now) + "'" + ","
+                            + "'" + d[1] + "'" + ","
+                            + "'" + d[6] + "'" + ","
+                            + "'" + vi[2] + "'"
+                            + ")"
+                            + ";");
+                  
+                 
+                    
+                     
+                    
+                    /* create gl_tran records */
+                    //    if (! error)
+                    //    error = fglData.glEntryFromVoucherExpense(key, now);
+                     
+                    message = fapData.APExpense(OVData.getNextNbr("batch"), 
+                            OVData.getDefaultCurrency(), 
+                            now, 
+                            exp, 
+                            key, d[1], d[3], bsParseDouble(d[9]), "AP-Cash");
+                        
+                    if (error) {
+                        message = new String[]{"1", "An Error Occurred in Expense"};
+                    } else {
+                    message = new String[]{"0", "expense complete"};
+                    }
+                    
+                    
+                    // now POS  one POS record per recurring expense line in details
+                     // create pos_det
+                            ArrayList<ordData.pos_det> posdlist = new ArrayList<ordData.pos_det>(); 
+                            ordData.pos_det posd = new ordData.pos_det(null,
+                                key,
+                                "1",
+                                d[5],
+                                d[5], // desc
+                                "", // ref
+                                d[2],
+                                d[3],
+                                "0",
+                                d[3],
+                                "0",
+                                vi[1], // acct
+                                vi[2] // cc
+                            );
+                            posdlist.add(posd);
+                           
+                            
+                     ordData.pos_mstr pos = new ordData.pos_mstr(null, 
+                            key,
+                            d[1],
+                            "expense",
+                            d[3], // entity
+                            d[4], // name
+                            dfdate.format(now), // date
+                            "", // time
+                            vi[1],
+                            vi[2], 
+                            "1",  // totqty
+                            "1", // totlines
+                            "0", // tax
+                            currformatDouble(totamt),
+                            vi[4],
+                            currformatDouble(totamt),
+                            "", // status
+                            d[2]
+                            );
+                     addPOSTransaction(posdlist, pos);
+                    
+                    
+                    }   
+                 // loop end  
+                 
+                 
+                 
+                 
+                  
+                if (OVData.isAutoPost()) {
+                    fglData.PostGL();
+                }     
+                    
+            } catch (SQLException s) {
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        
+        return message;
+
+    }
+    
+    public static String updateRecurExp_Income(String site, String amt) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","updateRecurExp_Income"});
+            list.add(new String[]{"param1",site});
+            list.add(new String[]{"param2",amt});
+            try {
+                return sendServerPost(list, "", null, "dataServFAP");
+            } catch (IOException ex) {
+                bslog(ex);
+                return "";
+            }
+        }   
+        
+        String r = "";
+        try{
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            int i = 0;
+            try {
+                            
+                res = st.executeQuery("SELECT *  FROM  exp_mstr where exp_id = 'bsint' and exp_site = " + "'" + site + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                    st.executeUpdate("insert into exp_mstr (exp_id, exp_site, exp_amt) values (" + 
+                            "'" + "bsint" + "'" + "," +
+                            "'" + site + "'" + "," +
+                            "'" + amt + "'" +      
+                            ") ;");           
+                          r = "income set";
+                    } else {
+                    st.executeUpdate("update exp_mstr set exp_amt = " + "'" + amt + "'" +
+                            " where exp_id = 'bsint' and exp_site = " + "'" + site + "'" 
+                            + ";");  
+                           r = "income updated";
+                    }
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        
+        return r;
+       }
+    
+    public static String updateExpActive(String key, String status) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","updateExpActive"});
+            list.add(new String[]{"param1",key});
+            list.add(new String[]{"param2",status});
+            try {
+                return sendServerPost(list, "", null, "dataServFAP");
+            } catch (IOException ex) {
+                bslog(ex);
+                return "";
+            }
+        }   
+        
+        String r = "";
+        try{
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            int i = 0;
+            try {
+                            
+                st.executeUpdate("update exp_mstr set exp_active = " + BlueSeerUtils.ConvertStringToBool(status) +
+                            " where exp_id = " + "'" + key + "'" 
+                            + ";"); 
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        
+        return r;
+       }
     
     
     public static String getVoucherBrowseView(String[] keys) {
@@ -1916,5 +3160,15 @@ public class fapData {
             this(m,"", "", "", "", "");
         }
     } 
+    
+    public record exp_mstr(String[] m, String exp_id, String exp_site, String exp_entity, String exp_name,
+        String exp_acct, String exp_cc, String exp_createdate, String exp_changedate, String exp_userid,
+        String exp_desc, String exp_ref, double exp_amt, String exp_active) {
+        public exp_mstr(String[]m) {
+            this(m, "", "", "", "", "", "", "", "", "", "",
+                    "", 0, "" );
+        }
+    }
+
     
 }

@@ -2002,27 +2002,34 @@ public class ordData {
     private static int _addPOSMstr(pos_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from pos_mstr where pos_nbr = ?";
-        String sqlInsert = "insert into pos_mstr (pos_nbr, pos_entrydate, pos_entrytime, "
-                        + " pos_aracct, pos_arcc, pos_bank, pos_totqty, pos_totlines, "
-                        + " pos_grossamt, pos_tottax, pos_totamt ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
-       
+        String sqlInsert = "insert into pos_mstr (pos_nbr, pos_key, pos_type, pos_entity, pos_entityname, pos_entrydate, pos_entrytime, "
+                        + " pos_aracct, pos_arcc, pos_totqty, pos_totlines, "
+                        + " pos_tottax, pos_totamt, pos_bank, pos_grossamt, pos_status, pos_site ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+      
+        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.pos_nbr);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.pos_nbr);
-            ps.setString(2, x.pos_entrydate);
-            ps.setString(3, x.pos_entrytime);
-            ps.setString(4, x.pos_aracct);
-            ps.setString(5, x.pos_arcc);
-            ps.setString(6, x.pos_bank);
-            ps.setString(7, x.pos_totqty);
-            ps.setString(8, x.pos_totlines);
-            ps.setString(9, x.pos_grossamt);
-            ps.setString(10, x.pos_tottax);
-            ps.setString(11, x.pos_totamt);
+            ps.setString(2, x.pos_key);
+            ps.setString(3, x.pos_type);
+            ps.setString(4, x.pos_entity);
+            ps.setString(5, x.pos_entityname);
+            ps.setString(6, x.pos_entrydate);
+            ps.setString(7, x.pos_entrytime);
+            ps.setString(8, x.pos_aracct);
+            ps.setString(9, x.pos_arcc);
+            ps.setString(10, x.pos_totqty);
+            ps.setString(11, x.pos_totlines);
+            ps.setString(12, x.pos_tottax);
+            ps.setString(13, x.pos_totamt);
+            ps.setString(14, x.pos_bank);
+            ps.setString(15, x.pos_grossamt);
+            ps.setString(16, x.pos_status);
+            ps.setString(17, x.pos_site);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -2083,24 +2090,29 @@ public class ordData {
      
     private static int _addPOSDet(pos_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
-        String sqlSelect = "select * from pos_det where posd_nbr = ?";
-        String sqlInsert = "insert into pos_det (posd_nbr, posd_line, posd_item, "
-                        + " posd_qty, posd_listprice, posd_disc, posd_netprice, posd_tax ) " 
-                        + " values (?,?,?,?,?,?,?,?); "; 
-       
+        String sqlSelect = "select * from pos_det where posd_nbr = ? and posd_line = ?";
+        String sqlInsert = "insert into pos_det (posd_nbr, posd_line, posd_item, posd_desc, posd_ref, "
+                        + " posd_qty, posd_listprice, posd_disc, posd_netprice, posd_tax, posd_acct, posd_cc ) " 
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.posd_nbr);
+          ps.setString(2, x.posd_line);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.posd_nbr);
             ps.setString(2, x.posd_line);
             ps.setString(3, x.posd_item);
-            ps.setString(4, x.posd_qty);
-            ps.setString(5, x.posd_listprice);
-            ps.setString(6, x.posd_disc);
-            ps.setString(7, x.posd_netprice);
-            ps.setString(8, x.posd_tax);
+            ps.setString(4, x.posd_desc);
+            ps.setString(5, x.posd_ref);
+            ps.setString(6, x.posd_qty);
+            ps.setString(7, x.posd_listprice);
+            ps.setString(8, x.posd_disc);
+            ps.setString(9, x.posd_netprice);
+            ps.setString(10, x.posd_tax);
+            ps.setString(11, x.posd_acct);
+            ps.setString(12, x.posd_cc);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -8989,20 +9001,22 @@ public class ordData {
         }
     }
     
-    public record pos_mstr(String[] m, String pos_nbr, String pos_entrydate, String pos_entrytime,
-        String pos_aracct, String pos_arcc, String pos_bank, String pos_totqty, 
-        String pos_totlines, String pos_grossamt, String pos_tottax, String pos_totamt)  {
+    public record pos_mstr(String[] m, String pos_nbr, String pos_key, String pos_type, String pos_entity, String pos_entityname, 
+        String pos_entrydate, String pos_entrytime, String pos_aracct, String pos_arcc,  String pos_totqty, 
+        String pos_totlines,  String pos_tottax, String pos_totamt, String pos_bank, String pos_grossamt,
+        String pos_status, String pos_site)  {
         public pos_mstr(String[] m) {
             this (m, "", "", "", "", "", "", "", "", "", "",
-                     "");
+                     "", "", "", "", "", "", "");
         }
     }
 
     public record pos_det(String[] m, String posd_nbr, String posd_line, String posd_item, 
-        String posd_qty, String posd_listprice, String posd_disc, 
-        String posd_netprice, String posd_tax)  {
+        String posd_desc, String posd_ref, String posd_qty, String posd_listprice, String posd_disc, 
+        String posd_netprice, String posd_tax, String posd_acct, String posd_cc)  {
         public pos_det(String[] m) {
-            this (m, "", "", "", "", "", "", "", "");
+            this (m, "", "", "", "", "", "", "", "", "", "",
+                    "", "");
         }
     }
 

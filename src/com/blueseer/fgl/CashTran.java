@@ -38,91 +38,57 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.adm.admData;
 import com.blueseer.ctr.cusData;
-import com.blueseer.fap.fapData;
-import static com.blueseer.fap.fapData.VouchAndPayTransaction;
+import com.blueseer.ctr.cusData.cm_mstr;
+import static com.blueseer.ctr.cusData.getCustMstr;
+import static com.blueseer.fap.fapData.addExpMstr;
 import static com.blueseer.fap.fapData.cashBuy;
+import static com.blueseer.fap.fapData.cashExpense;
+import static com.blueseer.fap.fapData.cashExpenseRecurring;
+import static com.blueseer.fap.fapData.cashIncome;
+import static com.blueseer.fap.fapData.cashSell;
+import com.blueseer.fap.fapData.exp_mstr;
+import static com.blueseer.fap.fapData.getExpMstr;
+import static com.blueseer.fap.fapData.getRecurringExpenseHistory;
+import static com.blueseer.fap.fapData.getRecurringExpenseRecords;
+import static com.blueseer.fap.fapData.getRecurringIncomeTotal;
+import static com.blueseer.fap.fapData.updateExpActive;
+import static com.blueseer.fap.fapData.updateRecurExp_Income;
+import com.blueseer.fgl.fglData.AcctMstr;
+import static com.blueseer.fgl.fglData.addAcctMstr;
+import static com.blueseer.fgl.fglData.getAcctMstr;
 import com.blueseer.inv.invData;
-import static com.blueseer.rcv.RecvMaint.vd;
-import com.blueseer.rcv.rcvData;
-import static com.blueseer.rcv.rcvData.addReceiverTransaction;
-import com.blueseer.shp.shpData;
-import static com.blueseer.shp.shpData.confirmShipperTransaction;
+import static com.blueseer.inv.invData.getItemMstr;
+import com.blueseer.inv.invData.item_mstr;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
-import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
-import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
-import static com.blueseer.utl.BlueSeerUtils.setDateDB;
-import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
-import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.OVData;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
-
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.Date;
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import javax.print.SimpleDoc;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.JFileChooser;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.ToolTipManager;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import com.blueseer.vdr.venData;
-import static com.blueseer.vdr.venData.getVendInfo;
 import static com.blueseer.vdr.venData.getVendMstr;
 import com.blueseer.vdr.venData.vd_mstr;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.sql.Connection;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -137,7 +103,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import org.apache.commons.io.FilenameUtils;
@@ -321,19 +286,19 @@ public class CashTran extends javax.swing.JPanel {
             
             switch(this.type) {
                 case "buy":
-                    message = addBuy();
+                    message = addBuyNew();
                     break;
                 case "sell":
-                    message = addSell();
+                    message = addSellNew();
                     break;
                 case "expense":
-                    message = addExpense();
+                    message = addExpenseNew();
                     break;
                 case "income":
-                    message = addIncome();
+                    message = addIncomeNew();
                     break;    
                 case "recurexpense":
-                    message = addRecurExpense();
+                    message = addRecurExpenseNew();
                     break;
                 default:
                     MainFrame.bslog("unkown switch selection " + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -419,130 +384,45 @@ public class CashTran extends javax.swing.JPanel {
          double totincome = 0;
          ImageIcon haspaid = null;
          double paidamt = 0;
-        try {
-
-           
-            
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
+        boolean paid = false; 
+         
+        totincome = getRecurringIncomeTotal(ddrexpsite.getSelectedItem().toString());
+        ArrayList<String[]> list = getRecurringExpenseRecords(ddrexpsite.getSelectedItem().toString(), BlueSeerUtils.boolToString(showall));
+        for (String[] s : list) {
+            totexpense += bsParseDouble(s[6]);
+            paidamt = bsParseDouble(s[7]);
+            if (paidamt > 0) {
+                haspaid = BlueSeerUtils.clickcheck;
+                paid = true;
             } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
+                haspaid = BlueSeerUtils.clicknocheck;
+                paid = false;
             }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                String blanket = "";
-                boolean paid = false;
-                
-                res = st.executeQuery("select * from exp_mstr where exp_id = 'bsint' " +
-                        " and exp_entity = '' " +
-                        " and exp_site = " + "'" + ddrexpsite.getSelectedItem().toString() + "'" + ";");
-                while (res.next()) {
-                totincome += bsParseDouble(res.getString("exp_amt"));
-                }
-                
-                if (showall) {                
-                res = st.executeQuery("select * from exp_mstr left outer join pos_mstr on pos_key = exp_id " +
-                                  " and pos_entrydate like " + "'" + dfdate.format(now).substring(0,8) + "%" + "'" +
-                                  " where exp_entity <> '' and exp_site =  " + "'" + ddrexpsite.getSelectedItem().toString() + "'" +
-                                  ";");
-                } else {
-                res = st.executeQuery("select * from exp_mstr left outer join pos_mstr on pos_key = exp_id " +
-                                  " and pos_entrydate like " + "'" + dfdate.format(now).substring(0,8) + "%" + "'" +
-                                  " where exp_entity <> '' and exp_active = '1' " +
-                                  " and exp_site = " + "'" + ddrexpsite.getSelectedItem().toString() + "'" +
-                                  ";");    
-                }
-                while (res.next()) {
-                    i++;
-                    totexpense += bsParseDouble(res.getString("exp_amt"));
-                    paidamt = res.getDouble("pos_totamt");
-                    if (paidamt > 0) {
-                        haspaid = BlueSeerUtils.clickcheck;
-                        paid = true;
-                    } else {
-                        haspaid = BlueSeerUtils.clicknocheck;
-                        paid = false;
-                    }
-                    // "ID", "Site", "Entity", "Name", "Desc", "Acct", "Amt"
-                    rexpensemodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("exp_id"), res.getString("exp_site"),
-                      res.getString("exp_entity"), res.getString("exp_name"), 
-                      res.getString("exp_desc"), res.getString("exp_acct"), res.getDouble("exp_amt"), haspaid, paidamt, false, paid
-                  });
-                }
+            // "ID", "Site", "Entity", "Name", "Desc", "Acct", "Amt"
+            rexpensemodel.addRow(new Object[]{BlueSeerUtils.clickflag, s[0], s[1],
+              s[2], s[3], 
+              s[4], s[5], bsParseDouble(s[6]), haspaid, paidamt, false, paid
+          });
             
-            } catch (SQLException s) {
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-                MainFrame.bslog(s);
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-            
-            tbrexptotamt.setText(String.valueOf(totexpense)); 
-            tbrexpincome.setText(String.valueOf(totincome)); 
-           
-           
-        } catch (Exception e) {
-            MainFrame.bslog(e);
         }
+        
+        tbrexptotamt.setText(String.valueOf(totexpense)); 
+        tbrexpincome.setText(String.valueOf(totincome));        
 
     }
     
     public void getRecurringExpenseRecord(String id) {
         isLoad = true;
-        try {
-            
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                String blanket = "";
-                boolean paid = false;
-                                
-                res = st.executeQuery("select * from exp_mstr  " +
-                                  " where exp_id = " + "'" + id + "'" +
-                                  ";");
-                while (res.next()) {
-                    i++;
-                   tbrexpensedesc.setText(res.getString("exp_desc"));
-                   tbrexprice.setText(res.getString("exp_amt"));
-                   ddrexpacct.setSelectedItem(res.getString("exp_acct"));
-                   ddrexpentity.setSelectedItem(res.getString("exp_entity"));
-                   ddrexpsite.setSelectedItem(res.getString("exp_site"));
-                   cbrexpenabled.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("exp_active")));
-                   tbrexpid.setText(res.getString("exp_id"));
-                }
-            
-            } catch (SQLException s) {
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-                MainFrame.bslog(s);
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
         
+        exp_mstr em = getExpMstr(new String[]{id});
+        tbrexpensedesc.setText(em.exp_desc());
+        tbrexprice.setText(bsNumber(em.exp_amt()));
+        ddrexpacct.setSelectedItem(em.exp_acct());
+        ddrexpentity.setSelectedItem(em.exp_entity());
+        ddrexpsite.setSelectedItem(em.exp_site());
+        cbrexpenabled.setSelected(BlueSeerUtils.ConvertStringToBool(em.exp_active()));
+        tbrexpid.setText(em.exp_id());                  
+             
         isLoad = false;
     }
     
@@ -551,46 +431,14 @@ public class CashTran extends javax.swing.JPanel {
         rexpenseHistoryModel.setRowCount(0);
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date now = new java.util.Date();
-        
-        try {
-           Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-              
-                res = st.executeQuery("select * from pos_mstr where pos_key = " + "'" + key + "'" + " order by pos_entrydate desc;");
-                while (res.next()) {
-                   //"ID", "Desc", "Vendor", "EffDate", "Acct", "Amount"
-                    rexpenseHistoryModel.addRow(new Object[]{res.getString("pos_key"), res.getString("pos_nbr"),
-                      res.getString("pos_entity"), res.getString("pos_entityname"), 
-                      res.getString("pos_entrydate"), res.getString("pos_aracct"), res.getDouble("pos_totamt")
-                  });
-                }
-            
-            } catch (SQLException s) {
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-                MainFrame.bslog(s);
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+        ArrayList<String[]> list = getRecurringExpenseHistory(key);
+        for (String[] s : list) {
+            rexpenseHistoryModel.addRow(new Object[]{s[0], s[1], s[2], s[3], s[4], s[5], bsParseDouble(s[6])});
         }
-
+       
     }
     
-  
+  /*
     public String[] addBuy() {
         
         String[] message = new String[2];
@@ -736,7 +584,6 @@ public class CashTran extends javax.swing.JPanel {
                   
                      }
                     
-                    /* create gl_tran records */
                     //    if (! error)
                     //    error = fglData.glEntryFromCashTranBuy(expensenbr.getText(), dcdate.getDate());
                     
@@ -810,11 +657,12 @@ public class CashTran extends javax.swing.JPanel {
         return message;
     }
     
+    */
     public String[] addBuyNew() {
        ArrayList<String[]> details = new ArrayList<>();
-       String[] headers = new String[]{ddentityExpense.getSelectedItem().toString(),
-           tbKeyExpense.getText(), 
-           dfdate.format(dcdateExpense.getDate()), 
+       String[] headers = new String[]{ddentity.getSelectedItem().toString(),
+           expensenbr.getText(), 
+           dfdate.format(dcdate.getDate()), 
            tbref.getText(), 
            tbpo.getText(), 
            defaultSite, 
@@ -825,7 +673,7 @@ public class CashTran extends javax.swing.JPanel {
        String[] m = cashBuy(details, headers);
        return m;
     }
-    
+    /*
     public String[] addSell() {
           
         String[] message = new String[2];
@@ -1036,7 +884,29 @@ public class CashTran extends javax.swing.JPanel {
         
         return message;
     }
-    
+    */
+    public String[] addSellNew() {
+         // headers = cust, transnbr, po, site, currency, remarks
+        // details = "Line", "Item", "Qty", "Price", "Desc", "Ref"
+       ArrayList<String[]> details = new ArrayList<>();
+       String[] headers = new String[]{ddentity1.getSelectedItem().toString(),
+           expensenbr1.getText(),            
+           tbpo1.getText(),
+           defaultSite, 
+           defaultCurrency,
+           tbrmks1.getText()};       
+       for (int j = 0; j < detailtable1.getRowCount(); j++) {
+           details.add(new String[]{detailtable1.getValueAt(j, 0).toString(), 
+               detailtable1.getValueAt(j, 1).toString(), 
+               detailtable1.getValueAt(j, 2).toString(), 
+               detailtable1.getValueAt(j, 3).toString(),
+               detailtable1.getValueAt(j, 4).toString(),
+               detailtable1.getValueAt(j, 5).toString()});
+       }
+       String[] m = cashSell(details, headers);
+       return m;
+    }
+    /*
     public String[] addExpense() {
         String[] vi = getVendInfo(ddentityExpense.getSelectedItem().toString());  // addr, acct, cc, currency, bank, terms, site
         
@@ -1167,7 +1037,29 @@ public class CashTran extends javax.swing.JPanel {
         
         return m;
     }
-    
+    */
+    public String[] addExpenseNew() {
+       ArrayList<String[]> details = new ArrayList<>();
+       String[] headers = new String[]{ddentityExpense.getSelectedItem().toString(),
+           tbKeyExpense.getText(), 
+           dfdate.format(dcdateExpense.getDate()), 
+           tbexpenseLOT.getText(), 
+           tbexpensePO.getText(), 
+           defaultSite, 
+           defaultCurrency,
+           tbexpenseRemarks.getText()};       
+       for (int j = 0; j < detailtable.getRowCount(); j++) {
+           details.add(new String[]{expenseTable.getValueAt(j, 0).toString(), 
+               expenseTable.getValueAt(j, 1).toString(), 
+               expenseTable.getValueAt(j, 2).toString(), 
+               expenseTable.getValueAt(j, 3).toString(),
+                expenseTable.getValueAt(j, 4).toString(),
+                expenseTable.getValueAt(j, 5).toString()});
+       }
+       String[] m = cashExpense(details, headers);
+       return m;
+    }
+    /*
     public String[] addIncome() {
           
         String[] message = new String[2];
@@ -1307,9 +1199,31 @@ public class CashTran extends javax.swing.JPanel {
         
         return message;
     }
-    
-    
-     public String[] addRecurExpense() {
+    */
+    public String[] addIncomeNew() {
+         // headers = cust, transnbr, po, site, currency, remarks
+        // details = "Line", "Item", "Qty", "Price", "Desc", "Ref"
+       ArrayList<String[]> details = new ArrayList<>();
+       String[] headers = new String[]{ddaccountincome.getSelectedItem().toString(),
+           tbKeyIncome.getText(),   
+           dfdate.format(dcdateIncome.getDate()),
+           tbincomeDesc.getText(),
+           defaultSite, 
+           defaultCurrency,
+           tbincomeRef.getText()};       
+       for (int j = 0; j < incomeTable.getRowCount(); j++) {
+           details.add(new String[]{incomeTable.getValueAt(j, 0).toString(), 
+               incomeTable.getValueAt(j, 1).toString(), 
+               incomeTable.getValueAt(j, 2).toString(), 
+               incomeTable.getValueAt(j, 3).toString(),
+               incomeTable.getValueAt(j, 4).toString(),
+               incomeTable.getValueAt(j, 5).toString()});
+       }
+       String[] m = cashIncome(details, headers);
+       return m;
+    }
+      /*  
+    public String[] addRecurExpense() {
           
         String[] message = new String[2];
         message[0] = "";
@@ -1398,7 +1312,7 @@ public class CashTran extends javax.swing.JPanel {
                     
                      
                     
-                    /* create gl_tran records */
+                  
                     //    if (! error)
                     //    error = fglData.glEntryFromVoucherExpense(key, now);
                      
@@ -1474,143 +1388,96 @@ public class CashTran extends javax.swing.JPanel {
         
         return message;
     }
-    
+    */
+    public String[] addRecurExpenseNew() {
+          // headers = site
+        // details = "History", "ID", "Site", "Entity", "Name", "Desc", "Acct", "Amt", "ThisMonth?", "ExactAmt", "Pay?", "dummyyesno"
+       ArrayList<String[]> details = new ArrayList<>();
+       String[] headers = new String[]{ddrexpsite.getSelectedItem().toString()};       
+       for (int j = 0; j < incomeTable.getRowCount(); j++) {
+           details.add(new String[]{incomeTable.getValueAt(j, 0).toString(), 
+               incomeTable.getValueAt(j, 1).toString(), 
+               incomeTable.getValueAt(j, 2).toString(), 
+               incomeTable.getValueAt(j, 3).toString(),
+               incomeTable.getValueAt(j, 4).toString(),
+               incomeTable.getValueAt(j, 5).toString(),
+           incomeTable.getValueAt(j, 6).toString(),
+           incomeTable.getValueAt(j, 7).toString(),
+           incomeTable.getValueAt(j, 8).toString(),
+           incomeTable.getValueAt(j, 9).toString(),
+           incomeTable.getValueAt(j, 10).toString(),
+           incomeTable.getValueAt(j, 11).toString()});
+       }
+       String[] m = cashExpenseRecurring(details, headers);
+       return m;
+    }
+        
     
     
     
     public void addExpenseAccount(String desc) {
       //  ddrexpacct.removeAllItems();
       //  ddaccountexpense.removeAllItems();
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                int i = 0;
-                int acctnbr = OVData.getNextNbr("expenseaccount");
-                if (acctnbr >= 99000000 && acctnbr <= 99999999) {
-                    proceed = true;
-                } else {
-                    bsmf.MainFrame.show(getMessageTag(1027));
-                    return;
-                }
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT ac_id FROM  ac_mstr where ac_id = " + "'" + String.valueOf(acctnbr) + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into ac_mstr "
-                            + "( ac_id, ac_desc, ac_type, ac_cur, ac_display ) "
-                            + " values ( " + "'" + String.valueOf(acctnbr) + "'" + ","
-                            + "'" + desc.replace("'", "").toUpperCase() + "'" + ","
-                            + "'" + "E" + "'" + ","
-                            + "'" + OVData.getDefaultCurrency() + "'" + ","
-                            + "'" + '1' + "'"        
-                            + ")"
-                            + ";");
-                        ddaccountexpense.addItem(String.valueOf(acctnbr));
-                        ddaccountexpense.setSelectedItem(String.valueOf(acctnbr));
-                        ddrexpacct.addItem(String.valueOf(acctnbr));
-                        ddrexpacct.setSelectedItem(String.valueOf(acctnbr));
-                    } else {
-                        bsmf.MainFrame.show(getMessageTag(1014));
-                    }
-
-                    //reinitapmvariables();
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+       boolean proceed = false;
+       int i = 0;
+        int acctnbr = OVData.getNextNbr("expenseaccount");
+        if (acctnbr >= 99000000 && acctnbr <= 99999999) {
+            proceed = true;
+        } else {
+            bsmf.MainFrame.show(getMessageTag(1027));
+            return;
+        }  
+      
+        AcctMstr am = new AcctMstr(null,
+                String.valueOf(acctnbr),
+                desc.replace("'", "").toUpperCase(),
+                "E",
+                defaultCurrency,
+                "1"
+        );
+        
+        String[] m = addAcctMstr(am);
+        if (m[0].equals("0")) {
+            ddaccountexpense.addItem(String.valueOf(acctnbr));
+            ddaccountexpense.setSelectedItem(String.valueOf(acctnbr));
+            ddrexpacct.addItem(String.valueOf(acctnbr));
+            ddrexpacct.setSelectedItem(String.valueOf(acctnbr));
+        } else {
+           bsmf.MainFrame.show(getMessageTag(1014)); 
         }
+     
     }
     
     public void addIncomeAccount(String desc) {
       //  ddrexpacct.removeAllItems();
       //  ddaccountexpense.removeAllItems();
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                int i = 0;
-                int acctnbr = OVData.getNextNbr("incomeaccount");
-                if (acctnbr >= 59000000 && acctnbr <= 59999999) {
-                    proceed = true;
-                } else {
-                    bsmf.MainFrame.show("income account generated number is beyond limits of 59000000 to 59999999");
-                    return;
-                }
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT ac_id FROM  ac_mstr where ac_id = " + "'" + String.valueOf(acctnbr) + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into ac_mstr "
-                            + "( ac_id, ac_desc, ac_type, ac_cur, ac_display ) "
-                            + " values ( " + "'" + String.valueOf(acctnbr) + "'" + ","
-                            + "'" + desc.replace("'", "").toUpperCase() + "'" + ","
-                            + "'" + "I" + "'" + ","
-                            + "'" + OVData.getDefaultCurrency() + "'" + ","
-                            + "'" + '1' + "'"        
-                            + ")"
-                            + ";");
-                        ddaccountincome.addItem(String.valueOf(acctnbr));
-                        ddaccountincome.setSelectedItem(String.valueOf(acctnbr));
-                        
-                    } else {
-                        bsmf.MainFrame.show(getMessageTag(1014));
-                    }
-
-                    //reinitapmvariables();
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+      
+      boolean proceed = false;
+       int i = 0;
+        int acctnbr = OVData.getNextNbr("incomeaccount");
+        if (acctnbr >= 59000000 && acctnbr <= 59999999) {
+            proceed = true;
+        } else {
+            bsmf.MainFrame.show("income account generated number is beyond limits of 59000000 to 59999999");
+            return;
         }
+      
+        AcctMstr am = new AcctMstr(null,
+                String.valueOf(acctnbr),
+                desc.replace("'", "").toUpperCase(),
+                "I",
+                defaultCurrency,
+                "1"
+        );
+        String[] m = addAcctMstr(am);
+        if (m[0].equals("0")) {
+            ddaccountincome.addItem(String.valueOf(acctnbr));
+            ddaccountincome.setSelectedItem(String.valueOf(acctnbr));
+        } else {
+           bsmf.MainFrame.show(getMessageTag(1014)); 
+        }
+
+     
     }
     
     public void setLanguageTags(Object myobj) {
@@ -1687,6 +1554,28 @@ public class CashTran extends javax.swing.JPanel {
        
     }
     
+    public exp_mstr createExpMstrRecord() {
+        String uniqueID = String.valueOf(OVData.getNextNbr("rexpense"));
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date now = new java.util.Date();
+        exp_mstr em = new exp_mstr(null, 
+                uniqueID,
+                ddrexpsite.getSelectedItem().toString(),
+                ddrexpentity.getSelectedItem().toString(),
+                lbname3.getText(),
+                ddrexpacct.getSelectedItem().toString(),
+                "9999",
+                dfdate.format(now),
+                dfdate.format(now),
+                bsmf.MainFrame.userid,
+                tbrexpensedesc.getText().replace("'",""),
+                "",
+                bsParseDouble(tbrexprice.getText()),
+                "1"
+        );
+        return em;
+    }
+    
     public void disableBuy() {
        
         tbactualamt.setEnabled(false);
@@ -1748,7 +1637,7 @@ public class CashTran extends javax.swing.JPanel {
         btexpenseAddAccount.setEnabled(false);
     }
     
-     public void disableIncome() {
+    public void disableIncome() {
          tbincometotal.setEnabled(false);
         dcdateIncome.setEnabled(false);
         tbincomeRef.setEnabled(false);
@@ -1887,12 +1776,7 @@ public class CashTran extends javax.swing.JPanel {
     public void clearBuy() {
          tbqty.setText("1");
          tbprice.setText("");
-         terms = "";
-         apacct = "";
-         apcc = "";
-         apbank = "";
-         actamt = 0;
-         actqty = 0;
+        
          expensenbr.setText("");
          tbpo.setText("");
         tbrmks.setText("");
@@ -1919,12 +1803,7 @@ public class CashTran extends javax.swing.JPanel {
     public void clearExpense() {
          tbexpenseQty.setText("1");
          tbexpensePrice.setText("");
-         terms = "";
-         apacct = "";
-         apcc = "";
-         apbank = "";
-         actamt = 0;
-         actqty = 0;
+        
          tbKeyExpense.setText("");
          tbexpenseDesc.setText("");
          tbexpensePO.setText("");
@@ -1991,12 +1870,7 @@ public class CashTran extends javax.swing.JPanel {
          
          tbrexpid.setEnabled(false);
          tbrexprice.setText("");
-         terms = "";
-         apacct = "";
-         apcc = "";
-         apbank = "";
-         actamt = 0;
-         actqty = 0;
+         
          tbrexpensedesc.setText("");
          tbrexpincome.setText("");
          cbrexpenabled.setSelected(true);
@@ -2078,12 +1952,7 @@ public class CashTran extends javax.swing.JPanel {
     public void clearSell() {
          tbqty1.setText("1");
          tbprice1.setText("");
-         terms = "";
-         apacct = "";
-         apcc = "";
-         apbank = "";
-         actamt = 0;
-         actqty = 0;
+         
          expensenbr1.setText("");
          tbpo1.setText("");
         tbrmks1.setText("");
@@ -2172,7 +2041,7 @@ public class CashTran extends javax.swing.JPanel {
          tbexpensetotal.setText(currformatDouble(total));
     }
     
-     public void sumIncomeTotal() {
+    public void sumIncomeTotal() {
          double total = 0;
          for (int j = 0; j < incomeTable.getRowCount(); j++) {
              total += ( bsParseDouble(incomeTable.getValueAt(j, 2).toString()) * bsParseDouble(incomeTable.getValueAt(j, 3).toString()));
@@ -2505,6 +2374,12 @@ public class CashTran extends javax.swing.JPanel {
         jPanel4.setName("panelsellsub"); // NOI18N
 
         dcdate1.setDateFormatString("yyyy-MM-dd");
+
+        expensenbr1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                expensenbr1ActionPerformed(evt);
+            }
+        });
 
         lblentity1.setText("Entity");
         lblentity1.setName("sell_lblentity"); // NOI18N
@@ -2937,7 +2812,7 @@ public class CashTran extends javax.swing.JPanel {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btadditem)
                             .addComponent(btdeleteitem))))
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -2993,7 +2868,7 @@ public class CashTran extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel35)
                     .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(25, 25, 25))
         );
@@ -4022,9 +3897,7 @@ public class CashTran extends javax.swing.JPanel {
        // voucherdet   "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
        // shipperdet   "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "shippedqty", "status", "WH", "LOC", "Desc"
             voucherline++;
-            actqty += bsParseDouble(tbqty.getText()); 
-            actamt += bsParseDouble(tbqty.getText()) * 
-                          bsParseDouble(tbprice.getText());
+                        
             
             buymodel.addRow(new Object[] { voucherline,
                                                   partnumber,
@@ -4033,6 +3906,11 @@ public class CashTran extends javax.swing.JPanel {
                                                   tbitemservice.getText().replace("'",""),
                                                   tbref.getText()
                                                   });
+            
+            double actamt = 0.00;
+            for (int j = 0; j < detailtable.getRowCount(); j++) {
+                actamt += (bsParseDouble(detailtable.getValueAt(j, 2).toString()) * bsParseDouble(detailtable.getValueAt(j, 3).toString()));
+            }
         tbitemservice.setText("");
         tbprice.setText("");
         tbactualamt.setText(currformatDouble(actamt));
@@ -4053,47 +3931,25 @@ public class CashTran extends javax.swing.JPanel {
 
     private void ddentityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddentityActionPerformed
        
-        if (ddentity.getSelectedItem() != null )
-        try {
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                res = st.executeQuery("select vd_name as 'name' from vd_mstr where vd_addr = " + "'" + ddentity.getSelectedItem().toString() + "'" + ";");
-                while (res.next()) {
-                    lbname.setText(res.getString("name"));
-                }
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+        if (ddentity.getSelectedItem() != null ) {
+            vd_mstr vd = getVendMstr(new String[]{ddentity.getSelectedItem().toString()});
+               lbname.setText(vd.vd_name());
         }
+        
     }//GEN-LAST:event_ddentityActionPerformed
 
     private void btdeleteitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteitemActionPerformed
         int[] rows = detailtable.getSelectedRows();
         for (int i : rows) {
-            bsmf.MainFrame.show(getMessageTag(1031, String.valueOf(i)));
-             actamt -= bsParseDouble(detailtable.getModel().getValueAt(i,2).toString()) * bsParseDouble(detailtable.getModel().getValueAt(i,3).toString());
-             actqty -= bsParseDouble(detailtable.getModel().getValueAt(i,2).toString());
+            bsmf.MainFrame.show(getMessageTag(1031, String.valueOf(i)));            
             ((javax.swing.table.DefaultTableModel) detailtable.getModel()).removeRow(i);
            voucherline--;
         }
+        
+        double actamt = 0.00;
+            for (int j = 0; j < detailtable.getRowCount(); j++) {
+                actamt += (bsParseDouble(detailtable.getValueAt(j, 2).toString()) * bsParseDouble(detailtable.getValueAt(j, 3).toString()));
+            }
         tbactualamt.setText(currformatDouble(actamt));
     }//GEN-LAST:event_btdeleteitemActionPerformed
 
@@ -4140,36 +3996,10 @@ public class CashTran extends javax.swing.JPanel {
     }//GEN-LAST:event_btadd1ActionPerformed
 
     private void ddentity1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddentity1ActionPerformed
-           if (ddentity1.getSelectedItem() != null )
-        try {
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-               res = st.executeQuery("select cm_name as 'name' from cm_mstr where cm_code = " + "'" + ddentity1.getSelectedItem().toString() + "'" + ";");  
-                while (res.next()) {
-                    lbname1.setText(res.getString("name"));
-                }
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+           if (ddentity1.getSelectedItem() != null ) {
+               cm_mstr cm = getCustMstr(new String[]{ddentityExpense.getSelectedItem().toString()});
+               lbname1.setText(cm.cm_name());
+           }        
         
     }//GEN-LAST:event_ddentity1ActionPerformed
 
@@ -4211,39 +4041,10 @@ public class CashTran extends javax.swing.JPanel {
     }//GEN-LAST:event_tbprice1FocusLost
 
     private void dditem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dditem1ActionPerformed
-       if (dditem1.getSelectedItem() != null && ! isLoad )
-        try {
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-               
-                    res = st.executeQuery("select it_desc from item_mstr where it_item = " + "'" + dditem1.getSelectedItem().toString() + "'" + ";");
-                    while (res.next()) {
-                        lbacct1.setText(res.getString("it_desc"));
-                    }
-                
-            } catch (SQLException s) {
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-                MainFrame.bslog(s);
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-            
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (dditem1.getSelectedItem() != null && ! isLoad ) {
+           item_mstr it = getItemMstr(new String[]{dditem1.getSelectedItem().toString()});
+           lbacct1.setText(it.it_desc());
+       }
     }//GEN-LAST:event_dditem1ActionPerformed
 
     private void btdeleteitem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteitem1ActionPerformed
@@ -4274,9 +4075,7 @@ public class CashTran extends javax.swing.JPanel {
        // voucherdet   "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
        // shipperdet   "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "shippedqty", "status", "WH", "LOC", "Desc"
             voucherline++;
-            actqty += bsParseDouble(tbqty1.getText()); 
-            actamt += bsParseDouble(tbqty1.getText()) * 
-                          bsParseDouble(tbprice1.getText());
+           
            
             sellmodel.addRow(new Object[] { voucherline, 
                                             dditem1.getSelectedItem().toString(),
@@ -4285,6 +4084,11 @@ public class CashTran extends javax.swing.JPanel {
                                             lbacct1.getText().replace("'",""),
                                             tbref1.getText()
                                           });
+            
+            double actamt = 0.00;
+            for (int j = 0; j < detailtable.getRowCount(); j++) {
+                actamt += (bsParseDouble(detailtable.getValueAt(j, 2).toString()) * bsParseDouble(detailtable.getValueAt(j, 3).toString()));
+            }
             
        
         tbprice1.setText("");
@@ -4319,36 +4123,11 @@ public class CashTran extends javax.swing.JPanel {
     }//GEN-LAST:event_btaddexpenseActionPerformed
 
     private void ddentityExpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddentityExpenseActionPerformed
-           if (ddentityExpense.getSelectedItem() != null )
-        try {
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                res = st.executeQuery("select vd_name as 'name' from vd_mstr where vd_addr = " + "'" + ddentityExpense.getSelectedItem().toString() + "'" + ";");
-                while (res.next()) {
-                    lbexpenseEntityName.setText(res.getString("name"));
-                }
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+           if (ddentityExpense.getSelectedItem() != null ) {
+               vd_mstr vd = getVendMstr(new String[]{ddentityExpense.getSelectedItem().toString()});
+               lbexpenseEntityName.setText(vd.vd_name());
+           }
+       
     }//GEN-LAST:event_ddentityExpenseActionPerformed
 
     private void btnewexpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewexpenseActionPerformed
@@ -4388,36 +4167,11 @@ public class CashTran extends javax.swing.JPanel {
     }//GEN-LAST:event_tbexpensePriceFocusLost
 
     private void ddaccountexpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddaccountexpenseActionPerformed
-         if (ddaccountexpense.getSelectedItem() != null && ! isLoad )
-        try {
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                         res = st.executeQuery("select ac_desc from ac_mstr where ac_id = " + "'" + ddaccountexpense.getSelectedItem().toString() + "'" + ";");
-                    while (res.next()) {
-                        lbacct2.setText(res.getString("ac_desc"));
-                    }
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+         if (ddaccountexpense.getSelectedItem() != null && ! isLoad ) {
+             AcctMstr ac = getAcctMstr(new String[]{ddaccountexpense.getSelectedItem().toString()});
+           lbacct2.setText(ac.desc());
+         }
+       
     }//GEN-LAST:event_ddaccountexpenseActionPerformed
 
     private void btdeleteItemExpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteItemExpenseActionPerformed
@@ -4518,36 +4272,10 @@ public class CashTran extends javax.swing.JPanel {
     }//GEN-LAST:event_btpayselectedActionPerformed
 
     private void ddrexpentityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddrexpentityActionPerformed
-            if (ddrexpentity.getSelectedItem() != null )
-        try {
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
+            if (ddrexpentity.getSelectedItem() != null ) {
+             vd_mstr vd = getVendMstr(new String[]{ddrexpentity.getSelectedItem().toString()});
+             lbname3.setText(vd.vd_name());
             }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                res = st.executeQuery("select vd_name as 'name' from vd_mstr where vd_addr = " + "'" + ddrexpentity.getSelectedItem().toString() + "'" + ";");
-                while (res.next()) {
-                    lbname3.setText(res.getString("name"));
-                }
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
     }//GEN-LAST:event_ddrexpentityActionPerformed
 
     private void btaddentity3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddentity3ActionPerformed
@@ -4568,36 +4296,10 @@ public class CashTran extends javax.swing.JPanel {
     }//GEN-LAST:event_tbrexpriceFocusLost
 
     private void ddrexpacctActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddrexpacctActionPerformed
-       if (ddrexpacct.getSelectedItem() != null && ! isLoad )
-        try {
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                         res = st.executeQuery("select ac_desc from ac_mstr where ac_id = " + "'" + ddrexpacct.getSelectedItem().toString() + "'" + ";");
-                    while (res.next()) {
-                        lbrexpacctname.setText(res.getString("ac_desc"));
-                    }
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (ddrexpacct.getSelectedItem() != null && ! isLoad ) {
+           AcctMstr ac = getAcctMstr(new String[]{ddrexpacct.getSelectedItem().toString()});
+           lbrexpacctname.setText(ac.desc());
+       }       
     }//GEN-LAST:event_ddrexpacctActionPerformed
 
     private void btrexpadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrexpadditemActionPerformed
@@ -4619,59 +4321,13 @@ public class CashTran extends javax.swing.JPanel {
            return; 
        }
        
-       String uniqueID = String.valueOf(OVData.getNextNbr("rexpense"));
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date now = new java.util.Date();
-            
-            try {
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;               
-                
-                    st.executeUpdate("insert into exp_mstr values (" + "'" + uniqueID + "'" + ","
-                            + "'" + ddrexpsite.getSelectedItem().toString() + "'" + "," 
-                            + "'" + ddrexpentity.getSelectedItem().toString() + "'" + ","
-                            + "'" + lbname3.getText() + "'" + ","
-                            + "'" + ddrexpacct.getSelectedItem().toString() + "'" + ","
-                            + "'" + "9999" + "'"  + ","
-                            + "'" + dfdate.format(now) + "'"  + ","     
-                            + "'" + dfdate.format(now) + "'"  + ","
-                            + "'" + bsmf.MainFrame.userid + "'"  + ","   
-                            + "'" + tbrexpensedesc.getText().replace("'","") + "'"  + ","   
-                            + "'" + "" + "'"  + ","   // ref        
-                            + "'" + tbrexprice.getText().replace(defaultDecimalSeparator, '.') + "'"  + ","          
-                            + "'" + "1" + "'"        // active
-                            + " )" + ";");              
-                          bsmf.MainFrame.show(getMessageTag(1030));
-                
-              
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-            getRecurringExpense(cbrexpshowall.isSelected());
-            calcdiff();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-         
-            
+       String[] m = addExpMstr(createExpMstrRecord());
+       if (m[0].equals("0")) {
+           bsmf.MainFrame.show(getMessageTag(1030));
+       }
+       
         getRecurringExpense(cbrexpshowall.isSelected());
+        calcdiff(); 
         
         tbrexpensedesc.setText("");
         tbrexprice.setText("");
@@ -4765,54 +4421,9 @@ public class CashTran extends javax.swing.JPanel {
     }//GEN-LAST:event_recurexpensetableMouseClicked
 
     private void btupdateincomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateincomeActionPerformed
-         try {
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                int i = 0;
-                
-                if (proceed) {
-                i = 0;
-                res = st.executeQuery("SELECT *  FROM  exp_mstr where exp_id = 'bsint' and exp_site = " + "'" + ddrexpsite.getSelectedItem().toString() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                    st.executeUpdate("insert into exp_mstr (exp_id, exp_site, exp_amt) values (" + 
-                            "'" + "bsint" + "'" + "," +
-                            "'" + ddrexpsite.getSelectedItem().toString() + "'" + "," +
-                            "'" + tbrexpincome.getText().replace(defaultDecimalSeparator, '.') + "'" +      
-                            ") ;");           
-                           bsmf.MainFrame.show("income set");
-                    } else {
-                    st.executeUpdate("update exp_mstr set exp_amt = " + "'" + tbrexpincome.getText() + "'" +
-                            " where exp_id = 'bsint' and exp_site = " + "'" + ddrexpsite.getSelectedItem().toString() + "'" 
-                            + ";");  
-                           bsmf.MainFrame.show("income updated");
-                    }
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+         
+        String r = updateRecurExp_Income(ddrexpsite.getSelectedItem().toString(), tbrexpincome.getText());
+        bsmf.MainFrame.show(r);       
     }//GEN-LAST:event_btupdateincomeActionPerformed
 
     private void btnewincomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewincomeActionPerformed
@@ -4846,36 +4457,10 @@ public class CashTran extends javax.swing.JPanel {
     }//GEN-LAST:event_tbincomeAmountFocusLost
 
     private void ddaccountincomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddaccountincomeActionPerformed
-        if (ddaccountincome.getSelectedItem() != null && ! isLoad )
-        try {
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                    res = st.executeQuery("select ac_desc from ac_mstr where ac_id = " + "'" + ddaccountincome.getSelectedItem().toString() + "'" + ";");
-                    while (res.next()) {
-                        lbincomeacct.setText(res.getString("ac_desc"));
-                    }
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        if (ddaccountincome.getSelectedItem() != null && ! isLoad ) {
+            AcctMstr ac = getAcctMstr(new String[]{ddaccountincome.getSelectedItem().toString()});
+           lbincomeacct.setText(ac.desc());
+        }        
     }//GEN-LAST:event_ddaccountincomeActionPerformed
 
     private void btdeleteItemIncomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteItemIncomeActionPerformed
@@ -4951,35 +4536,7 @@ public class CashTran extends javax.swing.JPanel {
 
     private void cbrexpenabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbrexpenabledActionPerformed
         if (! tbrexpid.getText().isEmpty()) { 
-        try {
-            int row = recurexpensetable.getSelectedRow();
-            
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            try {
-              
-                st.executeUpdate("update exp_mstr set exp_active = " + BlueSeerUtils.boolToInt(cbrexpenabled.isSelected()) +
-                            " where exp_id = " + "'" + tbrexpid.getText() + "'" 
-                            + ";");  
-                   
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-            getRecurringExpense(cbrexpshowall.isSelected());
-            calcdiff();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+            updateExpActive(tbrexpid.getText(), BlueSeerUtils.boolToString(cbrexpenabled.isSelected()));         
         }
     }//GEN-LAST:event_cbrexpenabledActionPerformed
 
@@ -5006,6 +4563,10 @@ public class CashTran extends javax.swing.JPanel {
     private void btLookUpExpAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpExpAccountActionPerformed
         lookUpFrameAcctDesc();
     }//GEN-LAST:event_btLookUpExpAccountActionPerformed
+
+    private void expensenbr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_expensenbr1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_expensenbr1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpExpAccount;
