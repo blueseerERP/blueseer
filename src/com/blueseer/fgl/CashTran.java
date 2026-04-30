@@ -496,7 +496,7 @@ public class CashTran extends javax.swing.JPanel {
            defaultSite, 
            defaultCurrency,
            tbexpenseRemarks.getText()};       
-       for (int j = 0; j < detailtable.getRowCount(); j++) {
+       for (int j = 0; j < expenseTable.getRowCount(); j++) {
            details.add(new String[]{expenseTable.getValueAt(j, 0).toString(), 
                expenseTable.getValueAt(j, 1).toString(), 
                expenseTable.getValueAt(j, 2).toString(), 
@@ -536,19 +536,19 @@ public class CashTran extends javax.swing.JPanel {
         // details = "History", "ID", "Site", "Entity", "Name", "Desc", "Acct", "Amt", "ThisMonth?", "ExactAmt", "Pay?", "dummyyesno"
        ArrayList<String[]> details = new ArrayList<>();
        String[] headers = new String[]{ddrexpsite.getSelectedItem().toString()};       
-       for (int j = 0; j < incomeTable.getRowCount(); j++) {
-           details.add(new String[]{incomeTable.getValueAt(j, 0).toString(), 
-               incomeTable.getValueAt(j, 1).toString(), 
-               incomeTable.getValueAt(j, 2).toString(), 
-               incomeTable.getValueAt(j, 3).toString(),
-               incomeTable.getValueAt(j, 4).toString(),
-               incomeTable.getValueAt(j, 5).toString(),
-           incomeTable.getValueAt(j, 6).toString(),
-           incomeTable.getValueAt(j, 7).toString(),
-           incomeTable.getValueAt(j, 8).toString(),
-           incomeTable.getValueAt(j, 9).toString(),
-           incomeTable.getValueAt(j, 10).toString(),
-           incomeTable.getValueAt(j, 11).toString()});
+       for (int j = 0; j < recurexpensetable.getRowCount(); j++) {
+           details.add(new String[]{recurexpensetable.getValueAt(j, 0).toString(), 
+               recurexpensetable.getValueAt(j, 1).toString(), 
+               recurexpensetable.getValueAt(j, 2).toString(), 
+               recurexpensetable.getValueAt(j, 3).toString(),
+               recurexpensetable.getValueAt(j, 4).toString(),
+               recurexpensetable.getValueAt(j, 5).toString(),
+           recurexpensetable.getValueAt(j, 6).toString(),
+           recurexpensetable.getValueAt(j, 7).toString(),
+           recurexpensetable.getValueAt(j, 8).toString(),
+           recurexpensetable.getValueAt(j, 9).toString(),
+           recurexpensetable.getValueAt(j, 10).toString(),
+           recurexpensetable.getValueAt(j, 11).toString()});
        }
        String[] m = cashExpenseRecurring(details, headers);
        return m;
@@ -687,6 +687,10 @@ public class CashTran extends javax.swing.JPanel {
         }
      
         initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "accounts,vendors");
+     
+         clearAll(); 
+       disableAll();
+        
         for (String[] s : initDataSets) {
             if (s[0].equals("currency")) {
               defaultCurrency = s[1];  
@@ -724,9 +728,10 @@ public class CashTran extends javax.swing.JPanel {
                 ddrexpacct.addItem(s[1]);
             }
         }
-        ddrexpsite.setSelectedItem(defaultSite);
-       clearAll(); 
-       disableAll();
+        ddrexpsite.setSelectedItem(defaultSite);      
+            
+        getRecurringExpense(cbrexpshowall.isSelected());   
+        calcdiff();
         
        btnewbuy.setEnabled(true);
        
@@ -1056,12 +1061,6 @@ public class CashTran extends javax.swing.JPanel {
         recurexpensetable.getColumn("Name").setPreferredWidth(0);
         recurexpensetable.getColumn("Name").setMinWidth(0);
         
-        isLoad = true;
-        
-            
-        getRecurringExpense(cbrexpshowall.isSelected());   
-        calcdiff();
-        isLoad = false;
         
        
     }

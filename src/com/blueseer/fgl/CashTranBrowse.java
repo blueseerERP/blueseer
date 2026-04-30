@@ -232,7 +232,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
             dataset.setValue(r[0], amt);            
         }
                
-        JFreeChart chart = ChartFactory.createPieChart("Expenses", dataset, false, false, false);
+        JFreeChart chart = ChartFactory.createPieChart("Expenses", dataset, true, true, false);
         PiePlot plot = (PiePlot) chart.getPlot();
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
             "{0}: {1} ({2})", NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
@@ -240,13 +240,13 @@ public class CashTranBrowse extends javax.swing.JPanel {
 
         try {
         
-        ChartUtilities.saveChartAsJPEG(new File(exoincfilepath), chart, (int) (this.getWidth() / 2), (int) (this.getHeight() / 1.2));
+        ChartUtilities.saveChartAsJPEG(new File(exoincfilepath), chart, (int) (this.getWidth() / 2.5), (int) (this.getHeight() / 2.8));
         } catch (IOException e) {
             MainFrame.bslog(e);
         }
         ImageIcon myicon = new ImageIcon(exoincfilepath);
         myicon.getImage().flush();   
-        this.pielabel.setIcon(myicon);
+        this.chartlabel.setIcon(myicon);
         this.repaint();
          
     }
@@ -267,7 +267,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
             dataset.setValue(r[0], amt);            
         }
                
-        JFreeChart chart = ChartFactory.createPieChart("Income", dataset, false, false, false);
+        JFreeChart chart = ChartFactory.createPieChart("Income", dataset, true, true, false);
         PiePlot plot = (PiePlot) chart.getPlot();
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
             "{0}: {1} ({2})", NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
@@ -275,7 +275,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
 
         try {
         
-        ChartUtilities.saveChartAsJPEG(new File(buysellfilepath), chart, (int) (this.getWidth() / 2), (int) (this.getHeight() / 1.2));
+        ChartUtilities.saveChartAsJPEG(new File(buysellfilepath), chart, (int) (this.getWidth() / 2.5), (int) (this.getHeight() / 2.8));
         } catch (IOException e) {
             MainFrame.bslog(e);
         }
@@ -599,17 +599,16 @@ public class CashTranBrowse extends javax.swing.JPanel {
         mymodel.setNumRows(0);
         if (roData != null) {
         for (Object[] rowData : roData) {
-            if (roData[i][5].toString().equals("sell")) {
+            if (roData[i][3].toString().equals("sell")) {
                 totsales += bsParseDouble(roData[i][8].toString());
-            } else if (roData[i][5].toString().equals("buy")) {
+            } else if (roData[i][3].toString().equals("buy")) {
                 totpurch += bsParseDouble(roData[i][8].toString());
-            } else if (roData[i][5].toString().equals("income")) {
+            } else if (roData[i][3].toString().equals("income")) {
                 totincome += bsParseDouble(roData[i][8].toString());
             } else {
                 totexpense += bsParseDouble(roData[i][8].toString());
             }
-            amt = amt + bsParseDouble(roData[i][5].toString());
-            roData[i][5] = bsParseDouble(roData[i][5].toString());
+            roData[i][8] = bsParseDouble(roData[i][8].toString());
             i++;
             mymodel.addRow(rowData);
         }

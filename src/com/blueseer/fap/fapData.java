@@ -1524,7 +1524,7 @@ public class fapData {
                 
             // create pos_det
             ordData.pos_det posd = new ordData.pos_det(null,
-                headers[0],
+                headers[1],
                 bsNumber(j),
                 d[0],
                 "", // desc
@@ -1793,7 +1793,7 @@ public class fapData {
                             j = 0;         
                             for (String[] d : details) {         
                             ordData.pos_det posd = new ordData.pos_det(null,
-                                headers[0],
+                                headers[1],
                                 bsNumber(j),
                                 d[1],
                                 "", // desc
@@ -1941,7 +1941,7 @@ public class fapData {
                             j = 0;         
                             for (String[] d : details) {         
                             ordData.pos_det posd = new ordData.pos_det(null,
-                                headers[0],
+                                headers[1],
                                 bsNumber(j),
                                 d[1],
                                 "", // desc
@@ -2073,7 +2073,7 @@ public class fapData {
                             int j = 0;         
                             for (String[] d : details) {         
                             ordData.pos_det posd = new ordData.pos_det(null,
-                                headers[0],
+                                headers[1],
                                 bsNumber(j),
                                 d[1],
                                 "", // desc
@@ -2090,6 +2090,7 @@ public class fapData {
                             posdlist.add(posd);
                             j++;
                             }   
+                            
                      ordData.pos_mstr pos = new ordData.pos_mstr(null, 
                             headers[1],
                             key,
