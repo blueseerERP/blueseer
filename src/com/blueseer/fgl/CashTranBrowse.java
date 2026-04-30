@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import com.blueseer.shp.*;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -67,13 +68,24 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.adm.admData;
+import com.blueseer.fap.fapData;
+import static com.blueseer.fap.fapData.getCashTranBrowseViewDet;
+import static com.blueseer.fap.fapData.getCashTranChartBuySell;
+import static com.blueseer.fap.fapData.getCashTranChartExpense;
+import static com.blueseer.fap.fapData.getCashTranInvAssetTotal;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.getTitleTag;
+import static com.blueseer.utl.BlueSeerUtils.jsonToData;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
@@ -81,11 +93,14 @@ import java.util.Locale;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import org.jfree.chart.ChartFactory;
@@ -102,6 +117,11 @@ import org.jfree.data.general.DefaultPieDataset;
  */
 public class CashTranBrowse extends javax.swing.JPanel {
  
+    public String rsData; 
+    Object[][] roData;
+    ArrayList<String[]> initDataSets = new ArrayList<>();
+    String defaultSite = "";
+    String defaultCurrency = "";
     String exoincfilepath = OVData.getSystemTempDirectory() + "/" + "chartexpinc.jpg";
     String buysellfilepath = OVData.getSystemTempDirectory() + "/" + "chartbuysell.jpg";
     double expenses = 0;
@@ -198,138 +218,64 @@ public class CashTranBrowse extends javax.swing.JPanel {
     }
     
       public void chartExp() {
-          
-          expenses = 0;
-          
-         try {
-          
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        ArrayList<String[]> data = new ArrayList<>();
+        data = getCashTranChartExpense(dfdate.format(dcfrom.getDate()),
+                dfdate.format(dcto.getDate()),
+                ddsite.getSelectedItem().toString());
+        for (String[] r : data) {
+            double amt = bsParseDouble(r[1]);
+            if (amt < 0) {
+                amt = amt * -1;
             }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");       
-                 
-                  
-                res = st.executeQuery("select posd_acct, ac_desc, sum(posd_netprice * posd_qty) as 'sum' from pos_det " +
-                        " inner join pos_mstr on pos_nbr = posd_nbr  " +
-                        " inner join ac_mstr on ac_id = posd_acct  " +
-                        " where pos_entrydate >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
-                        " AND pos_entrydate <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
-                        " AND pos_type = 'expense' " +
-                        " AND pos_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +       
-                        " group by posd_acct, ac_desc order by posd_acct desc   ;");
-             
-                DefaultPieDataset dataset = new DefaultPieDataset();
+            dataset.setValue(r[0], amt);            
+        }
                
-                String acct = "";
-                while (res.next()) {
-                      acct = res.getString("ac_desc");  
-                    double amt = res.getDouble("sum");
-                    if (amt < 0) {amt = amt * -1;}
-                    
-                    expenses += amt;
-                    
-                    if (amt > 0) {
-                       dataset.setValue(acct, amt);
-                    }
-                }
-        JFreeChart chart = ChartFactory.createPieChart("Expenses", dataset, true, true, false);
+        JFreeChart chart = ChartFactory.createPieChart("Expenses", dataset, false, false, false);
         PiePlot plot = (PiePlot) chart.getPlot();
-      //  plot.setSectionPaint(KEY1, Color.green);
-      //  plot.setSectionPaint(KEY2, Color.red);
-     //   plot.setExplodePercent(KEY1, 0.10);
-        //plot.setSimpleLabels(true);
-
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
+            "{0}: {1} ({2})", NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
         plot.setLabelGenerator(gen);
 
         try {
         
-        ChartUtilities.saveChartAsJPEG(new File(exoincfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.8));
-       // ChartUtilities.saveChartAsJPEG(new File(exoincfilepath), chart, 400, 200);
+        ChartUtilities.saveChartAsJPEG(new File(exoincfilepath), chart, (int) (this.getWidth() / 2), (int) (this.getHeight() / 1.2));
         } catch (IOException e) {
             MainFrame.bslog(e);
         }
         ImageIcon myicon = new ImageIcon(exoincfilepath);
-        myicon.getImage().flush();  
-      //  myicon.getImage().getScaledInstance(400, 200, Image.SCALE_SMOOTH);
-        this.chartlabel.setIcon(myicon);
+        myicon.getImage().flush();   
+        this.pielabel.setIcon(myicon);
         this.repaint();
-       
-       // bsmf.MainFrame.show("your chart is complete...go to chartview");
-                
-              } catch (SQLException s) {
-                  MainFrame.bslog(s);
-                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+         
     }
        
       public void chartBuyAndSell() {
-         try {
-          
-           Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
+        
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        ArrayList<String[]> data = new ArrayList<>();
+        data = getCashTranChartBuySell(dfdate.format(dcfrom.getDate()),
+                dfdate.format(dcto.getDate()),
+                ddsite.getSelectedItem().toString()); 
+        for (String[] r : data) {
+            double amt = bsParseDouble(r[1]);
+            if (amt < 0) {
+                amt = amt * -1;
             }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");       
-                 
-                  
-                res = st.executeQuery("select posd_acct, ac_desc, sum(posd_netprice * posd_qty) as 'sum' from pos_det " +
-                        " inner join pos_mstr on pos_nbr = posd_nbr  " +
-                        " inner join ac_mstr on ac_id = posd_acct  " +
-                        " where pos_entrydate >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
-                        " AND pos_entrydate <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
-                        " AND pos_type <> 'expense' " +
-                        " AND pos_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +       
-                        " group by posd_acct, ac_desc order by posd_acct desc   ;");
-             
-                DefaultPieDataset dataset = new DefaultPieDataset();
+            dataset.setValue(r[0], amt);            
+        }
                
-                String acct = "";
-                while (res.next()) {
-                      acct = res.getString("ac_desc");
-                    double amt = res.getDouble("sum");
-                    if (amt < 0) {amt = amt * -1;}
-                  dataset.setValue(acct, amt);
-                }
-        JFreeChart chart = ChartFactory.createPieChart("Income", dataset, true, true, false);
+        JFreeChart chart = ChartFactory.createPieChart("Income", dataset, false, false, false);
         PiePlot plot = (PiePlot) chart.getPlot();
-      //  plot.setSectionPaint(KEY1, Color.green);
-      //  plot.setSectionPaint(KEY2, Color.red);
-     //   plot.setExplodePercent(KEY1, 0.10);
-        //plot.setSimpleLabels(true);
-
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
+            "{0}: {1} ({2})", NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
         plot.setLabelGenerator(gen);
 
         try {
         
-        ChartUtilities.saveChartAsJPEG(new File(buysellfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.8));
+        ChartUtilities.saveChartAsJPEG(new File(buysellfilepath), chart, (int) (this.getWidth() / 2), (int) (this.getHeight() / 1.2));
         } catch (IOException e) {
             MainFrame.bslog(e);
         }
@@ -337,24 +283,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
         myicon.getImage().flush();   
         this.pielabel.setIcon(myicon);
         this.repaint();
-       
-       // bsmf.MainFrame.show("your chart is complete...go to chartview");
-                
-              } catch (SQLException s) {
-                  MainFrame.bslog(s);
-                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+         
     }
        
      
@@ -367,61 +296,62 @@ public class CashTranBrowse extends javax.swing.JPanel {
         initComponents();
         setLanguageTags(this);
     }
-
-    public void getdetail(String shipper) {
-      
-         modeldetail.setNumRows(0);
-         double totalsales = 0;
-         double totalqty = 0;
-         
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                String blanket = "";
-                res = st.executeQuery("select posd_nbr, posd_item, posd_desc, posd_ref, posd_qty, posd_netprice from pos_det " +
-                        " where posd_nbr = " + "'" + shipper + "'" +  ";");
-                while (res.next()) {
-                    totalsales = totalsales + (res.getDouble("posd_qty") * res.getDouble("posd_netprice"));
-                    totalqty = totalqty + res.getDouble("posd_qty");
-                   modeldetail.addRow(new Object[]{ 
-                      res.getString("posd_nbr"), 
-                      res.getString("posd_item"),
-                      res.getString("posd_desc"),
-                      res.getString("posd_ref"),
-                      res.getString("posd_qty"),
-                      res.getString("posd_netprice")});
-                }
-               
-             
-               
-                tabledetail.setModel(modeldetail);
-                this.repaint();
-
-            } catch (SQLException s) {
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+    
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else {
+            return;
         }
-
-    }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                 // start reset background colors
+                if (component instanceof JTextField) {
+                    if (((JTextField) component).isEditable()) {
+                     component.setBackground(Color.WHITE);
+                    } else {
+                     component.setBackground(bsmf.MainFrame.nonEditableColor);   
+                    }
+                }
+                if (component instanceof JComboBox) {
+                     component.setBackground(bsmf.MainFrame.ddbgcolor);
+                }
+                // end reset background colors
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
     
     public void setLanguageTags(Object myobj) {
       // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
@@ -470,8 +400,100 @@ public class CashTranBrowse extends javax.swing.JPanel {
        }
     }
     
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+         
+          String action = "";
+          String[] key = null;
+          
+          public Task(String action, String[] key) { 
+              this.action = action;
+              this.key = key;
+          }     
+            
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            rsData = "";
+            
+            
+            switch(this.action) {
+                case "dataInit":
+                    message = getInitialization();
+                    break;
+                
+                case "getBrowseView":
+                    message = getBrowseView();
+                    break; 
+                    
+                case "getBrowseViewDet":
+                    message = getBrowseViewDet(key[0]);
+                    break;     
+                    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            
+            
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+            
+            
+            if (this.action.equals("dataInit")) {
+                    done_Initialization();
+            }
+            
+            if (this.action.equals("getBrowseView")) {
+                done_getBrowseView();
+            }
+            
+            if (this.action.equals("getBrowseViewDet")) {
+                done_getBrowseViewDet();
+            }
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+    
     
     public void initvars(String[] arg) {
+        executeTask("dataInit", null);
+    }
+    
+    public String[] getInitialization() {
+        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "vendors");
+        if (initDataSets.isEmpty()) {
+           return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.dataInitError}; 
+        } else {
+           return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess}; 
+        }
+    }  
+    
+    public void done_Initialization() {
+        setPanelComponentState(this, true);
+         chartpanel.setVisible(false);
         tbexpenses.setText("0");
         tbtotsales.setText("0");
         tbincome.setText("0");
@@ -507,22 +529,147 @@ public class CashTranBrowse extends javax.swing.JPanel {
         
         
        
-        ddsite.removeAllItems();
-        ArrayList<String> mylist = OVData.getSiteList(bsmf.MainFrame.userid);
-        for (String code : mylist) {
-            ddsite.addItem(code);
-        }
-        ddsite.setSelectedItem(OVData.getDefaultSite());
-                    
-                    
-                    
-       
-        
         btdetail.setEnabled(false);
         detailpanel.setVisible(false);
         chartpanel.setVisible(false);
-          
+        
+        ddsite.removeAllItems();
+        
+        for (String[] s : initDataSets) {
+            
+            if (s[0].equals("sites")) {
+              ddsite.addItem(s[1]); 
+            }
+            if (s[0].equals("site")) {
+              defaultSite = s[1]; 
+            }            
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1]; 
+            }
+        }
+        if (ddsite.getItemCount() > 0) {
+            ddsite.setSelectedItem(defaultSite);
+        }
+       
+       
     }
+    
+    public String[] getBrowseView() {
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        
+        String jsonString = null; 
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
+        ArrayList<String[]> list = new ArrayList<>();
+        list.add(new String[]{"id","getCashTranBrowseView"});
+        list.add(new String[]{"param1",dfdate.format(dcfrom.getDate())});
+        list.add(new String[]{"param2",dfdate.format(dcto.getDate())});
+        list.add(new String[]{"param3",ddsite.getSelectedItem().toString()});
+        
+        try {
+                jsonString = sendServerPost(list, "", null, "dataServFAP"); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getCashTranBrowseView")};
+            }
+        } else {
+            jsonString = fapData.getCashTranBrowseView(new String[]{
+                dfdate.format(dcfrom.getDate()),
+                dfdate.format(dcto.getDate()),
+                ddsite.getSelectedItem().toString()
+            });
+        }
+      
+      if (jsonString == null) {
+          return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getCashTranBrowseView return jsonString is null")};
+      }
+        
+      roData = jsonToData(jsonString);
+       
+      return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getMessageTag(1125)};
+    }
+
+    public void done_getBrowseView() {
+        setPanelComponentState(this, true);
+        int i = 0;
+        double amt = 0;
+        double totsales = 0;
+         double totpurch = 0;
+         double totincome = 0;
+         double totexpense = 0;
+        mymodel.setNumRows(0);
+        if (roData != null) {
+        for (Object[] rowData : roData) {
+            if (roData[i][5].toString().equals("sell")) {
+                totsales += bsParseDouble(roData[i][8].toString());
+            } else if (roData[i][5].toString().equals("buy")) {
+                totpurch += bsParseDouble(roData[i][8].toString());
+            } else if (roData[i][5].toString().equals("income")) {
+                totincome += bsParseDouble(roData[i][8].toString());
+            } else {
+                totexpense += bsParseDouble(roData[i][8].toString());
+            }
+            amt = amt + bsParseDouble(roData[i][5].toString());
+            roData[i][5] = bsParseDouble(roData[i][5].toString());
+            i++;
+            mymodel.addRow(rowData);
+        }
+        
+                chartBuyAndSell();
+                chartExp();       
+                       
+                tbtotsales.setText(currformatDouble(totsales));
+                tbincome.setText(currformatDouble(totincome));
+                tbtotpurch.setText(currformatDouble(totpurch));
+                tbexpenses.setText(currformatDouble(totexpense));
+                tbprofit.setText(currformatDouble(totincome - totexpense));  // expenses depend on math in chartExp();
+        
+        }
+        
+        tbinventory.setText(currformatDouble(getCashTranInvAssetTotal()));
+        roData = null;
+    }   
+    
+    public String[] getBrowseViewDet(String key) {
+      
+        String jsonString = null;
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "getCashTranBrowseViewDet"});
+            list.add(new String[]{"param1", key});
+            try {
+                jsonString = sendServerPost(list, "", null, "dataServFAP"); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getDetail")};
+            }
+        } else {
+            jsonString = getCashTranBrowseViewDet(key); 
+        }        
+        roData = jsonToData(jsonString);
+        
+        return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getMessageTag(1125)};
+      
+    }
+   
+    public void done_getBrowseViewDet() {
+      modeldetail.setNumRows(0);
+       //  double totalsales = 0;
+      //   double totalqty = 0;
+         
+       if (roData != null) {
+        if (roData.length > 0) {
+            for (Object[] rowData : roData) {
+               // totalsales = totalsales + (bsParseDouble(rowData[6].toString()) * bsParseDouble(rowData[7].toString()));
+               // totalqty = totalqty + bsParseDouble(rowData[6].toString());
+                modeldetail.addRow(rowData);
+            } 
+        }
+       }
+       roData = null;
+    }
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -867,159 +1014,9 @@ public class CashTranBrowse extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
-    try {
-           Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                String fromdate = "";
-                String todate = "";
-                mymodel.setNumRows(0);
-                 
-              
-                
-                 double totsales = 0;
-                 double totpurch = 0;
-                 double totincome = 0;
-                 double totexpense = 0;
-                 
-                 String trantype = "";
-                 
-            
-                  Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-                 while (en.hasMoreElements()) {
-                     TableColumn tc = en.nextElement();
-                     if (    tc.getModelIndex() == 0 ||
-                             tc.getModelIndex() == 9 ) {
-                         continue;
-                     }
-                     tc.setCellRenderer(new CashTranBrowse.SomeRenderer());
-                 }   
-               
-                
-             
-                 if (dcfrom.getDate() == null) {
-                     fromdate = bsmf.MainFrame.lowdate;
-                 } else {
-                     fromdate = dfdate.format(dcfrom.getDate());
-                 }
-                 if (dcto.getDate() == null) {
-                     todate = bsmf.MainFrame.hidate;
-                 } else {
-                    todate = dfdate.format(dcto.getDate()); 
-                 }
-                  
-                      //lets get the total inventory value first
-                      inventory = 0;
-                      res = st.executeQuery("select sum(in_qoh * it_mtl_cost) as 'sum' from in_mstr " +
-                        " inner join item_mstr on it_item = in_item where it_code = 'A' " );
-                      while (res.next()) {
-                          inventory += res.getDouble("sum");
-                      }
-                      tbinventory.setText(currformatDouble(inventory));
-                
-                      
-                  // now lets get the pos_mstr records    
-                  res = st.executeQuery("select pos_nbr, pos_site, pos_key, pos_type, pos_entity, pos_entityname, pos_entrydate, pos_totqty, pos_totamt from pos_mstr " +
-                        " where pos_entrydate >= " + "'" + fromdate + "'" + 
-                        " and pos_entrydate <= " + "'" + todate + "'" +
-                        " and pos_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +        
-                        " order by pos_nbr desc;");
-                
-                
-                       while (res.next()) {
-                          
-                        
-                         trantype = res.getString("pos_type");
-                         if (trantype.equals("sell")) {
-                             totsales = totsales + res.getDouble("pos_totamt");
-                         mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
-                               res.getString("pos_nbr"),
-                                res.getString("pos_key"),
-                                res.getString("pos_type"),
-                                res.getString("pos_entity"),
-                                res.getString("pos_entityname"),
-                                res.getString("pos_entrydate"),
-                                res.getString("pos_totqty"),
-                                currformatDouble(res.getDouble("pos_totamt")),
-                                BlueSeerUtils.clickprint 
-                            });
-                         } else if (trantype.equals("buy")) {
-                             totpurch = totpurch + res.getDouble("pos_totamt");
-                             mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
-                               res.getString("pos_nbr"),
-                                res.getString("pos_key"),
-                                res.getString("pos_type"),
-                                res.getString("pos_entity"),
-                                res.getString("pos_entityname"),
-                                res.getString("pos_entrydate"),
-                                res.getString("pos_totqty"),
-                                currformatDouble(res.getDouble("pos_totamt")),
-                                BlueSeerUtils.clicklock 
-                            }); 
-                         } else if (trantype.equals("income")) {
-                            totincome = totincome + res.getDouble("pos_totamt");    
-                             mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
-                               res.getString("pos_nbr"),
-                                res.getString("pos_key"),
-                                res.getString("pos_type"),
-                                res.getString("pos_entity"),
-                                res.getString("pos_entityname"),
-                                res.getString("pos_entrydate"),
-                                res.getString("pos_totqty"),
-                                currformatDouble(res.getDouble("pos_totamt")),
-                                BlueSeerUtils.clicklock 
-                            });     
-                         } else {
-                             totexpense = totexpense + res.getDouble("pos_totamt");
-                             mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
-                               res.getString("pos_nbr"),
-                                res.getString("pos_key"),
-                                res.getString("pos_type"),
-                                res.getString("pos_entity"),
-                                res.getString("pos_entityname"),
-                                res.getString("pos_entrydate"),
-                                res.getString("pos_totqty"),
-                                currformatDouble(res.getDouble("pos_totamt")),
-                                BlueSeerUtils.clicklock 
-                            }); 
-                         }
-                                
-                       }
-              
-                       
-                chartBuyAndSell();
-                chartExp();       
-                       
-                tbtotsales.setText(currformatDouble(totsales));
-                tbincome.setText(currformatDouble(totincome));
-                tbtotpurch.setText(currformatDouble(totpurch));
-                tbexpenses.setText(currformatDouble(expenses));
-                tbprofit.setText(currformatDouble(totincome - totexpense));  // expenses depend on math in chartExp();
-                
-             
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        mymodel.setRowCount(0);
+        setPanelComponentState(this, false);
+        executeTask("getBrowseView", null);
        
     }//GEN-LAST:event_btRunActionPerformed
 
@@ -1033,24 +1030,12 @@ public class CashTranBrowse extends javax.swing.JPanel {
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-                getdetail(tablereport.getValueAt(row, 1).toString());
+                executeTask("getBrowseViewDet", new String[]{tablereport.getValueAt(row, 1).toString()});
+               // getdetail(tablereport.getValueAt(row, 1).toString());
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
         }
-        /*
-        if ( col == 0 && tablereport.getValueAt(row, 4).toString().equals("sell") ) {
-                String mypanel = "MenuShipMaint";
-               if (! checkperms(mypanel)) { return; }
-               String args = tablereport.getValueAt(row, 3).toString();
-               reinitpanels(mypanel, true, args);
-        }
-        if ( col == 0 && tablereport.getValueAt(row, 4).toString().equals("buy") ) {
-                String mypanel = "ReceiverMaintMenu";
-               if (! checkperms(mypanel)) { return; }
-               String args = tablereport.getValueAt(row, 3).toString();
-               reinitpanels(mypanel, true, args);
-        }
-*/
+       
         if ( col == 9 && tablereport.getValueAt(row, 3).toString().equals("sell")) {
               OVData.printReceipt(tablereport.getValueAt(row, 2).toString());
         }

@@ -1287,9 +1287,162 @@ public class fapData {
 
     }
 
+    public static double getCashTranInvAssetTotal() {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "getCashTranInvAssetTotal"});
+            try {
+                return jsonToDouble(sendServerPost(list, "", null, "dataServFAP")); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return 0.00;
+            }
+        }
+        
+        double r = 0.00;
+
+        try {
+            
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                    res = st.executeQuery("select sum(in_qoh * it_mtl_cost) as 'sum' from in_mstr " +
+                        " inner join item_mstr on it_item = in_item where it_code = 'A' " );
+                      while (res.next()) {
+                          r += res.getDouble("sum");
+                      }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return r;
+
+    }
+
 
     
+    
+    
     // misc
+    public static String getCashTranBrowseView(String[] keys) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {  
+                 
+                    res = st.executeQuery("select pos_nbr, pos_site, pos_key, pos_type, pos_entity, pos_entityname, pos_entrydate, pos_totqty, pos_totamt from pos_mstr " +
+                        " where pos_entrydate >= " + "'" + keys[0] + "'" + 
+                        " and pos_entrydate <= " + "'" + keys[1] + "'" +
+                        " and pos_site = " + "'" + keys[2] + "'" +        
+                        " order by pos_nbr desc;");
+                    
+                    while (res.next()) {                  
+                    JSONArray rowArray = new JSONArray(); 
+                        rowArray.put("detail");
+                        rowArray.put(res.getString("pos_nbr"));
+                        rowArray.put(res.getString("pos_key"));
+                        rowArray.put(res.getString("pos_type"));
+                        rowArray.put(res.getString("pos_entity"));
+                        rowArray.put(res.getString("pos_entityname"));
+                        rowArray.put(res.getString("pos_entrydate"));
+                        rowArray.put(bsNumber(res.getDouble("pos_totqty")));
+                        rowArray.put(bsNumber(res.getDouble("pos_totamt")));
+                        rowArray.put("click_tbd");
+                        jsonarray.put(rowArray);
+                }
+               
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return jsonarray.toString(); 
+    }
+   
+    public static String getCashTranBrowseViewDet(String key) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {  
+                 
+                    res = st.executeQuery("select posd_nbr, posd_item, posd_desc, posd_ref, posd_qty, posd_netprice from pos_det " +
+                        " where posd_nbr = " + "'" + key + "'" +  ";");
+                    
+                    while (res.next()) {                  
+                    JSONArray rowArray = new JSONArray(); 
+                        rowArray.put(res.getString("posd_nbr"));
+                        rowArray.put(res.getString("posd_item"));
+                        rowArray.put(res.getString("posd_desc"));
+                        rowArray.put(res.getString("posd_ref"));
+                        rowArray.put(res.getString("posd_qty"));
+                        rowArray.put(res.getString("posd_netprice"));
+                        jsonarray.put(rowArray);
+                }
+               
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return jsonarray.toString(); 
+    }
+   
+    
     public static String[] cashBuy(ArrayList<String[]> details, String[] headers) {
         // headers = vendorid, expensenbr, effdate, ref, po, site, currency
         // details = item, qty, price
@@ -2577,6 +2730,122 @@ public class fapData {
            while (res.next()) {
                String[] x = new String[2];
                x[0] = res.getString("vod_expense_acct");
+               x[1] = res.getString("sum");
+                myarray.add(x);
+            }
+
+       }
+        catch (SQLException s){
+             bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static ArrayList<String[]> getCashTranChartExpense(String fromdate, String todate, String site) {
+    if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "getCashTranChartExpense"});
+            list.add(new String[]{"param1", fromdate});
+            list.add(new String[]{"param2", todate});
+            list.add(new String[]{"param3", site});
+            try {
+                return jsonToArrayListStringArray(sendServerPost(list, "", null, "dataServFAP"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+    }
+    ArrayList<String[]> myarray = new ArrayList();
+
+    try{
+
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+            res = st.executeQuery("select posd_acct, ac_desc, sum(posd_netprice * posd_qty) as 'sum' from pos_det " +
+                        " inner join pos_mstr on pos_nbr = posd_nbr  " +
+                        " inner join ac_mstr on ac_id = posd_acct  " +
+                        " where pos_entrydate >= " + "'" + fromdate + "'" +
+                        " AND pos_entrydate <= " + "'" + todate + "'" +
+                        " AND pos_type = 'expense' " +
+                        " AND pos_site = " + "'" + site + "'" +       
+                        " group by posd_acct, ac_desc order by posd_acct desc   ;");
+           while (res.next()) {
+               String[] x = new String[2];
+               x[0] = res.getString("ac_desc");
+               x[1] = res.getString("sum");
+                myarray.add(x);
+            }
+
+       }
+        catch (SQLException s){
+             bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static ArrayList<String[]> getCashTranChartBuySell(String fromdate, String todate, String site) {
+    if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "getCashTranChartBuySell"});
+            list.add(new String[]{"param1", fromdate});
+            list.add(new String[]{"param2", todate});
+            list.add(new String[]{"param3", site});
+            try {
+                return jsonToArrayListStringArray(sendServerPost(list, "", null, "dataServFAP"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+    }
+    ArrayList<String[]> myarray = new ArrayList();
+
+    try{
+
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+            res = st.executeQuery("select posd_acct, ac_desc, sum(posd_netprice * posd_qty) as 'sum' from pos_det " +
+                        " inner join pos_mstr on pos_nbr = posd_nbr  " +
+                        " inner join ac_mstr on ac_id = posd_acct  " +
+                        " where pos_entrydate >= " + "'" + fromdate + "'" +
+                        " AND pos_entrydate <= " + "'" + todate + "'" +
+                        " AND pos_type <> 'expense' " +
+                        " AND pos_site = " + "'" + site + "'" +       
+                        " group by posd_acct, ac_desc order by posd_acct desc   ;");
+           while (res.next()) {
+               String[] x = new String[2];
+               x[0] = res.getString("ac_desc");
                x[1] = res.getString("sum");
                 myarray.add(x);
             }

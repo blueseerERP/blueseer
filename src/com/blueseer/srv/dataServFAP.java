@@ -32,6 +32,7 @@ import static com.blueseer.fap.fapData.deleteExpMstr;
 import static com.blueseer.fap.fapData.getAPExpenseByAcct;
 import static com.blueseer.fap.fapData.getAPExpenseByVendor;
 import static com.blueseer.fap.fapData.getAPVoucherSet;
+import static com.blueseer.fap.fapData.getCashTranInvAssetTotal;
 import static com.blueseer.fap.fapData.getExpMstr;
 import static com.blueseer.fap.fapData.getFapRptPickerData;
 import static com.blueseer.fap.fapData.getPOsummaryChargesTaxes;
@@ -342,6 +343,12 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             response.getWriter().print(doubleToJson(getRecurringIncomeTotal(request.getHeader("param1"))));
             break;  
         }
+        
+        case "getCashTranInvAssetTotal" : { 
+            response.getWriter().print(doubleToJson(getCashTranInvAssetTotal()));
+            break;  
+        }
+        
         
         case "getRecurringExpenseHistory" : {
             response.getWriter().print(ArrayListStringArrayToJson(getRecurringExpenseHistory(request.getHeader("param1"))));
