@@ -1619,7 +1619,7 @@ public class fapData {
                      ordData.pos_mstr pos = new ordData.pos_mstr(null, 
                             headers[1],
                             key,
-                            "buy",
+                            "sell",
                             headers[0], // cust
                             "", // name
                             dfdate.format(now), // date

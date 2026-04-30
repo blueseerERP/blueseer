@@ -27,17 +27,27 @@ package com.blueseer.srv;
 
 
 import com.blueseer.fap.fapData;
+import static com.blueseer.fap.fapData.addExpMstr;
+import static com.blueseer.fap.fapData.deleteExpMstr;
 import static com.blueseer.fap.fapData.getAPExpenseByAcct;
 import static com.blueseer.fap.fapData.getAPExpenseByVendor;
 import static com.blueseer.fap.fapData.getAPVoucherSet;
+import static com.blueseer.fap.fapData.getExpMstr;
 import static com.blueseer.fap.fapData.getFapRptPickerData;
 import static com.blueseer.fap.fapData.getPOsummaryChargesTaxes;
+import static com.blueseer.fap.fapData.getRecurringExpenseHistory;
+import static com.blueseer.fap.fapData.getRecurringExpenseRecords;
+import static com.blueseer.fap.fapData.getRecurringIncomeTotal;
 import static com.blueseer.fap.fapData.getVoucherBrowseView;
 import static com.blueseer.fap.fapData.updateAPVoucherStatus;
+import static com.blueseer.fap.fapData.updateExpActive;
+import static com.blueseer.fap.fapData.updateExpMstr;
+import static com.blueseer.fap.fapData.updateRecurExp_Income;
 import static com.blueseer.utl.BlueSeerUtils.ArrayListStringArrayToJson;
 import static com.blueseer.utl.BlueSeerUtils.arrayToJson;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerAuth;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerAuthAPI;
+import static com.blueseer.utl.BlueSeerUtils.doubleToJson;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -118,6 +128,119 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             response.getWriter().print(arrayToJson(fapData.cashBuy(details, headers))); 
             break;
             }
+        
+        case "cashSell" : {
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            reader.close();
+            ObjectMapper om = new ObjectMapper();
+            String[] ca = sb.toString().split("=_=", -1);
+            ArrayList<String[]> details = om.readValue(ca[0], ArrayList.class);
+            String[] headers = om.readValue(ca[1], String[].class); 
+            response.getWriter().print(arrayToJson(fapData.cashSell(details, headers))); 
+            break;
+            }
+        
+        case "cashExpense" : {
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            reader.close();
+            ObjectMapper om = new ObjectMapper();
+            String[] ca = sb.toString().split("=_=", -1);
+            ArrayList<String[]> details = om.readValue(ca[0], ArrayList.class);
+            String[] headers = om.readValue(ca[1], String[].class); 
+            response.getWriter().print(arrayToJson(fapData.cashExpense(details, headers))); 
+            break;
+            }
+        
+        case "cashIncome" : {
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            reader.close();
+            ObjectMapper om = new ObjectMapper();
+            String[] ca = sb.toString().split("=_=", -1);
+            ArrayList<String[]> details = om.readValue(ca[0], ArrayList.class);
+            String[] headers = om.readValue(ca[1], String[].class); 
+            response.getWriter().print(arrayToJson(fapData.cashIncome(details, headers))); 
+            break;
+            }
+        
+        case "cashExpenseRecurring" : {
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            reader.close();
+            ObjectMapper om = new ObjectMapper();
+            String[] ca = sb.toString().split("=_=", -1);
+            ArrayList<String[]> details = om.readValue(ca[0], ArrayList.class);
+            String[] headers = om.readValue(ca[1], String[].class); 
+            response.getWriter().print(arrayToJson(fapData.cashExpenseRecurring(details, headers))); 
+            break;
+            }
+        
+        case "addExpMstr" : {
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            ObjectMapper objectMapper = new ObjectMapper();
+            fapData.exp_mstr am = objectMapper.readValue(sb.toString(), fapData.exp_mstr.class);            
+            response.getWriter().print(arrayToJson(addExpMstr(am)));
+            break;
+          }
+    
+        case "updateExpMstr" : {
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            ObjectMapper objectMapper = new ObjectMapper();
+            fapData.exp_mstr am = objectMapper.readValue(sb.toString(), fapData.exp_mstr.class);            
+            response.getWriter().print(arrayToJson(updateExpMstr(am)));
+            break;
+          }
+    
+        case "deleteExpMstr" : {
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            ObjectMapper objectMapper = new ObjectMapper();
+            fapData.exp_mstr am = objectMapper.readValue(sb.toString(), fapData.exp_mstr.class);            
+            response.getWriter().print(arrayToJson(deleteExpMstr(am)));
+            break;
+          }
+    
+    
+        case "getExpMstr" : { 
+            String[] key = new String[]{request.getHeader("param1")}; 
+            fapData.exp_mstr x = getExpMstr(key);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String r = objectMapper.writeValueAsString(x);
+            response.getWriter().print(r);
+            break;
+          }
         
         case "VoucherTransaction" : {
             String line;
@@ -203,6 +326,31 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         case "updateAPVoucherStatus" : { 
             updateAPVoucherStatus(request.getHeader("param1"), request.getHeader("param2"));
             break;  
+        }
+        
+        case "updateRecurExp_Income" : { 
+            response.getWriter().print(updateRecurExp_Income(request.getHeader("param1"), request.getHeader("param2")));
+            break;  
+        }
+        
+        case "updateExpActive" : { 
+            response.getWriter().print(updateExpActive(request.getHeader("param1"), request.getHeader("param2")));
+            break;  
+        }
+        
+        case "getRecurringIncomeTotal" : { 
+            response.getWriter().print(doubleToJson(getRecurringIncomeTotal(request.getHeader("param1"))));
+            break;  
+        }
+        
+        case "getRecurringExpenseHistory" : {
+            response.getWriter().print(ArrayListStringArrayToJson(getRecurringExpenseHistory(request.getHeader("param1"))));
+            break;
+        }
+        
+        case "getRecurringExpenseRecords" : {
+            response.getWriter().print(ArrayListStringArrayToJson(getRecurringExpenseRecords(request.getHeader("param1"), request.getHeader("param2"))));
+            break;
         }
         
         case "getFapRptPickerData" : {

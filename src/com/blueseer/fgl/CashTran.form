@@ -131,8 +131,10 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="ddentity1" min="-2" pref="110" max="-2" attributes="0"/>
+                                      <Component id="tbcust" min="-2" pref="110" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btLookUpBillTo" min="-2" pref="25" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                                       <Component id="btaddentity1" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="dcdate1" alignment="0" min="-2" pref="161" max="-2" attributes="0"/>
@@ -176,10 +178,13 @@
                           <Component id="lbtitle1" min="-2" pref="62" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="ddentity1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblentity1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btaddentity1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblentity1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btaddentity1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbcust" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="btLookUpBillTo" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -209,16 +214,6 @@
                 <Property name="text" type="java.lang.String" value="Entity"/>
                 <Property name="name" type="java.lang.String" value="sell_lblentity" noResource="true"/>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JComboBox" name="ddentity1">
-              <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="0"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddentity1ActionPerformed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="lbname1">
             </Component>
@@ -287,12 +282,14 @@
                               </Group>
                               <Component id="tbprice1" alignment="0" min="-2" pref="68" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="dditem1" min="-2" pref="180" max="-2" attributes="0"/>
+                                  <Component id="tbitemSell" min="-2" pref="180" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbacct1" min="-2" pref="141" max="-2" attributes="0"/>
+                                  <Component id="btLookUpItemDesc" min="-2" pref="27" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lbitemdesc" min="-2" pref="175" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace pref="282" max="32767" attributes="0"/>
+                          <EmptySpace pref="210" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -301,13 +298,16 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lbacct1" alignment="1" min="-2" pref="20" max="-2" attributes="0"/>
-                              <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                  <Component id="dditem1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lbitem1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lbitemdesc" alignment="1" min="-2" pref="20" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                                      <Component id="lbitem1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tbitemSell" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
+                              <Component id="btLookUpItemDesc" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="tbprice1" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -318,9 +318,9 @@
                               <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="tbrmks1" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbrmks1" min="-2" pref="22" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -360,19 +360,6 @@
                     <Property name="name" type="java.lang.String" value="sell_lblprice" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="dditem1">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="0"/>
-                    </Property>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dditem1ActionPerformed"/>
-                  </Events>
-                  <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-                  </AuxValues>
-                </Component>
                 <Component class="javax.swing.JButton" name="btdeleteitem1">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Del Item"/>
@@ -410,7 +397,7 @@
                     <Property name="name" type="java.lang.String" value="sell_lblqty" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbacct1">
+                <Component class="javax.swing.JLabel" name="lbitemdesc">
                 </Component>
                 <Component class="javax.swing.JTextField" name="tbpo1">
                 </Component>
@@ -428,8 +415,33 @@
                     <Property name="name" type="java.lang.String" value="sell_lblremarks" noResource="true"/>
                   </Properties>
                 </Component>
+                <Component class="javax.swing.JButton" name="btLookUpItemDesc">
+                  <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/images/find.png"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLookUpItemDescActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbitemSell">
+                </Component>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JButton" name="btLookUpBillTo">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/find.png"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" value="lookup"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLookUpBillToActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="tbcust">
+            </Component>
           </SubComponents>
         </Container>
         <Component class="javax.swing.JTextField" name="tbactualamt1">
