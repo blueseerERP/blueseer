@@ -51,6 +51,7 @@ import static com.blueseer.utl.BlueSeerUtils.arrayToJson;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerAuth;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerAuthAPI;
 import static com.blueseer.utl.BlueSeerUtils.doubleToJson;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -126,7 +127,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             reader.close();
             ObjectMapper om = new ObjectMapper();
             String[] ca = sb.toString().split("=_=", -1);
-            ArrayList<String[]> details = om.readValue(ca[0], ArrayList.class);
+            ArrayList<String[]> details = om.readValue(ca[0], new TypeReference<ArrayList<String[]>>() {});
             String[] headers = om.readValue(ca[1], String[].class); 
             response.getWriter().print(arrayToJson(fapData.cashBuy(details, headers))); 
             break;
@@ -142,7 +143,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             reader.close();
             ObjectMapper om = new ObjectMapper();
             String[] ca = sb.toString().split("=_=", -1);
-            ArrayList<String[]> details = om.readValue(ca[0], ArrayList.class);
+            ArrayList<String[]> details = om.readValue(ca[0], new TypeReference<ArrayList<String[]>>() {});
             String[] headers = om.readValue(ca[1], String[].class); 
             response.getWriter().print(arrayToJson(fapData.cashSell(details, headers))); 
             break;
@@ -158,7 +159,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             reader.close();
             ObjectMapper om = new ObjectMapper();
             String[] ca = sb.toString().split("=_=", -1);
-            ArrayList<String[]> details = om.readValue(ca[0], ArrayList.class);
+            ArrayList<String[]> details = om.readValue(ca[0], new TypeReference<ArrayList<String[]>>() {});
             String[] headers = om.readValue(ca[1], String[].class); 
             response.getWriter().print(arrayToJson(fapData.cashExpense(details, headers))); 
             break;
@@ -174,7 +175,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             reader.close();
             ObjectMapper om = new ObjectMapper();
             String[] ca = sb.toString().split("=_=", -1);
-            ArrayList<String[]> details = om.readValue(ca[0], ArrayList.class);
+            ArrayList<String[]> details = om.readValue(ca[0], new TypeReference<ArrayList<String[]>>() {});
             String[] headers = om.readValue(ca[1], String[].class); 
             response.getWriter().print(arrayToJson(fapData.cashIncome(details, headers))); 
             break;
@@ -190,7 +191,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             reader.close();
             ObjectMapper om = new ObjectMapper();
             String[] ca = sb.toString().split("=_=", -1);
-            ArrayList<String[]> details = om.readValue(ca[0], ArrayList.class);
+            ArrayList<String[]> details = om.readValue(ca[0], new TypeReference<ArrayList<String[]>>() {});
             String[] headers = om.readValue(ca[1], String[].class); 
             response.getWriter().print(arrayToJson(fapData.cashExpenseRecurring(details, headers))); 
             break;
