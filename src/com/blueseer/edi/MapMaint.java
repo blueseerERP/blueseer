@@ -29,9 +29,6 @@ package com.blueseer.edi;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.ds;
-import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
@@ -41,10 +38,6 @@ import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,8 +47,6 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
 import static com.blueseer.adm.SystemControl.newFile;
 import com.blueseer.edi.EDI.AnnoDoc;
 import static com.blueseer.edi.EDI.createIMAP;
@@ -87,7 +78,6 @@ import com.blueseer.shp.shpData.ship_det;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
-import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -106,8 +96,6 @@ import static com.blueseer.utl.EDData.getBSDocTypeFromStds;
 import static com.blueseer.utl.EDData.getDelimiters;
 import static com.blueseer.utl.EDData.readEDIRawFileIntoCbuf;
 import com.blueseer.utl.IBlueSeerT;
-import static com.blueseer.utl.OVData.getSystemAttachmentDirectory;
-import static com.blueseer.utl.OVData.getSystemEDIDirectory;
 import static com.blueseer.utl.OVData.getSystemTempDirectory;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -143,7 +131,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -152,8 +139,6 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -1262,42 +1247,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tamap.setCaretPosition(0);
         setAction(x.m()); 
     }
-    
-    public void updateEDIMstr(map_mstr mm) {
-         try {
-            
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            try {
-                    // NOTE:   cannot change edi_doc (it is a key in edi_mstr) ...if map_mstr has changed inbound doctype, then edi_mstr has to be recreated.
-                    st.executeUpdate("update edi_mstr set "
-                            + "edi_doctypeout = " + "'" + mm.map_outdoctype() + "'"  + ","
-                            + "edi_filetypeout = " + "'" + mm.map_outfiletype() + "'"  + ","   
-                            + "edi_filetype = " + "'" + mm.map_infiletype() + "'"  + ","         
-                            + "edi_ifs = " + "'" + mm.map_ifs() + "'" + ","
-                            + "edi_ofs = " + "'" + mm.map_ofs() + "'"
-                            + " where edi_map = " + "'" + mm.map_id() + "'"  
-                            + ";");                
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }
-    
+       
     public ArrayList<String> extractImports() {
         ArrayList<String> s = new ArrayList<String>();
         String[] x = tamap.getText().split("\n");
@@ -2061,52 +2011,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (panel.equals("tamap")) {
             mappanel.setVisible(false);
         }
-    }
-    
-    public void getdetail(String rvid) {
-      
-         modeldetail.setNumRows(0);
-         double total = 0;
-        
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                String blanket = "";
-                
-                res = st.executeQuery("select rvd_id, rvd_po, rvd_poline, rvd_item, rvd_packingslip, rvd_date, rvd_netprice, rvd_qty, rvd_voqty " +
-                        " from recv_det " +
-                        " where rvd_id = " + "'" + rvid + "'" + ";");
-                while (res.next()) {
-                   modeldetail.addRow(new Object[]{ 
-                      res.getString("rvd_id"), 
-                       res.getString("rvd_po"),
-                       res.getString("rvd_poline"),
-                       res.getString("rvd_item"),
-                       res.getString("rvd_packingslip"),
-                       res.getString("rvd_date"),
-                       currformatDouble(res.getDouble("rvd_netprice")),
-                      res.getInt("rvd_qty"), 
-                      res.getInt("rvd_voqty")});
-                }
-               
-              
-            
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-
-    }
+    }    
     
     public void saveFile() {
         Path path = FileSystems.getDefault().getPath(tbpath.getText());
