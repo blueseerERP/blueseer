@@ -1874,6 +1874,7 @@ public class fapData {
         int j = 0;
         double totamt = 0.00;
         double totqty = 0.00;
+        int batchid = OVData.getNextNbr("batch");
         
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         
@@ -1923,7 +1924,7 @@ public class fapData {
                 vi[3], //ap_curr
                 vi[3], //ap_base_curr
                 headers[1], //ap_check // in this case voucher number is reference field
-                "", //ap_batch
+                bsNumber(batchid), //ap_batch
                 headers[5], //ap_site
                 "Expense",
                 "",
