@@ -1853,6 +1853,22 @@ public class fapData {
         // headers = vendorid, expensenbr, effdate, ref, po, site, currency, remarks
         // details = "Line", "Item", "Qty", "Price", "Ref", "Acct"
         
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id","cashExpense"});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(details);
+                jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(headers);
+                System.out.println("HERE: " + jsonString);
+                return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAP"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        
+        
         String[] vi = getVendInfo(headers[0]);  // addr, acct, cc, currency, bank, terms, site
         
         int j = 0;
