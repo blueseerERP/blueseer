@@ -479,6 +479,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
     
     
     public void initvars(String[] arg) {
+        setPanelComponentState(this, false);
         executeTask("dataInit", null);
     }
     
