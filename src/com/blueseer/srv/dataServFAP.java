@@ -32,6 +32,8 @@ import static com.blueseer.fap.fapData.deleteExpMstr;
 import static com.blueseer.fap.fapData.getAPExpenseByAcct;
 import static com.blueseer.fap.fapData.getAPExpenseByVendor;
 import static com.blueseer.fap.fapData.getAPVoucherSet;
+import static com.blueseer.fap.fapData.getCashTranChartBuySell;
+import static com.blueseer.fap.fapData.getCashTranChartExpense;
 import static com.blueseer.fap.fapData.getCashTranInvAssetTotal;
 import static com.blueseer.fap.fapData.getExpMstr;
 import static com.blueseer.fap.fapData.getFapRptPickerData;
@@ -374,6 +376,31 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         break;
         }
         
+        case "getCashTranBrowseView" : { 
+      response.getWriter().print(fapData.getCashTranBrowseView(new String[]{request.getHeader("param1"), 
+                    request.getHeader("param2"),
+                    request.getHeader("param3")})); 
+      break;
+    } 
+        
+        case "getCashTranBrowseViewDet" : { 
+      response.getWriter().print(fapData.getCashTranBrowseViewDet(request.getHeader("param1"))); 
+      break; 
+    }  
+        
+        case "getCashTranChartExpense" : {
+            response.getWriter().print(ArrayListStringArrayToJson(getCashTranChartExpense(request.getHeader("param1"), 
+                    request.getHeader("param2"),
+                    request.getHeader("param3"))));
+            break;
+        }
+        
+        case "getCashTranChartBuySell" : {
+            response.getWriter().print(ArrayListStringArrayToJson(getCashTranChartBuySell(request.getHeader("param1"), 
+                    request.getHeader("param2"),
+                    request.getHeader("param3"))));
+            break;
+        }
         
         default:
         response.getWriter().print("");
