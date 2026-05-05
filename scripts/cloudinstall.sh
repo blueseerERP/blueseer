@@ -6,6 +6,7 @@ LOG_FILE=cloudinstall.log
 NO_APT_UPDATE="0"
 NO_P12="0"
 KEYNAME="blueseer"
+KEYPASS="placeholder"
 
 log() {
 echo "$(date '+%Y%m%d%H%M%S') -> $1" |tee -a "$LOG_FILE"
@@ -51,7 +52,7 @@ createP12() {
 ### create .p12 with keypair for TLS remote call
 log "step:  creating .p12 with keypair"
 read -r -p "Enter keystore/key passwd: " KEYPASS
-if [[ -z "$KEYPASS" ]]; then
+if [[ -z "$KEYPASS" || "$KEYPASS" == "placeholder" ]]; then
    echo "Error...must enter keystore/key passwd" >&2
    exit 1
 fi
@@ -128,7 +129,8 @@ PID=$!
 wait $PID
 
 log "step:  run blueseer mysql install script"
-/opt/blueseer/mysql_install.sh
+cd /opt/blueseer
+./mysql_install.sh
 
 
 log "step:  update relevant tables for access"
@@ -136,9 +138,16 @@ mysql -u root -p$mysqlpasswd bsdb -e "insert into usr_meta values ('access', 'ip
 mysql -u root -p$mysqlpasswd bsdb -e "update ov_mstr set ov_currency = 'USD';"
 
 
+log "creating web.properties file"
+echo "keystore=$p12dir" >/opt/blueseer/conf/web.properties
+echo "storepass=$KEYPASS" >>/opt/blueseer/conf/web.properties
+echo "keypass=$KEYPASS" >>/opt/blueseer/conf/web.properties
+
+
 
 log "step:  copy service file to systemd"
 cp /opt/blueseer/bsapi.service /usr/lib/systemd/system/
+chmod 644 /opt/blueseer/bsapi.service.sh
 chmod 644 /usr/lib/systemd/system/bsapi.service
 systemctl daemon-reload
 systemctl start bsapi.service

@@ -58,7 +58,7 @@ echo "fr=french"
 echo "es=spanish"
 echo "tr=turkish"
 echo "de=german"
-echo -n "Enter the two character language code (en, es, fr, etc): "
+echo -n "Enter the two character language code (en, es, fr, etc) default=en: "
 read LANG
 
 if [ ${#LANG} -ge 3 ]; then echo "you entered more than two characters...try again"; exit
