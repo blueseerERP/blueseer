@@ -846,6 +846,13 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
       break;
     } 
     
+    case "getAcctBalYTDBrowseView" : { 
+      response.getWriter().print(fglData.getAcctBalYTDBrowseView(new String[]{request.getHeader("param1"), 
+                    request.getHeader("param2"),
+                    request.getHeader("param3")} ));
+      break;
+    }
+    
     
     case "getInvoiceBrowseDetail" : { 
       response.getWriter().print(fglData.getInvoiceBrowseDetail(request.getHeader("param1"))); 

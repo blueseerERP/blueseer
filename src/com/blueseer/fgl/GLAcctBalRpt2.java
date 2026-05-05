@@ -117,10 +117,10 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class GLAcctBalRpt2 extends javax.swing.JPanel {
  
-     public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
-     public ArrayList<String[]> accounts;
-     public String data = null;
-     ArrayList<String[]> initDataSets = new ArrayList<>();
+    public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
+    public ArrayList<String[]> accounts;
+    public String data = null;
+    ArrayList<String[]> initDataSets = new ArrayList<>();
     String defaultSite = "";
     String defaultCurrency = "";
     String[] glCalDateArray;

@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.db;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -57,9 +58,15 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.adm.admData;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.dropColumn;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.jsonToData;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
+import java.awt.Color;
 import java.awt.Component;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
@@ -67,11 +74,15 @@ import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -83,8 +94,24 @@ public class GLAcctBalYTD extends javax.swing.JPanel {
      * Creates new form ScrapReportPanel
      */
     
+    public String data = null;
+    ArrayList<String[]> initDataSets = new ArrayList<>();
+    String defaultSite = "";
+    String defaultCurrency = "";
+    String[] glCalDateArray;
+    ArrayList<String> datelabels = new ArrayList<>();
+    public String rsData; 
+    Object[][] roData;
+    boolean isLoad = false;
+     
+     
+     MyTableModel mymodel = new MyTableModel(new Object[][]{},
+                        new String[]{getGlobalColumnTag("account"), 
+                            getGlobalColumnTag("description"), 
+                            getGlobalColumnTag("amount")});
     
-        class MyTableModel extends DefaultTableModel {  
+    
+    class MyTableModel extends DefaultTableModel {  
       
         public MyTableModel(Object rowData[][], Object columnNames[]) {  
              super(rowData, columnNames);  
@@ -113,6 +140,77 @@ public class GLAcctBalYTD extends javax.swing.JPanel {
         setLanguageTags(this);
     }
 
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+         
+          String action = "";
+          String[] key = null;
+          
+          public Task(String action, String[] key) { 
+              this.action = action;
+              this.key = key;
+          }     
+            
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            rsData = "";
+            
+            
+            switch(this.action) {
+                case "dataInit":
+                    message = getInitialization();
+                    break;
+                    
+                case "getBrowseView":
+                    message = getBrowseView();
+                    break;    
+                 
+                    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            
+            
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+            
+            
+            if (this.action.equals("dataInit")) {
+                    done_Initialization();
+            }
+            
+            if (this.action.equals("getBrowseView")) {
+                done_getBrowseView();
+            }
+            
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+    
     public void setLanguageTags(Object myobj) {
       // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
       
@@ -160,26 +258,173 @@ public class GLAcctBalYTD extends javax.swing.JPanel {
        }
     }
     
-    
-    public void initvars(String[] arg) {
-         
-         
-         
-          if (ddacctfrom.getItemCount() == 0) {
-        ArrayList myacct = fglData.getGLAcctList();
-        for (int i = 0; i < myacct.size(); i++) {
-            ddacctfrom.addItem(myacct.get(i));
-            ddacctto.addItem(myacct.get(i));
-        }
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
         } else {
-            ddacctfrom.setSelectedIndex(0);
-            ddacctto.setSelectedIndex(ddacctto.getItemCount());
+            return;
         }
-         
-       
-          
-          
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                 // start reset background colors
+                if (component instanceof JTextField) {
+                    if (((JTextField) component).isEditable()) {
+                     component.setBackground(Color.WHITE);
+                    } else {
+                     component.setBackground(bsmf.MainFrame.nonEditableColor);   
+                    }
+                }
+                if (component instanceof JComboBox) {
+                     component.setBackground(bsmf.MainFrame.ddbgcolor);
+                }
+                // end reset background colors
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+        
+    public void initvars(String[] arg) {
+        executeTask("dataInit", null);          
     }
+    
+    public String[] getInitialization() {
+        java.util.Date now = new java.util.Date();
+        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "accounts");
+        
+        if (initDataSets.isEmpty()) {
+           return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.dataInitError}; 
+        } else {
+           return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess}; 
+        }
+    }  
+    
+    public void done_Initialization() {
+        setPanelComponentState(this, true);
+        
+        
+        mymodel.setNumRows(0);
+        tablereport.setModel(mymodel);        
+        tablereport.getTableHeader().setReorderingAllowed(false);
+        
+               
+          
+        ddacctfrom.removeAllItems();
+        ddacctto.removeAllItems();
+        
+        for (String[] s : initDataSets) {            
+            
+            if (s[0].equals("site")) {
+              defaultSite = s[1]; 
+            }
+            if (s[0].equals("accounts")) {
+              ddacctfrom.addItem(s[1]); 
+              ddacctto.addItem(s[1]);
+            }
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1]; 
+            }
+        }
+               
+        ddacctfrom.setSelectedIndex(0);
+        ddacctto.setSelectedIndex(ddacctto.getItemCount() - 1);
+        
+        TableColumnModel tcm = tablereport.getColumnModel();
+        tcm.getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));
+        
+       // accounts = fglData.getGLAcctListRangeWCurrTypeDesc(ddacctfrom.getSelectedItem().toString(), ddacctto.getSelectedItem().toString());
+        
+    }
+    
+    public String[] getBrowseView() {
+        
+        String jsonString = null; 
+        DateFormat dfdate = new SimpleDateFormat("yyyy");
+        java.util.Date now = new java.util.Date();
+        String year = dfdate.format(now);
+                 
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        list.add(new String[]{"id","getAcctBalYTDBrowseView"});
+        list.add(new String[]{"param1",year});
+        list.add(new String[]{"param2",ddacctfrom.getSelectedItem().toString()});
+        list.add(new String[]{"param3",ddacctto.getSelectedItem().toString()});  
+        
+        try {
+                jsonString = sendServerPost(list, "", null, "dataServFIN"); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getAcctBalYTDBrowseView")};
+            }
+        } else {
+            jsonString = fglData.getAcctBalYTDBrowseView(new String[]{
+                year,
+                ddacctfrom.getSelectedItem().toString(),
+                ddacctto.getSelectedItem().toString()
+            });
+        }
+      
+      if (jsonString == null) {
+          return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getAcctBalYTDBrowseView return jsonString is null")};
+      }
+        
+      roData = jsonToData(jsonString);
+       
+      return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getMessageTag(1125)};
+    }
+
+    public void done_getBrowseView() {
+        setPanelComponentState(this, true);        
+        int i = 0;
+        double dol = 0.00;
+        mymodel.setNumRows(0);
+        if (roData != null) {
+           for (Object[] rowData : roData) {
+               if (cbzero.isSelected() && bsParseDouble(rowData[2].toString()) == 0) {
+                     continue;
+               }
+               rowData[2] = bsParseDouble(rowData[2].toString());
+               dol += bsParseDouble(rowData[2].toString());
+               mymodel.addRow(rowData); 
+           }
+        }    
+        labeldollar.setText(String.valueOf(currformatDouble(dol)));
+        labelcount.setText(String.valueOf(i));
+        roData = null;
+    }   
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -194,7 +439,7 @@ public class GLAcctBalYTD extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablescrap = new javax.swing.JTable();
+        tablereport = new javax.swing.JTable();
         labelcount = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         labeldollar = new javax.swing.JLabel();
@@ -221,8 +466,8 @@ public class GLAcctBalYTD extends javax.swing.JPanel {
         jLabel4.setText("To Acct");
         jLabel4.setName("lbltoacct"); // NOI18N
 
-        tablescrap.setAutoCreateRowSorter(true);
-        tablescrap.setModel(new javax.swing.table.DefaultTableModel(
+        tablereport.setAutoCreateRowSorter(true);
+        tablereport.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -233,7 +478,7 @@ public class GLAcctBalYTD extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(tablescrap);
+        jScrollPane1.setViewportView(tablereport);
 
         labelcount.setText("0");
 
@@ -316,84 +561,9 @@ public class GLAcctBalYTD extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
-   
-    
-try {
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                int qty = 0;
-                double dol = 0;
-                int i = 0;
-               
-               
-                   
-                MyTableModel mymodel = new MyTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("account"), 
-                            getGlobalColumnTag("description"), 
-                            getGlobalColumnTag("amount")});
-                tablescrap.setModel(mymodel);
-                TableColumnModel tcm = tablescrap.getColumnModel();
-                tcm.getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
-               
-                 DateFormat dfdate = new SimpleDateFormat("yyyy");
-                 java.util.Date now = new java.util.Date();
-                 String year = dfdate.format(now);
-                 
-                double amt = 0;
-                String acct = "";
-                String acctdesc = "";
-                
-                
-                 
-               res = st.executeQuery("select acb_acct, ac_desc, sum(acb_amt) as sum from acb_mstr " +
-                        " inner join ac_mstr on ac_id = acb_acct " +
-                        "where acb_year = " +
-                        "'" + year + "'" +
-                        " and acb_acct >= " + "'" + ddacctfrom.getSelectedItem().toString() + "'" +
-                        " and acb_acct <= " + "'" + ddacctto.getSelectedItem().toString() + "'" +
-                        " group by acb_acct, ac_desc " +
-                        ";");
-                while (res.next()) {
-                   
-                   amt = res.getDouble("sum");
-                   acct = res.getString("acb_acct");
-                   acctdesc = (res.getString("ac_desc") == null) ? "" : res.getString("ac_desc");
-                   dol += amt;
-                 if (cbzero.isSelected() && amt == 0)
-                     continue;
-                 
-                  i++;
-                 mymodel.addRow(new Object[]{acct, acctdesc, amt });
-                               
-                }
-                
-                labeldollar.setText(String.valueOf(currformatDouble(dol)));
-                labelcount.setText(String.valueOf(i));
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-       
+        mymodel.setNumRows(0);
+        setPanelComponentState(this, false);
+        executeTask("getBrowseView", null);
     }//GEN-LAST:event_btRunActionPerformed
 
 
@@ -410,6 +580,6 @@ try {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelcount;
     private javax.swing.JLabel labeldollar;
-    private javax.swing.JTable tablescrap;
+    private javax.swing.JTable tablereport;
     // End of variables declaration//GEN-END:variables
 }

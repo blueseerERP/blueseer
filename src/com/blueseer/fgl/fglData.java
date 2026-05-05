@@ -5935,6 +5935,61 @@ public class fglData {
       return jsonarray.toString();
     }
     
+    public static String getAcctBalYTDBrowseView(String[] key) {
+        JSONArray jsonarray = new JSONArray();
+               
+        try {
+
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                int i = 0;
+                
+                
+                res = st.executeQuery("select acb_acct, ac_desc, sum(acb_amt) as sum from acb_mstr " +
+                        " inner join ac_mstr on ac_id = acb_acct " +
+                        "where acb_year = " +
+                        "'" + key[0] + "'" +
+                        " and acb_acct >= " + "'" + key[1] + "'" +
+                        " and acb_acct <= " + "'" + key[2] + "'" +
+                        " group by acb_acct, ac_desc " +
+                        ";");
+                
+                    String status = "";
+                    while (res.next()) {                       
+                    JSONArray rowArray = new JSONArray();
+                    rowArray.put(res.getString("acb_acct"));
+                    rowArray.put(res.getString("ac_desc"));
+                    rowArray.put(res.getString("sum"));
+                    jsonarray.put(rowArray); 
+                    }
+               
+                
+               
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+
+      return jsonarray.toString();
+    }
+    
     
     public static String setGLRecNbr(String type) {
            String mystring = "";
