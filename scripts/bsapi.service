@@ -1,0 +1,19 @@
+### contents of bsapi.service
+[Unit]
+Description=bsapi ssl service
+After=network.target
+Requires=network.target
+
+[Service]
+WorkingDirectory=/opt/blueseer/
+ExecStart=/opt/blueseer/bsapi.service.sh
+StandardOutput=/opt/blueseer/logs/bsapi.log
+StandardError=/opt/blueseer/logs/bsapi_error.log
+SyslogIdentifier=bsapi
+TimeoutStartSec=1000s
+Restart=on-failure
+Type=simple
+
+
+[Install]
+WantedBy=multi-user.target

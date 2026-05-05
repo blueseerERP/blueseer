@@ -417,61 +417,7 @@ public class WorkFlowLog extends javax.swing.JPanel {
                 }
        }
     }
-    
-    public void getdetail(String parentid) {
-      
-         modeldetail.setNumRows(0);
-                
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                String blanket = "";
-                
-                 res = st.executeQuery("select wkfdl_id, wkfdl_action, wkfdl_ts, wkfdl_messg, wkfdl_status from wkfd_log " +
-                        " where wkfdl_parentid = " + "'" + parentid + "'" +
-                        ";");   
-                 
-                
-                while (res.next()) {
-                   modeldetail.addRow(new Object[]{ 
-                      res.getString("wkfdl_id"), 
-                      res.getString("wkfdl_action"),
-                      res.getString("wkfdl_ts"),
-                      res.getString("wkfdl_messg"),
-                      res.getString("wkfdl_status")
-                      });
-                }
-               
-                
-                // this.repaint();
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-
-    }
-    
+   
     public void initvars(String[] arg) {
        
         
