@@ -5,7 +5,7 @@ set -uo pipefail
 LOG_FILE=cloudinstall.log
 NO_APT_UPDATE="0"
 NO_P12="0"
-KEYNAME="blueseer"
+KEYNAME="bscert"
 KEYPASS="placeholder"
 
 log() {
@@ -67,7 +67,13 @@ openssl pkcs12 -export -out "$KEYNAME.p12" \
 -password pass:"$KEYPASS" \
 -passin pass:"$KEYPASS"
 
+if [[ -f "$KEYNAME.p12" ]]; then
 cp $KEYNAME.p12 /opt/blueseer/conf/
+cp $KEYNAME.pub /opt/blueseer/conf/
+cp $KEYNAME.crt /opt/blueseer/conf/
+rm $KEYNAME.p12
+rm $KEYNAME
+fi
 
 }
 
@@ -150,7 +156,7 @@ echo "keypass=$KEYPASS" >>/opt/blueseer/conf/web.properties
 
 log "step:  copy service file to systemd"
 cp /opt/blueseer/bsapi.service /usr/lib/systemd/system/
-chmod 644 /opt/blueseer/bsapi.service.sh
+chmod 700 /opt/blueseer/bsapi.service.sh
 chmod 644 /usr/lib/systemd/system/bsapi.service
 systemctl daemon-reload
 systemctl start bsapi.service
