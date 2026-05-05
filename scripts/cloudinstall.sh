@@ -66,6 +66,9 @@ openssl pkcs12 -export -out "$KEYNAME.p12" \
 -name "$KEYNAME" \
 -password pass:"$KEYPASS" \
 -passin pass:"$KEYPASS"
+
+cp $KEYNAME.p12 /opt/blueseer/conf/
+
 }
 
 
@@ -139,7 +142,7 @@ mysql -u root -p$mysqlpasswd bsdb -e "update ov_mstr set ov_currency = 'USD';"
 
 
 log "creating web.properties file"
-echo "keystore=$p12dir" >/opt/blueseer/conf/web.properties
+echo "keystore=/opt/blueseer/conf/$KEYNAME.p12" >/opt/blueseer/conf/web.properties
 echo "storepass=$KEYPASS" >>/opt/blueseer/conf/web.properties
 echo "keypass=$KEYPASS" >>/opt/blueseer/conf/web.properties
 
