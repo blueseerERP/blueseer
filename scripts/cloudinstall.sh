@@ -73,6 +73,8 @@ cp $KEYNAME.pub /opt/blueseer/conf/
 cp $KEYNAME.crt /opt/blueseer/conf/
 rm $KEYNAME.p12
 rm $KEYNAME
+rm $KEYNAME.pub
+rm $KEYNAME.crt
 fi
 
 }
