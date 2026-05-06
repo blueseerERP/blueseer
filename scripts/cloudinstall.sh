@@ -31,7 +31,7 @@ else
         log "step:  attempting to silently install mysql with entered mysql admin passwd applied"
 	debconf-set-selections <<< "mysql-server mysql-server/root_password password $mysqlpasswd"
 	debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $mysqlpasswd"
-     	DEBIAN_FRONTEND=noninteractive apt install -y mysql_server
+     	DEBIAN_FRONTEND=noninteractive apt install -y mysql-server
         systemctl enable mysql
         systemctl start mysql
 	mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$mysqlpasswd'; FLUSH PRIVILEGES;"
@@ -108,11 +108,16 @@ if [[ -z "$clientsideip" ]]; then
    exit 1
 fi
 
-echo "Choose the install option number (1 = BlueSeer, 2 = MySQL + BlueSeer) "
+echo "Choose the install option number (1 = BlueSeer, 2 = MySQL + BlueSeer, 3 = MySQL Only) "
 read -r -p "Enter choice number (default=1): " choice
 
 if [[ "$choice" == "2" ]]; then
 installMySQL
+fi
+
+if [[ "$choice" == "3" ]]; then
+installMySQL
+exit 0
 fi
 
 

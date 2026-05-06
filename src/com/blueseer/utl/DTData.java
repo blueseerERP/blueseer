@@ -12410,7 +12410,7 @@ public class DTData {
         String jsonString = null;
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
             ArrayList<String[]> list = new ArrayList<String[]>();
-            list.add(new String[]{"id", "getRoutingsAllData"});
+            list.add(new String[]{"id", "getLocationsAllData"});
             try {
                 jsonString = sendServerPost(list, "", null, "dataServDT"); 
             } catch (IOException ex) {

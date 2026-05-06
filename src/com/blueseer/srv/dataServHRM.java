@@ -34,6 +34,7 @@ import static com.blueseer.hrm.hrmData.getEmpIDByFormalName;
 import static com.blueseer.hrm.hrmData.getEmpNameAll;
 import static com.blueseer.hrm.hrmData.getEmployeeMstr;
 import static com.blueseer.hrm.hrmData.getHrmRptPickerData;
+import static com.blueseer.hrm.hrmData.getPayRecords;
 import static com.blueseer.hrm.hrmData.isValidEmployeeID;
 import static com.blueseer.hrm.hrmData.updateEmployeeTransaction;
 import static com.blueseer.utl.BlueSeerUtils.ArrayListStringArrayToJson;
@@ -176,6 +177,11 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         case "isValidEmployeeID" : {
         response.getWriter().println(boolToJson(isValidEmployeeID(request.getHeader("param1")))); 
         break;
+        }
+        
+        case "getPayRecords" : {       
+            response.getWriter().print(ArrayListStringArrayToJson(getPayRecords(request.getHeader("param1"))));
+            break;
         }
         
         default:
