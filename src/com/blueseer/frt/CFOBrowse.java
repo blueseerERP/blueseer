@@ -508,7 +508,7 @@ public class CFOBrowse extends javax.swing.JPanel {
         list.add(new String[]{"param8",ddstatus.getSelectedItem().toString()});
         
         try {
-                jsonString = sendServerPost(list, "", null, "dataServINV"); 
+                jsonString = sendServerPost(list, "", null, "dataServFRT"); 
             } catch (IOException ex) {
                 bslog(ex);
                 return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getCFOBrowseView")};

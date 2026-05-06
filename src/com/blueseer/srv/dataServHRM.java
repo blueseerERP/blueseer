@@ -27,15 +27,22 @@ package com.blueseer.srv;
 
 
 import com.blueseer.hrm.hrmData;
+import static com.blueseer.hrm.hrmData.addEmpTrain;
 import static com.blueseer.hrm.hrmData.addEmployeeTransaction;
 import static com.blueseer.hrm.hrmData.deleteEmpMstr;
+import static com.blueseer.hrm.hrmData.deleteEmpTrain;
 import static com.blueseer.hrm.hrmData.getEmpFormalNameByID;
 import static com.blueseer.hrm.hrmData.getEmpIDByFormalName;
 import static com.blueseer.hrm.hrmData.getEmpNameAll;
+import static com.blueseer.hrm.hrmData.getEmpTrain;
+import static com.blueseer.hrm.hrmData.getEmpTrainByCourse;
+import static com.blueseer.hrm.hrmData.getEmpTrainRecords;
+import static com.blueseer.hrm.hrmData.getEmployeeExceptions;
 import static com.blueseer.hrm.hrmData.getEmployeeMstr;
 import static com.blueseer.hrm.hrmData.getHrmRptPickerData;
 import static com.blueseer.hrm.hrmData.getPayRecords;
 import static com.blueseer.hrm.hrmData.isValidEmployeeID;
+import static com.blueseer.hrm.hrmData.updateEmpTrain;
 import static com.blueseer.hrm.hrmData.updateEmployeeTransaction;
 import static com.blueseer.utl.BlueSeerUtils.ArrayListStringArrayToJson;
 import static com.blueseer.utl.BlueSeerUtils.arrayToJson;
@@ -145,6 +152,31 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             break;
           }
         
+        case "getEmployeeExceptions" : {       
+        ArrayList<hrmData.emp_exception> xd = getEmployeeExceptions(new String[]{request.getHeader("param1")});
+        ObjectMapper omsd = new ObjectMapper(); 
+        String rsd = omsd.writeValueAsString(xd);
+        response.getWriter().print(rsd);
+        break;
+        } 
+        
+        case "getEmpTrainRecords" : {       
+        ArrayList<hrmData.emp_train> xd = getEmpTrainRecords(new String[]{request.getHeader("param1")});
+        ObjectMapper omsd = new ObjectMapper(); 
+        String rsd = omsd.writeValueAsString(xd);
+        response.getWriter().print(rsd);
+        break;
+        } 
+        
+        case "getEmpTrainByCourse" : {       
+        ArrayList<hrmData.emp_train> xd = getEmpTrainByCourse(new String[]{request.getHeader("param1")});
+        ObjectMapper omsd = new ObjectMapper(); 
+        String rsd = omsd.writeValueAsString(xd);
+        response.getWriter().print(rsd);
+        break;
+        } 
+        
+        
         case "getEmpNameAll" : {       
             response.getWriter().print(ArrayListStringArrayToJson(getEmpNameAll()));
             break;
@@ -183,6 +215,52 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             response.getWriter().print(ArrayListStringArrayToJson(getPayRecords(request.getHeader("param1"))));
             break;
         }
+        
+        case "addEmpTrain" : {
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            reader.close();
+            ObjectMapper om = new ObjectMapper();
+            hrmData.emp_train[] sdarray = om.readValue(sb.toString(), hrmData.emp_train[].class);
+            ArrayList<hrmData.emp_train> svlist = new ArrayList<hrmData.emp_train>(Arrays.asList(sdarray));             
+            response.getWriter().print(arrayToJson(addEmpTrain(svlist))); 
+            break;
+            } 
+    
+        case "updateEmpTrain" : {
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            reader.close();
+            ObjectMapper om = new ObjectMapper();
+            hrmData.emp_train[] sdarray = om.readValue(sb.toString(), hrmData.emp_train[].class);
+            ArrayList<hrmData.emp_train> svlist = new ArrayList<hrmData.emp_train>(Arrays.asList(sdarray));            
+            response.getWriter().print(arrayToJson(updateEmpTrain(request.getHeader("param1"), svlist))); 
+            break;
+            }
+
+        case "deleteEmpTrain" : {                 
+      response.getWriter().print(arrayToJson(deleteEmpTrain(request.getHeader("param1"))));
+      break;
+    }
+        
+        case "getEmpTrain" : {
+      String[] key = new String[]{request.getHeader("param1"), request.getHeader("param2")}; 
+      hrmData.emp_train am = getEmpTrain(key);
+      ObjectMapper objectMapper = new ObjectMapper();
+      String r = objectMapper.writeValueAsString(am);
+      response.getWriter().print(r);
+      break;
+    }
+    
+        
         
         default:
         response.getWriter().print("");
