@@ -306,7 +306,12 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeerV {
             if (s[0].equals("countries")) {
               ddcountry.addItem(s[1]); 
             }
-            
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1];  
+            }
+            if (s[0].equals("canupdate")) {
+              canUpdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }     
         }
         ddsite.setSelectedItem(defaultsite);
         ddstate.insertItemAt("", 0);
