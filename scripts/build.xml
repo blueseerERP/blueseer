@@ -13,7 +13,7 @@
 	    value="dist/" />
     <property name="JDK17dir" location="C:\java\jdk-17" />
     <property name="javac17" location="${JDK17dir}/bin/javac" />
-    <property name="javaclinux" location="/opt/jdk-17/bin/javac" />
+    <property name="javaclinux" location="/home/vcs/jdk-17/bin/javac" />
     <property name="java17" location="${JDK17dir}/bin/java" />
     <property name="java17l" location="/opt/jdk-17/bin/java" />
     <property name="lang" value="en" />
