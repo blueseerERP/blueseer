@@ -3301,7 +3301,7 @@ public class frtData {
                         " cfo_cust <= " + "'" + keys[3] + "'" + " AND " +
                         " cfo_orddate >= " + "'" + keys[4] + "'" + " AND " + 
                         " cfo_orddate <= " + "'" + keys[5] + "'" + " AND " +           
-                        " cfo_site = " + "'" + keys[6] + "'" + " AND " + 
+                        " cfo_site = " + "'" + keys[6] + "'" + 
                         " order by cfo_nbr ;"); 
                 } else {
                     res = st.executeQuery("select cfo_custfonbr, cfo_nbr, cfo_revision, cfo_orderstatus, cfo_cust, cfo_orddate, " +
@@ -3311,7 +3311,7 @@ public class frtData {
                         " cfo_cust <= " + "'" + keys[3] + "'" + " AND " +
                         " cfo_orddate >= " + "'" + keys[4] + "'" + " AND " + 
                         " cfo_orddate <= " + "'" + keys[5] + "'" + " AND " +           
-                        " cfo_site = " + "'" + keys[6] + "'" + " AND " +
+                        " cfo_site = " + "'" + keys[6] + "'" + 
                         " order by cfo_nbr ;"); 
                 }
              }
@@ -3358,7 +3358,7 @@ public class frtData {
                         " cfod_type = " + "'" + "Load" + "'" + " AND " +        
                         " cfod_date >= " + "'" + keys[4] + "'" + " AND " +
                         " cfod_date <= " + "'" + keys[5] + "'" + " AND " + 
-                        " cfo_site = " + "'" + keys[6] + "'" + " AND " +
+                        " cfo_site = " + "'" + keys[6] + "'" + 
                         " order by cfo_nbr ;"); 
                 } else {
                     res = st.executeQuery("select cfo_custfonbr, cfo_nbr, cfo_revision, cfo_orderstatus, cfo_cust, cfo_orddate, " +
@@ -3368,7 +3368,7 @@ public class frtData {
                         " cfo_cust <= " + "'" + keys[3] + "'" + " AND " +
                         " cfo_orddate >= " + "'" + keys[4] + "'" + " AND " + 
                         " cfo_orddate <= " + "'" + keys[5] + "'" + " AND " +           
-                        " cfo_site = " + "'" + keys[6] + "'" + " AND " +
+                        " cfo_site = " + "'" + keys[6] + "'" + 
                         " order by cfo_nbr ;"); 
                 }
              }
