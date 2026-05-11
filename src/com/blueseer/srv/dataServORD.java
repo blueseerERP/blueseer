@@ -173,11 +173,11 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             ArrayList<ordData.sod_det> sdlist = new ArrayList<ordData.sod_det>(Arrays.asList(sdarray)); 
             ordData.so_mstr sm = om.readValue(ca[3], ordData.so_mstr.class); 
             ordData.so_tax[] starray = om.readValue(ca[4], ordData.so_tax[].class);
-            ArrayList<ordData.so_tax> stlist = new ArrayList<ordData.so_tax>(Arrays.asList(starray));
+            ArrayList<ordData.so_tax> stlist = (starray == null) ? null : new ArrayList<ordData.so_tax>(Arrays.asList(starray));
             ordData.sod_tax[] sodtarray = om.readValue(ca[5], ordData.sod_tax[].class);
             ArrayList<ordData.sod_tax> sodtlist = new ArrayList<ordData.sod_tax>(Arrays.asList(sodtarray));  
             ordData.sos_det[] sosdarray = om.readValue(ca[6], ordData.sos_det[].class);
-            ArrayList<ordData.sos_det> sosdlist = new ArrayList<ordData.sos_det>(Arrays.asList(sosdarray)); 
+            ArrayList<ordData.sos_det> sosdlist = (sosdarray == null) ? null : new ArrayList<ordData.sos_det>(Arrays.asList(sosdarray));
             response.getWriter().print(arrayToJson(ordData.updateOrderTransaction(key, badlist, sdlist, sm, stlist, sodtlist, sosdlist))); 
             }
             break;  
