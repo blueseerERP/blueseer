@@ -147,11 +147,11 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             ArrayList<ordData.sod_det> sdlist = (sdarray == null) ? null : new ArrayList<ordData.sod_det>(Arrays.asList(sdarray)); 
             ordData.so_mstr sm = om.readValue(ca[1], ordData.so_mstr.class); 
             ordData.so_tax[] starray = om.readValue(ca[2], ordData.so_tax[].class);
-            ArrayList<ordData.so_tax> stlist = new ArrayList<ordData.so_tax>(Arrays.asList(starray));
+            ArrayList<ordData.so_tax> stlist = (starray == null) ? null : new ArrayList<ordData.so_tax>(Arrays.asList(starray));
             ordData.sod_tax[] sodtarray = om.readValue(ca[3], ordData.sod_tax[].class);
-            ArrayList<ordData.sod_tax> sodtlist = new ArrayList<ordData.sod_tax>(Arrays.asList(sodtarray));  
+            ArrayList<ordData.sod_tax> sodtlist = (sodtarray == null) ? null : new ArrayList<ordData.sod_tax>(Arrays.asList(sodtarray));  
             ordData.sos_det[] sosdarray = om.readValue(ca[4], ordData.sos_det[].class);
-            ArrayList<ordData.sos_det> sosdlist = new ArrayList<ordData.sos_det>(Arrays.asList(sosdarray)); 
+            ArrayList<ordData.sos_det> sosdlist = (sosdarray == null) ? null : new ArrayList<ordData.sos_det>(Arrays.asList(sosdarray));
             response.getWriter().print(arrayToJson(ordData.addOrderTransaction(sdlist, sm, stlist, sodtlist, sosdlist))); 
             break;
             }
@@ -175,7 +175,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             ordData.so_tax[] starray = om.readValue(ca[4], ordData.so_tax[].class);
             ArrayList<ordData.so_tax> stlist = (starray == null) ? null : new ArrayList<ordData.so_tax>(Arrays.asList(starray));
             ordData.sod_tax[] sodtarray = om.readValue(ca[5], ordData.sod_tax[].class);
-            ArrayList<ordData.sod_tax> sodtlist = new ArrayList<ordData.sod_tax>(Arrays.asList(sodtarray));  
+            ArrayList<ordData.sod_tax> sodtlist = (sodtarray == null) ? null : new ArrayList<ordData.sod_tax>(Arrays.asList(sodtarray));  
             ordData.sos_det[] sosdarray = om.readValue(ca[6], ordData.sos_det[].class);
             ArrayList<ordData.sos_det> sosdlist = (sosdarray == null) ? null : new ArrayList<ordData.sos_det>(Arrays.asList(sosdarray));
             response.getWriter().print(arrayToJson(ordData.updateOrderTransaction(key, badlist, sdlist, sm, stlist, sodtlist, sosdlist))); 
@@ -196,7 +196,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             ArrayList<ordData.bill_det> sdlist = new ArrayList<ordData.bill_det>(Arrays.asList(sdarray)); 
             ordData.bill_mstr sm = om.readValue(ca[1], ordData.bill_mstr.class); 
             ordData.bill_sac[] sosdarray = om.readValue(ca[2], ordData.bill_sac[].class);
-            ArrayList<ordData.bill_sac> sosdlist = new ArrayList<ordData.bill_sac>(Arrays.asList(sosdarray)); 
+            ArrayList<ordData.bill_sac> sosdlist = (sosdarray == null) ? null : new ArrayList<ordData.bill_sac>(Arrays.asList(sosdarray));
             response.getWriter().print(arrayToJson(ordData.addBillingTransaction(sdlist, sm, sosdlist))); 
             break;
             }
@@ -217,7 +217,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             ArrayList<ordData.bill_det> detlist = new ArrayList<ordData.bill_det>(Arrays.asList(detarray)); 
             ordData.bill_mstr x = om.readValue(ca[3], ordData.bill_mstr.class); 
             ordData.bill_sac[] sosdarray = om.readValue(ca[4], ordData.bill_sac[].class);
-            ArrayList<ordData.bill_sac> sosdlist = new ArrayList<ordData.bill_sac>(Arrays.asList(sosdarray)); 
+            ArrayList<ordData.bill_sac> sosdlist = (sosdarray == null) ? null : new ArrayList<ordData.bill_sac>(Arrays.asList(sosdarray));
             response.getWriter().print(arrayToJson(ordData.updateBillingTransaction(key, badlist, detlist, x, sosdlist))); 
         break;    
         }
@@ -236,7 +236,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             ArrayList<ordData.quo_det> sdlist = new ArrayList<ordData.quo_det>(Arrays.asList(sdarray)); 
             ordData.quo_mstr sm = om.readValue(ca[1], ordData.quo_mstr.class); 
             ordData.quo_sac[] sosdarray = om.readValue(ca[2], ordData.quo_sac[].class);
-            ArrayList<ordData.quo_sac> sosdlist = new ArrayList<ordData.quo_sac>(Arrays.asList(sosdarray)); 
+            ArrayList<ordData.quo_sac> sosdlist = (sosdarray == null) ? null : new ArrayList<ordData.quo_sac>(Arrays.asList(sosdarray));
             response.getWriter().print(arrayToJson(ordData.addQuoteTransaction(sdlist, sm, sosdlist))); 
             break;
             }
@@ -257,7 +257,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             ArrayList<ordData.quo_det> detlist = new ArrayList<ordData.quo_det>(Arrays.asList(detarray)); 
             ordData.quo_mstr x = om.readValue(ca[3], ordData.quo_mstr.class); 
             ordData.quo_sac[] sosdarray = om.readValue(ca[4], ordData.quo_sac[].class);
-            ArrayList<ordData.quo_sac> sosdlist = new ArrayList<ordData.quo_sac>(Arrays.asList(sosdarray)); 
+            ArrayList<ordData.quo_sac> sosdlist = (sosdarray == null) ? null : new ArrayList<ordData.quo_sac>(Arrays.asList(sosdarray));
             response.getWriter().print(arrayToJson(ordData.updateQuoteTransaction(key, badlist, detlist, x, sosdlist)));  
         break;    
         }
