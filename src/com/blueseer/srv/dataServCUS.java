@@ -54,11 +54,13 @@ import static com.blueseer.ctr.cusData.getCusRptPickerData;
 import static com.blueseer.ctr.cusData.getCustBrowseView;
 import static com.blueseer.ctr.cusData.getCustLabel;
 import static com.blueseer.ctr.cusData.getCustMstr;
+import static com.blueseer.ctr.cusData.getCustName;
 import static com.blueseer.ctr.cusData.getCustPriceBrowseView;
 import static com.blueseer.ctr.cusData.getCustShipSet;
 import static com.blueseer.ctr.cusData.getCustXrefBrowseView;
 import static com.blueseer.ctr.cusData.getDiscountRecsByCust;
 import static com.blueseer.ctr.cusData.getSalesRepBrowseView;
+import static com.blueseer.ctr.cusData.getShipName;
 import static com.blueseer.ctr.cusData.getSlspMstr;
 import static com.blueseer.ctr.cusData.getTermsMstr;
 import static com.blueseer.ctr.cusData.getcustmstrlist;
@@ -217,6 +219,16 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         
         case "getCustLabel" :  {       
             response.getWriter().print(getCustLabel(request.getHeader("param1")));
+            break;    
+        }
+        
+        case "getCustName" :  {       
+            response.getWriter().print(getCustName(request.getHeader("param1")));
+            break;    
+        }
+        
+        case "getShipName" :  {       
+            response.getWriter().print(getShipName(request.getHeader("param1"), request.getHeader("param2")));
             break;    
         }
         

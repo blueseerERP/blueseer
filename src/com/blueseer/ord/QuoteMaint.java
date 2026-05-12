@@ -1262,6 +1262,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel17 = new javax.swing.JLabel();
         btchangelog = new javax.swing.JButton();
         btLookUpBillTo = new javax.swing.JButton();
+        btupdateitem = new javax.swing.JButton();
         jPanelCharges = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         sactable = new javax.swing.JTable();
@@ -1337,6 +1338,11 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        detailtable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                detailtableMouseClicked(evt);
+            }
+        });
         jScrollPane7.setViewportView(detailtable);
 
         ddcust.addActionListener(new java.awt.event.ActionListener() {
@@ -1532,6 +1538,13 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        btupdateitem.setText("Update Item");
+        btupdateitem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateitemActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
         jPanelMainLayout.setHorizontalGroup(
@@ -1587,6 +1600,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                                     .addGap(146, 146, 146)
                                     .addComponent(btadditem)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btupdateitem)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(btdeleteitem))
                                 .addGroup(jPanelMainLayout.createSequentialGroup()
                                     .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -1631,14 +1646,15 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addComponent(btLookUpItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lblitemdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 872, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanelMainLayout.createSequentialGroup()
                             .addComponent(btcommit)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(jLabel13)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(tbtotdisc, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, Short.MAX_VALUE)
+                            .addGap(18, 18, 18)
                             .addComponent(jLabel17)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(tbtottax, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1653,8 +1669,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btdelete)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btadd))
-                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 775, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btadd))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelMainLayout.setVerticalGroup(
@@ -1738,7 +1753,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14))
+                    .addComponent(jLabel14)
+                    .addComponent(btupdateitem))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -2267,6 +2283,53 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         lookUpFrameBillTo();
     }//GEN-LAST:event_btLookUpBillToActionPerformed
 
+    private void btupdateitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateitemActionPerformed
+         if (! canupdate) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return;
+        }
+        
+        int[] rows = detailtable.getSelectedRows();
+        if (rows.length != 1) {
+            bsmf.MainFrame.show(getMessageTag(1095));
+                return;
+        }
+        for (int i : rows) {           
+                actamt += bsParseDouble(tbqty.getText()) * bsParseDouble(tbprice.getText());               
+                detailtable.setValueAt(tbitemservice.getText(), i, 2);
+                detailtable.setValueAt(lblitemdesc.getText(), i, 3);
+                detailtable.setValueAt(tbqty.getText(), i, 4);
+                detailtable.setValueAt(tbprice.getText(), i, 5);
+                detailtable.setValueAt(tbprice.getText(), i, 7);
+                detailtable.setValueAt(dduom.getSelectedItem().toString(), i, 8);
+                
+                tbitemservice.setText("");
+                lblitemdesc.setText("");
+                tbqty.setText("");
+                tbprice.setText("");
+                dduom.setSelectedIndex(0);
+                tbitemservice.requestFocus();
+                summarize();  
+        }
+                
+        updateQuoteTransaction(tbkey.getText(), null, createDetRecord(), null, null);
+        
+        
+    }//GEN-LAST:event_btupdateitemActionPerformed
+
+    private void detailtableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_detailtableMouseClicked
+        int row = detailtable.rowAtPoint(evt.getPoint());
+        int col = detailtable.columnAtPoint(evt.getPoint());
+       
+        isLoad = true;  
+        tbitemservice.setText(detailtable.getValueAt(row, 2).toString());
+        dduom.setSelectedItem(detailtable.getValueAt(row, 8).toString());
+        tbqty.setText(detailtable.getValueAt(row, 4).toString());
+        lblitemdesc.setText(detailtable.getValueAt(row, 3).toString());
+        tbprice.setText(detailtable.getValueAt(row, 7).toString());
+        isLoad = false;
+    }//GEN-LAST:event_detailtableMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpBillTo;
     private javax.swing.JButton btLookUpItemDesc;
@@ -2285,6 +2348,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btsacadd;
     private javax.swing.JButton btsacdelete;
     private javax.swing.JButton btupdate;
+    private javax.swing.JButton btupdateitem;
     private com.toedter.calendar.JDateChooser dcpricingexpire;
     private com.toedter.calendar.JDateChooser dcquoteexpire;
     private javax.swing.JComboBox<String> ddcurr;

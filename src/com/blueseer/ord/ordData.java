@@ -2335,20 +2335,32 @@ public class ordData {
               bscon = DriverManager.getConnection(url + db, user, pass);  
             }
             bscon.setAutoCommit(false);
-            for (String line : lines) {
-               _deleteQuoteLines(x, line, bscon, ps);  // discard unwanted lines
-             }
-            for (quo_det z : qod) {
-                if (qo.quo_status().equals(getGlobalProgTag("closed"))) {
-                    continue;
+            
+            quo_mstr db_qm = _getQuoteMstr(x, bscon, ps, res);
+            if (db_qm != null && db_qm.quo_status().equals(getGlobalProgTag("closed"))) {
+                  return new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1097)};
+            }
+            
+            if (lines != null) {
+                for (String line : lines) {
+                   _deleteQuoteLines(x, line, bscon, ps);  // discard unwanted lines
+                 }
+            }
+            if (qod != null) {
+                for (quo_det z : qod) {                    
+                    _updateQuoteDet(z, qo, bscon, ps, res);
                 }
-                _updateQuoteDet(z, qo, bscon, ps, res);
             }
-            _deleteQuoteSAC(qo.quo_nbr, bscon);
-            for (quo_sac z : qsac) {
-                _addQuoteSAC(z, bscon, ps, res);
+            if (qsac != null) {
+                _deleteQuoteSAC(qo.quo_nbr, bscon);
+                for (quo_sac z : qsac) {
+                    _addQuoteSAC(z, bscon, ps, res);
+                }
             }
-             _updateQuoteMstr(qo, bscon, ps);  
+            if (qo != null) {
+             _updateQuoteMstr(qo, bscon, ps);
+            }
+            
             bscon.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -2423,6 +2435,42 @@ public class ordData {
             } 
             return rows;
     }
+    
+    private static quo_mstr _getQuoteMstr(String x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        quo_mstr r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from quo_mstr where quo_nbr = ?";       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x);
+          res = ps.executeQuery();
+          while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new quo_mstr(m, 
+                            res.getString("quo_nbr"), 
+                            res.getString("quo_cust"),    
+                            res.getString("quo_ship"),
+                            res.getString("quo_site"),
+                            res.getString("quo_date"),
+                            res.getString("quo_expire"),  
+                            res.getString("quo_priceexpire"),
+                            res.getString("quo_status"),  
+                            res.getString("quo_rmks"),
+                            res.getString("quo_ref"),
+                            res.getString("quo_type"),
+                            res.getString("quo_taxcode"),
+                            res.getString("quo_disccode"),
+                            res.getString("quo_groupcode"),
+                            res.getString("quo_curr"),
+                            res.getString("quo_approved"),
+                            res.getString("quo_approver"),
+                            res.getString("quo_varchar"),
+                            res.getString("quo_terms")
+                        );
+                    }
+          
+          return r;
+    }
+    
     
     private static int _updateQuoteMstr(quo_mstr x, Connection con, PreparedStatement ps) throws SQLException {
         int rows = 0;
@@ -2684,6 +2732,20 @@ public class ordData {
     public static quo_mstr getQuoteMstr(String[] x) {
         quo_mstr r = null;
         String[] m = new String[2];
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "getQuoteMstr"});
+            list.add(new String[]{"param1",  x[0]});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String returnstring = sendServerPost(list, "", null, "dataServORD");
+                r = objectMapper.readValue(returnstring, quo_mstr.class); 
+                return r;
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
         String sql = "select * from quo_mstr where quo_nbr = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
