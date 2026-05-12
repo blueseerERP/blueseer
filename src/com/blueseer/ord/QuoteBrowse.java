@@ -383,9 +383,9 @@ public class QuoteBrowse extends javax.swing.JPanel {
         
         
         fromcust = (tbfromcust.getText().isEmpty()) ? bsmf.MainFrame.lowchar :  tbfromcust.getText();  
-        tocust = (tbtocust.getText().isEmpty()) ? bsmf.MainFrame.lowchar :  tbtocust.getText();
+        tocust = (tbtocust.getText().isEmpty()) ? bsmf.MainFrame.hichar :  tbtocust.getText();
         fromnbr = (tbfromnbr.getText().isEmpty()) ? bsmf.MainFrame.lowchar :  tbfromnbr.getText();  
-        tonbr = (tbtonbr.getText().isEmpty()) ? bsmf.MainFrame.lowchar :  tbtonbr.getText();
+        tonbr = (tbtonbr.getText().isEmpty()) ? bsmf.MainFrame.hichar :  tbtonbr.getText();
         
         String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -404,7 +404,7 @@ public class QuoteBrowse extends javax.swing.JPanel {
                 jsonString = sendServerPost(list, "", null, "dataServORD"); 
             } catch (IOException ex) {
                 bslog(ex);
-                return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getSerialBrowseView")};
+                return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getQuoteBrowseView")};
             }
         } else {
             jsonString = ordData.getQuoteBrowseView(new String[]{
@@ -420,7 +420,7 @@ public class QuoteBrowse extends javax.swing.JPanel {
         }
       
       if (jsonString == null) {
-          return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getSerialBrowseView return jsonString is null")};
+          return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getQuoteBrowseView return jsonString is null")};
       }
         
       roData = jsonToData(jsonString);
