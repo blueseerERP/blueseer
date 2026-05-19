@@ -92,6 +92,7 @@ import static com.blueseer.utl.OVData.getpsmstrparents;
 import static com.blueseer.utl.OVData.getpsmstrparents2;
 import static com.blueseer.utl.OVData.getzerolevelpsmstr;
 import static com.blueseer.utl.OVData.isAutoPost;
+import static com.blueseer.utl.OVData.isClockScanCard;
 import static com.blueseer.utl.OVData.isDuplicateNavCode;
 import static com.blueseer.utl.OVData.isGLPeriodClosed;
 import static com.blueseer.utl.OVData.isValidBank;
@@ -439,7 +440,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             break;    
         
         case "addUpdateSysMeta" : {
-        response.getWriter().println(boolToJson(addUpdateSysMeta(request.getHeader("param1"), 
+        response.getWriter().print(boolToJson(addUpdateSysMeta(request.getHeader("param1"), 
                 request.getHeader("param2"), 
                 request.getHeader("param3"), 
                 request.getHeader("param4")))); 
@@ -447,7 +448,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         }
         
         case "deleteSysMeta" : {
-        response.getWriter().println(boolToJson(deleteSysMeta(request.getHeader("param1"), 
+        response.getWriter().print(boolToJson(deleteSysMeta(request.getHeader("param1"), 
                 request.getHeader("param2"), 
                 request.getHeader("param3"), 
                 request.getHeader("param4")))); 
@@ -463,52 +464,52 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         break; 
             
         case "isDuplicateNavCode" : {
-        response.getWriter().println(boolToJson(isDuplicateNavCode(request.getHeader("param1"), request.getHeader("param2")))); 
+        response.getWriter().print(boolToJson(isDuplicateNavCode(request.getHeader("param1"), request.getHeader("param2")))); 
         break;
         }
             
         case "isAutoPost" : {
-        response.getWriter().println(boolToJson(isAutoPost())); 
+        response.getWriter().print(boolToJson(isAutoPost())); 
         break;
         }    
         
         case "isValidItem" : {
-        response.getWriter().println(boolToJson(isValidItem(request.getHeader("param1")))); 
+        response.getWriter().print(boolToJson(isValidItem(request.getHeader("param1")))); 
         break;
         }
         
         case "isValidUOM" : {
-        response.getWriter().println(boolToJson(isValidUOM(request.getHeader("param1")))); 
+        response.getWriter().print(boolToJson(isValidUOM(request.getHeader("param1")))); 
         break;
         }
           
         case "isValidGLAcct" : {
-        response.getWriter().println(boolToJson(isValidGLAcct(request.getHeader("param1")))); 
+        response.getWriter().print(boolToJson(isValidGLAcct(request.getHeader("param1")))); 
         break;
         }
         
         case "isValidGLcc" : {
-        response.getWriter().println(boolToJson(isValidGLcc(request.getHeader("param1")))); 
+        response.getWriter().print(boolToJson(isValidGLcc(request.getHeader("param1")))); 
         break;
         }
         
         case "isValidCurrency" : {
-        response.getWriter().println(boolToJson(isValidCurrency(request.getHeader("param1")))); 
+        response.getWriter().print(boolToJson(isValidCurrency(request.getHeader("param1")))); 
         break;
         }
         
         case "isValidBank" : {
-        response.getWriter().println(boolToJson(isValidBank(request.getHeader("param1")))); 
+        response.getWriter().print(boolToJson(isValidBank(request.getHeader("param1")))); 
         break;
         }
         
         case "isValidProfile" : {
-        response.getWriter().println(boolToJson(isValidProfile(request.getHeader("param1")))); 
+        response.getWriter().print(boolToJson(isValidProfile(request.getHeader("param1")))); 
         break;
         }
         
         case "isValidTerms" : {
-        response.getWriter().println(boolToJson(isValidTerms(request.getHeader("param1")))); 
+        response.getWriter().print(boolToJson(isValidTerms(request.getHeader("param1")))); 
         break;
         }
         
@@ -641,7 +642,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             break;   
             
         case "addSysMetaDataNoUnique" : {
-        response.getWriter().println(boolToJson(addSysMetaDataNoUnique(request.getHeader("param1"), 
+        response.getWriter().print(boolToJson(addSysMetaDataNoUnique(request.getHeader("param1"), 
                 request.getHeader("param2"),
                 request.getHeader("param3"),
                 request.getHeader("param4")))); 
@@ -649,7 +650,12 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         }
         
         case "autoclock" : {
-        response.getWriter().println(boolToJson(autoclock(bsParseInt(request.getHeader("param1"))))); 
+        response.getWriter().print(boolToJson(autoclock(bsParseInt(request.getHeader("param1"))))); 
+        break;   
+        }
+        
+        case "isClockScanCard" : {
+        response.getWriter().print(boolToJson(isClockScanCard())); 
         break;   
         }
         
@@ -678,7 +684,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         } 
         
         case "isGLPeriodClosed" : {
-        response.getWriter().println(boolToJson(isGLPeriodClosed(request.getHeader("param1")))); 
+        response.getWriter().print(boolToJson(isGLPeriodClosed(request.getHeader("param1")))); 
         break;
         }
         

@@ -45,6 +45,17 @@ import static com.blueseer.hrm.hrmData.isValidEmployeeID;
 import static com.blueseer.hrm.hrmData.updateEmpClockStatus;
 import static com.blueseer.hrm.hrmData.updateEmpTrain;
 import static com.blueseer.hrm.hrmData.updateEmployeeTransaction;
+import com.blueseer.tca.tcaData;
+import static com.blueseer.tca.tcaData.addClockCode;
+import static com.blueseer.tca.tcaData.addTimeClock;
+import static com.blueseer.tca.tcaData.deleteClockCode;
+import static com.blueseer.tca.tcaData.getClockCode;
+import static com.blueseer.tca.tcaData.getTimeClock;
+import static com.blueseer.tca.tcaData.getTimeClockRec;
+import static com.blueseer.tca.tcaData.getTimeClockSet;
+import static com.blueseer.tca.tcaData.updateClockCode;
+import static com.blueseer.tca.tcaData.updateTimeClock;
+import static com.blueseer.tca.tcaData.updateTimeClockRec;
 import static com.blueseer.utl.BlueSeerUtils.ArrayListStringArrayToJson;
 import static com.blueseer.utl.BlueSeerUtils.arrayToJson;
 import static com.blueseer.utl.BlueSeerUtils.boolToJson;
@@ -65,7 +76,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author terryva
  */
-public class dataServHRM extends HttpServlet {
+public class dataServTCA extends HttpServlet {
  
     
         
@@ -96,7 +107,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     
     switch (id) {
         
-        case "addEmployeeTransaction" : {
+        case "addTimeClock" : {
             String line;
             StringBuilder sb = new StringBuilder();  
             BufferedReader reader = request.getReader();  // as string
@@ -105,15 +116,12 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             } 
             reader.close();
             ObjectMapper om = new ObjectMapper();
-            String[] ca = sb.toString().split("=_=", -1);
-            hrmData.emp_mstr em = om.readValue(ca[0], hrmData.emp_mstr.class); 
-            hrmData.emp_exception[] sdarray = om.readValue(ca[1], hrmData.emp_exception[].class);
-            ArrayList<hrmData.emp_exception> svlist = new ArrayList<hrmData.emp_exception>(Arrays.asList(sdarray));             
-            response.getWriter().print(arrayToJson(addEmployeeTransaction(em, svlist))); 
+            tcaData.time_clock tc = om.readValue(sb.toString(), tcaData.time_clock.class);                          
+            response.getWriter().print(arrayToJson(addTimeClock(tc))); 
             break;
             }
         
-        case "updateEmployeeTransaction" : {
+        case "updateTimeClock" : {
             String line;
             StringBuilder sb = new StringBuilder();  
             BufferedReader reader = request.getReader();  // as string
@@ -122,15 +130,12 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             } 
             reader.close();
             ObjectMapper om = new ObjectMapper();
-            String[] ca = sb.toString().split("=_=", -1);
-            hrmData.emp_mstr em = om.readValue(ca[0], hrmData.emp_mstr.class); 
-            hrmData.emp_exception[] sdarray = om.readValue(ca[1], hrmData.emp_exception[].class);
-            ArrayList<hrmData.emp_exception> svlist = new ArrayList<hrmData.emp_exception>(Arrays.asList(sdarray));             
-            response.getWriter().print(arrayToJson(updateEmployeeTransaction(em, svlist))); 
+            tcaData.time_clock tc = om.readValue(sb.toString(), tcaData.time_clock.class);                          
+            response.getWriter().print(arrayToJson(updateTimeClock(tc))); 
             break;
             }
         
-        case "deleteEmpMstr" : {
+        case "updateTimeClockRec" : {
             String line;
             StringBuilder sb = new StringBuilder();  
             BufferedReader reader = request.getReader();  // as string
@@ -139,85 +144,39 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             } 
             reader.close();
             ObjectMapper om = new ObjectMapper();
-            hrmData.emp_mstr em = om.readValue(sb.toString(), hrmData.emp_mstr.class);                    
-            response.getWriter().print(arrayToJson(deleteEmpMstr(em))); 
+            tcaData.time_clock tc = om.readValue(sb.toString(), tcaData.time_clock.class);                          
+            response.getWriter().print(arrayToJson(updateTimeClockRec(tc))); 
             break;
             }
-        
-        case "getEmployeeMstr" : { 
+                
+        case "getTimeClockRec" : { 
             String[] key = new String[]{request.getHeader("param1")}; 
-            hrmData.emp_mstr x = getEmployeeMstr(key);
+            tcaData.time_clock x = getTimeClockRec(key);
             ObjectMapper objectMapper = new ObjectMapper();
             String r = objectMapper.writeValueAsString(x);
             response.getWriter().print(r);
             break;
           }
         
-        case "getEmployeeExceptions" : {       
-        ArrayList<hrmData.emp_exception> xd = getEmployeeExceptions(new String[]{request.getHeader("param1")});
-        ObjectMapper omsd = new ObjectMapper(); 
-        String rsd = omsd.writeValueAsString(xd);
-        response.getWriter().print(rsd);
-        break;
-        } 
-        
-        case "getEmpTrainRecords" : {       
-        ArrayList<hrmData.emp_train> xd = getEmpTrainRecords(new String[]{request.getHeader("param1")});
-        ObjectMapper omsd = new ObjectMapper(); 
-        String rsd = omsd.writeValueAsString(xd);
-        response.getWriter().print(rsd);
-        break;
-        } 
-        
-        case "getEmpTrainByCourse" : {       
-        ArrayList<hrmData.emp_train> xd = getEmpTrainByCourse(new String[]{request.getHeader("param1")});
-        ObjectMapper omsd = new ObjectMapper(); 
-        String rsd = omsd.writeValueAsString(xd);
-        response.getWriter().print(rsd);
-        break;
-        } 
-        
-        
-        case "getEmpNameAll" : {       
-            response.getWriter().print(ArrayListStringArrayToJson(getEmpNameAll()));
+        case "getTimeClock" : { 
+            String[] key = new String[]{request.getHeader("param1")}; 
+            tcaData.time_clock x = getTimeClock(key);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String r = objectMapper.writeValueAsString(x);
+            response.getWriter().print(r);
             break;
-        }
+          }
         
-        case "getEmpIDByFormalName" : {       
-            response.getWriter().print(getEmpIDByFormalName(request.getHeader("param1")));
+        case "getTimeClockSet" : { 
+            String[] key = new String[]{request.getHeader("param1")}; 
+            tcaData.TimeClockSet x = getTimeClockSet(key);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String r = objectMapper.writeValueAsString(x);
+            response.getWriter().print(r);
             break;
-        }
+          }
         
-        case "getEmpFormalNameByID" : {       
-            response.getWriter().print(getEmpFormalNameByID(request.getHeader("param1")));
-            break;
-        }
-        
-        case "getHrmRptPickerData" : {
-        String[] x = new String[]{
-               request.getHeader("func"),
-               request.getHeader("param1"), 
-               request.getHeader("param2"),
-               request.getHeader("param3"),
-               request.getHeader("param4"),
-               request.getHeader("param5"),
-               request.getHeader("param6")
-               };     
-        response.getWriter().print(getHrmRptPickerData(x));  
-        break;
-        }
-        
-        case "isValidEmployeeID" : {
-        response.getWriter().println(boolToJson(isValidEmployeeID(request.getHeader("param1")))); 
-        break;
-        }
-        
-        case "getPayRecords" : {       
-            response.getWriter().print(ArrayListStringArrayToJson(getPayRecords(request.getHeader("param1"))));
-            break;
-        }
-        
-        case "addEmpTrain" : {
+        case "addClockCode" : {
             String line;
             StringBuilder sb = new StringBuilder();  
             BufferedReader reader = request.getReader();  // as string
@@ -226,47 +185,48 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             } 
             reader.close();
             ObjectMapper om = new ObjectMapper();
-            hrmData.emp_train[] sdarray = om.readValue(sb.toString(), hrmData.emp_train[].class);
-            ArrayList<hrmData.emp_train> svlist = new ArrayList<hrmData.emp_train>(Arrays.asList(sdarray));             
-            response.getWriter().print(arrayToJson(addEmpTrain(svlist))); 
-            break;
-            } 
-    
-        case "updateEmpTrain" : {
-            String line;
-            StringBuilder sb = new StringBuilder();  
-            BufferedReader reader = request.getReader();  // as string
-            while ((line = reader.readLine()) != null) {  
-            sb.append(line);
-            } 
-            reader.close();
-            ObjectMapper om = new ObjectMapper();
-            hrmData.emp_train[] sdarray = om.readValue(sb.toString(), hrmData.emp_train[].class);
-            ArrayList<hrmData.emp_train> svlist = new ArrayList<hrmData.emp_train>(Arrays.asList(sdarray));            
-            response.getWriter().print(arrayToJson(updateEmpTrain(request.getHeader("param1"), svlist))); 
+            tcaData.clock_code tc = om.readValue(sb.toString(), tcaData.clock_code.class);                          
+            response.getWriter().print(arrayToJson(addClockCode(tc))); 
             break;
             }
-
-        case "deleteEmpTrain" : {                 
-      response.getWriter().print(arrayToJson(deleteEmpTrain(request.getHeader("param1"))));
-      break;
-    }
         
-        case "getEmpTrain" : {
-      String[] key = new String[]{request.getHeader("param1"), request.getHeader("param2")}; 
-      hrmData.emp_train am = getEmpTrain(key);
-      ObjectMapper objectMapper = new ObjectMapper();
-      String r = objectMapper.writeValueAsString(am);
-      response.getWriter().print(r);
-      break;
-    }
-    
-        case "updateEmpClockStatus" : {       
-            response.getWriter().print(updateEmpClockStatus(request.getHeader("param1"), request.getHeader("param2")));
-            break; 
-        }
+        case "updateClockCode" : {
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            reader.close();
+            ObjectMapper om = new ObjectMapper();
+            tcaData.clock_code tc = om.readValue(sb.toString(), tcaData.clock_code.class);                          
+            response.getWriter().print(arrayToJson(updateClockCode(tc))); 
+            break;
+            }
         
+        case "getClockCode" : { 
+            String[] key = new String[]{request.getHeader("param1")}; 
+            tcaData.clock_code x = getClockCode(key);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String r = objectMapper.writeValueAsString(x);
+            response.getWriter().print(r);
+            break;
+          }
         
+        case "deleteClockCode" : {
+            String line;
+            StringBuilder sb = new StringBuilder();  
+            BufferedReader reader = request.getReader();  // as string
+            while ((line = reader.readLine()) != null) {  
+            sb.append(line);
+            } 
+            reader.close();
+            ObjectMapper om = new ObjectMapper();
+            tcaData.clock_code tc = om.readValue(sb.toString(), tcaData.clock_code.class);                          
+            response.getWriter().print(arrayToJson(deleteClockCode(tc))); 
+            break;
+            }
+                
         default:
         response.getWriter().print("");
         System.out.println("error no switch case exists in dataServHRM for id: " + id);    
