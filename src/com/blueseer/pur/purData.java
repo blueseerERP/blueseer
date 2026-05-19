@@ -1633,7 +1633,6 @@ public class purData {
                     while (res.next()) {
                             i++;
                             JSONArray rowArray = new JSONArray(); 
-                            rowArray.put("select");
                             rowArray.put(res.getString("tr_id"));
                             rowArray.put(res.getString("tr_addrcode"));
                             rowArray.put(res.getString("vd_name"));
@@ -1663,7 +1662,6 @@ public class purData {
                     while (res.next()) {
                             i++;
                             JSONArray rowArray = new JSONArray(); 
-                            rowArray.put("select");
                             rowArray.put(res.getString("pod_nbr"));
                             rowArray.put(res.getString("vd_name"));
                             rowArray.put(res.getString("pod_item"));
@@ -1693,7 +1691,6 @@ public class purData {
                     while (res.next()) {
                             i++;
                             JSONArray rowArray = new JSONArray(); 
-                            rowArray.put("select");
                             rowArray.put(res.getString("rvd_id"));
                             rowArray.put(res.getString("vd_name"));
                             rowArray.put(res.getString("rvd_item"));
