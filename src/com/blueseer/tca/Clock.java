@@ -290,7 +290,7 @@ public class Clock extends javax.swing.JPanel {
         tcaData.time_clock x = new tcaData.time_clock(null, 
                  myid,
                  clockdate, // indate
-                 "",  // outdate
+                 null,  // outdate
                  clocktime, // intime
                  "", // outtime
                  "", // dept

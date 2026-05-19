@@ -1416,7 +1416,7 @@ public class hrmData {
             ArrayList<String[]> list = new ArrayList<>();
             list.add(new String[]{"id", "updateEmpClockStatus"});
             list.add(new String[]{"param1",  myid});
-            list.add(new String[]{"param1",  status});
+            list.add(new String[]{"param2",  status});
             try {
                 return sendServerPost(list, "", null, "dataServHRM"); 
             } catch (IOException ex) {
