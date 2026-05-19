@@ -907,7 +907,7 @@ public class PurRptPicker extends javax.swing.JPanel {
         if (roData != null) {
             int i = 0;
             for (Object[] rowData : roData) {
-                roData[i][8] = bsParseDouble(roData[i][8].toString());
+                roData[i][7] = bsParseDouble(roData[i][7].toString());
                 mymodel.addRow(rowData);
                 i++;
             }
@@ -1027,7 +1027,7 @@ public class PurRptPicker extends javax.swing.JPanel {
         if (roData != null) {
             int i = 0;
             for (Object[] rowData : roData) {
-                roData[i][8] = bsParseDouble(roData[i][8].toString());
+                roData[i][7] = bsParseDouble(roData[i][7].toString());
                 mymodel.addRow(rowData);
                 i++;
             }
@@ -1044,7 +1044,7 @@ public class PurRptPicker extends javax.swing.JPanel {
                  }
                  tc.setCellRenderer(new PurRptPicker.renderer1());
              }
-            tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));    
+            tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));    
         } // else run report
                
     }
@@ -1148,7 +1148,7 @@ public class PurRptPicker extends javax.swing.JPanel {
         if (roData != null) {
             int i = 0;
             for (Object[] rowData : roData) {
-                roData[i][8] = bsParseDouble(roData[i][8].toString());
+                roData[i][7] = bsParseDouble(roData[i][7].toString());
                 mymodel.addRow(rowData);
                 i++;
             }
@@ -1164,7 +1164,7 @@ public class PurRptPicker extends javax.swing.JPanel {
                  }
                  tc.setCellRenderer(new PurRptPicker.renderer1());
              }
-            tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));      
+            tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));      
         } // else run report
                
     }
