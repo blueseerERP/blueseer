@@ -436,6 +436,15 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
       
     
     case "getExcMstr" : {
+      String[] key = new String[]{request.getHeader("base"), request.getHeader("foreign")}; 
+      exc_mstr em = getExcMstr(key);
+      ObjectMapper objectMapper = new ObjectMapper();
+      String r = objectMapper.writeValueAsString(em);
+      response.getWriter().print(r);
+      break;
+    }
+    
+    case "getExcMstrList" : {
       String base = request.getHeader("base"); 
       ArrayList<exc_mstr> emlist = getExcMstr(base);
       ObjectMapper objectMapper = new ObjectMapper();

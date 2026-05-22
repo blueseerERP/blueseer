@@ -2929,13 +2929,14 @@ public class BlueSeerUtils {
     public static boolean confirmServerAuthAPI(HttpServletRequest httpRequest, HashMap<String,String> hm) {
         String user = httpRequest.getHeader("user");
         String ip = httpRequest.getRemoteAddr();
+        String xff = httpRequest.getHeader("X-FORWARDED-FOR");
         String sessionid = httpRequest.getHeader("sessionid");
         
         if (hm.containsKey(user) && hm.get(user).equals(sessionid + "," + ip)) {
             return true;
         } else {
-           bslog("confirmServerAuthAPI creds failed: " +  user + "," + sessionid + "," + ip );
-           System.out.println("confirmServerAuthAPI creds failed: " + user + "," + sessionid + "," + ip ); 
+           bslog("confirmServerAuthAPI creds failed: " +  user + "," + sessionid + "," + ip + ",xff:" + xff);
+           System.out.println("confirmServerAuthAPI creds failed: " + user + "," + sessionid + "," + ip + ",xff:" + xff); 
            return false;
         }
     }

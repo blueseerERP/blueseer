@@ -916,7 +916,8 @@ public class fglData {
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
             ArrayList<String[]> list = new ArrayList<String[]>();
             list.add(new String[]{"id","getExcMstr"});
-            list.add(new String[]{"key",x[0]});
+            list.add(new String[]{"base",x[0]});
+            list.add(new String[]{"foreign",x[1]});
             ObjectMapper objectMapper = new ObjectMapper();
             try {
                 String returnstring = sendServerPost(list, "", null, "dataServFIN");
@@ -964,7 +965,7 @@ public class fglData {
         
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
             ArrayList<String[]> params = new ArrayList<String[]>();
-            params.add(new String[]{"id","getExcMstr"});
+            params.add(new String[]{"id","getExcMstrList"});
             params.add(new String[]{"base",base});
             ObjectMapper objectMapper = new ObjectMapper();
             try {
