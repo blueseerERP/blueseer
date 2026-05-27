@@ -146,7 +146,8 @@ public static String[] checkargs(String[] args) {
 
 
 public static void runTranslation(String[] args) {
-    File lf = new File("ediload.lck");
+    String lockfile = bsmf.MainFrame.dbname + ".ediload.lck";
+    File lf = new File(lockfile);
     try { 
 	
         
@@ -174,11 +175,11 @@ public static void runTranslation(String[] args) {
             }
                
             if (lf.exists()) {
-            System.out.println("EDILoad:  lock file found...exiting.  ediload.lck");
+            System.out.println("EDILoad:  lock file found...exiting. " + lockfile);
             return;
 	    } else {
             lf.createNewFile();
-            System.out.println("EDILoad:  creating lock file.  ediload.lck");
+            System.out.println("EDILoad:  creating lock file. " + lockfile);
             }
             
             
@@ -227,7 +228,7 @@ public static void runTranslation(String[] args) {
        } finally {
         if (lf.exists()) {
          lf.delete();
-         System.out.println("EDILoad:  removing lock file.  ediload.lck");
+         System.out.println("EDILoad:  removing lock file. " + lockfile);
         }
     }
 }

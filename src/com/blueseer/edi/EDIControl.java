@@ -291,7 +291,7 @@ public class EDIControl extends javax.swing.JPanel {
             return false;
         }
         
-        fc = checkLength(f,"edic_batchdir");
+        fc = checkLength(f,"edic_batch");
         if (tbbatchdir.getText().length() > fc || tbbatchdir.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
             tbbatchdir.requestFocus();
