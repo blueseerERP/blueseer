@@ -168,6 +168,9 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
             if (s[0].equals("currency")) {
               defaultCurrency = s[1];  
             }
+            if (s[0].equals("site")) {
+              defaultSite = s[1];  
+            }
             if (s[0].equals("canupdate")) {
               canUpdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
             }
@@ -232,11 +235,12 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
     }
     
     public boolean validateInput(dbaction x) { 
-        boolean b = true;
-                                
-               // nothing here
+        if (! canUpdate) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
                
-        return b;
+        return true;
     }
     
     public void initvars(String[] arg) {

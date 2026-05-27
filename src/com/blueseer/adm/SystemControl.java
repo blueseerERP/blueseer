@@ -237,6 +237,9 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
             if (s[0].equals("currency")) {
               defaultCurrency = s[1];  
             }
+            if (s[0].equals("site")) {
+              defaultSite = s[1];  
+            }
             if (s[0].equals("canupdate")) {
               canUpdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
             }
@@ -300,41 +303,39 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
     }
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
+        if (! canUpdate) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
                                 
-                if (tbversion.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbversion.requestFocus();
-                    return b;
-                }
-                if (tbbgimage.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbbgimage.requestFocus();
-                    return b;
-                }
-                if (tbrcolor.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbrcolor.requestFocus();
-                    return b;
-                }
-                if (tbbcolor.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbbcolor.requestFocus();
-                    return b;
-                }
-                if (tbgcolor.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbgcolor.requestFocus();
-                    return b;
-                }
-                
+        if (tbversion.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            tbversion.requestFocus();
+            return false;
+        }
+        if (tbbgimage.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            tbbgimage.requestFocus();
+            return false;
+        }
+        if (tbrcolor.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            tbrcolor.requestFocus();
+            return false;
+        }
+        if (tbbcolor.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            tbbcolor.requestFocus();
+            return false;
+        }
+        if (tbgcolor.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            tbgcolor.requestFocus();
+            return false;
+        }
+
                
-        return b;
+        return true;
     }
     
     public void initvars(String[] arg) {

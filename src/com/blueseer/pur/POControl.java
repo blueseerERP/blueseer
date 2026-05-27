@@ -154,6 +154,9 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
             if (s[0].equals("currency")) {
               defaultCurrency = s[1];  
             }
+            if (s[0].equals("site")) {
+              defaultSite = s[1];  
+            }
             if (s[0].equals("canupdate")) {
               canUpdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
             }
@@ -219,34 +222,34 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
     }
     
     public boolean validateInput(dbaction x) { 
-        boolean b = true;
+        if (! canUpdate) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
+        
           if (tbacct.getText().isEmpty() || ! accounts.contains(tbacct.getText())) {
-                    b = false;
                     bsmf.MainFrame.show(getMessageTag(1026));
                     tbacct.requestFocus();
-                    return b;
+                    return false;
                 }                      
           if (tbtaxacct.getText().isEmpty() || ! accounts.contains(tbtaxacct.getText())) {
-                    b = false;
                     bsmf.MainFrame.show(getMessageTag(1026));
                     tbtaxacct.requestFocus();
-                    return b;
+                    return false;
                 }  
           if (tbfreightacct.getText().isEmpty() || ! accounts.contains(tbfreightacct.getText())) {
-                    b = false;
                     bsmf.MainFrame.show(getMessageTag(1026));
                     tbfreightacct.requestFocus();
-                    return b;
+                    return false;
                 }                      
           if (tbserviceacct.getText().isEmpty() || ! accounts.contains(tbserviceacct.getText())) {
-                    b = false;
                     bsmf.MainFrame.show(getMessageTag(1026));
                     tbserviceacct.requestFocus();
-                    return b;
+                    return false;
                 }                      
            
                
-        return b;
+        return true;
     }
     
     public void initvars(String[] arg) {
