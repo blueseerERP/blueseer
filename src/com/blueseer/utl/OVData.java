@@ -24111,7 +24111,8 @@ return mylist;
         Path path = FileSystems.getDefault().getPath(cleanDirString(dir) + "custom/" + jasperfile); 
         if (! Files.exists(path)) {
           path = FileSystems.getDefault().getPath(cleanDirString(dir) + jasperfile);   
-        }        
+        }      
+      //  System.out.println("HERE: " + path + "    " + dir + "   " + jasperfile);
         return (Files.exists(path)) ? path : null;
     }
    

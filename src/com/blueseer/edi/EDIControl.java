@@ -27,6 +27,7 @@ package com.blueseer.edi;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
+import com.blueseer.adm.admData;
 import static com.blueseer.adm.admData.getAllPKSKeysExceptStore;
 import com.blueseer.edi.ediData.edi_ctrl;
 import static com.blueseer.edi.ediData.getEDICtrl;
@@ -62,7 +63,10 @@ public class EDIControl extends javax.swing.JPanel {
      */
     boolean isLoad = false;
     public static edi_ctrl x = null;
-    boolean canUpdate = false;
+    ArrayList<String[]> initDataSets = null;
+    String defaultSite = "";
+    String defaultCurrency = "";
+        boolean canUpdate = false;
     ArrayList<String> pksids = new ArrayList();
     
     
@@ -236,6 +240,26 @@ public class EDIControl extends javax.swing.JPanel {
             }
     } 
     
+    public void setComponentDefaultValues(boolean init) {
+       isLoad = true;
+        if (init) {
+        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "accounts");
+       }
+       for (String[] s : initDataSets) {
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1];  
+            }
+            if (s[0].equals("site")) {
+              defaultSite = s[1];  
+            }
+            if (s[0].equals("canupdate")) {
+              canUpdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
+            }
+            
+        }
+       isLoad = false;
+    }
+     
     public boolean validateInput(dbaction x) {
         
         if (! canUpdate) {
@@ -344,12 +368,8 @@ public class EDIControl extends javax.swing.JPanel {
     }
     
     public void initvars(String[] key) {
-        
-        
-        isLoad = true;
+        setComponentDefaultValues(initDataSets == null);
         executeTask(dbaction.get, null);
-        isLoad = false;
-        
     }
     
     /**
