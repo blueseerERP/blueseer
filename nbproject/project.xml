@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.java.j2seproject</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
+            <name>blueseer</name>
+            <source-roots>
+                <root id="src.dir"/>
+            </source-roots>
+            <test-roots>
+                <root id="test.test.dir"/>
+                <root id="test.attachments.dir"/>
+                <root id="test.build.dir"/>
+                <root id="test.conf.dir"/>
+                <root id="test.data.dir"/>
+                <root id="test.dist.dir"/>
+                <root id="test.images.dir"/>
+                <root id="test.jasper.dir"/>
+                <root id="test.logs.dir"/>
+                <root id="test.zebra.dir"/>
+            </test-roots>
+        </data>
+    </configuration>
+</project>
