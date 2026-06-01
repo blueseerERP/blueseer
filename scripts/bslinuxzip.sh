@@ -31,4 +31,4 @@ zip -u $bszip controlM.sh
 zip -u $bszip bsapi.service
 zip -u $bszip bsapi.service.sh
 cd /home/vcs
-zip -ru $bsdir/$bszip jre17/*
+zip -ru $bsdir/$bszip jre26/*

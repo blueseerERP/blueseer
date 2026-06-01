@@ -1,2 +1,2 @@
 #!/bin/bash
-jre17/bin/java -cp "custom/*:dist/*" bsmf.MainFrame
+jre26/bin/java --enable-native-access=ALL-UNNAMED -cp "custom/*:dist/*" bsmf.MainFrame
