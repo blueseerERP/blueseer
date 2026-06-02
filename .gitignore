@@ -11,3 +11,5 @@ test2
 !scripts/build.xml
 nbproject/private/
 .nb-gradle/
+*.zip
+*.deb
