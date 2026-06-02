@@ -2,11 +2,11 @@
 
 # script to create directory structure for deb packaging
 
-bs="blueseer.sqlite.linux.v7.0"
+bs="blueseer.sqlite.linux.v8.0"
 bsshare="$bs/usr/share/blueseer"
-rm -fR blueseer.sqlite.linux.v7.0
-rm -f blueseer.sqlite.linux.v7.0.deb
-cp -R ../sf/linux/blueseer.sqlite.linux.v7.0 $bs
+rm -fR blueseer.sqlite.linux.v8.0
+rm -f blueseer.sqlite.linux.v8.0.deb
+cp -R ../sf/linux/blueseer.sqlite.linux.v8.0 $bs
 mkdir $bs/usr
 mkdir $bs/usr/share
 mkdir $bs/usr/share/blueseer
@@ -37,10 +37,10 @@ cp -R ../sf/custom $bsshare/
 cp -R ../sf/patches $bsshare/
 cp -R ../sf/jasper $bsshare/
 cp -R ../sf/images $bsshare/
-cp -R /home/vcs/jre17 $bsshare/
+cp -R /home/vcs/jre26 $bsshare/
 
 rm -f $bs/usr/bin/blueseer
-echo "cd /usr/share/blueseer; jre17/bin/java -D\"java.util.logging.config.file=bslogging.properties\" -cp \".:custom/*:dist/*:edi/maps/*\" bsmf.MainFrame" >>$bs/usr/bin/blueseer
+echo "cd /usr/share/blueseer; jre26/bin/java -D\"java.util.logging.config.file=bslogging.properties\" -cp \".:custom/*:dist/*:edi/maps/*\" bsmf.MainFrame" >>$bs/usr/bin/blueseer
 
 chmod -R 0755 $bs
 chmod -R 0777 $bsshare/data

@@ -55,10 +55,10 @@ $patchmain = "blueseer.patch.ver." + $version + "." + "zip"
 mkdir $patchdir
 mkdir $patchdir\dist
 cp ..\.patch $patchdir\
-cp .patchsqlv70 $patchdir\
+cp .patchsqlv80 $patchdir\
 cp patch_install.bat $patchdir\
 cp patch_install.sh $patchdir\
-cp ..\jre17\lib\security\jssecacerts $patchdir\
+cp ..\jre26\lib\security\jssecacerts $patchdir\
 cp ..\sf\patches\patch_instructions.pdf $patchdir\
 cp ..\sf\jasper $patchdir\ -recurse
 cp ..\sf\zebra $patchdir\ -recurse
@@ -79,7 +79,7 @@ compress-archive -update -path login.bat -destinationpath $wip\$myzip
 compress-archive -update -path sclnk.vbs -destinationpath $wip\$myzip
 compress-archive -update -path bslogging.properties -destinationpath $wip\$myzip
 compress-archive -update -path ..\.patch -destinationpath $wip\$myzip
-compress-archive -update -path ..\jre17 -destinationpath $wip\$myzip
+compress-archive -update -path ..\jre26 -destinationpath $wip\$myzip
 
 $myzip = "blueseer.sqlite.win.v" + $version + ".zip"
 rm $wip\$myzip
@@ -91,7 +91,7 @@ compress-archive -update -path login.bat -destinationpath $wip\$myzip
 compress-archive -update -path sclnk.vbs -destinationpath $wip\$myzip
 compress-archive -update -path bslogging.properties -destinationpath $wip\$myzip
 compress-archive -update -path ..\.patch -destinationpath $wip\$myzip
-compress-archive -update -path ..\jre17 -destinationpath $wip\$myzip
+compress-archive -update -path ..\jre26 -destinationpath $wip\$myzip
 #$zip = [System.IO.Compression.ZipFile]::Open("$wip\$myzip", [System.IO.Compression.ZipArchiveMode]::Update)
 #$zip.CreateEntry("edi/in")
 #$zip.Dispose()
