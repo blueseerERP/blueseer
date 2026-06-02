@@ -58,6 +58,10 @@
         <javac executable="${javac23}" fork="yes" srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
         </javac>
     </target>
+    <target name="compile26" depends="clean, makedir">
+        <javac executable="${javac26}" fork="yes" srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
+        </javac>
+    </target>
     <target name="compilelinux" depends="clean, makedir">
 	    <javac  executable="${javaclinux}" fork="yes" srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
         </javac>
@@ -170,6 +174,9 @@
 
     <target name="main" depends="compile17, jar">
         <description>Main target</description>
+    </target>
+    <target name="main26" depends="compile26, jar">
+        <description>Main Compile target using JDK 26</description>
     </target>
     <target name="mainl" depends="compilelinux, jar">
         <description>Main target</description>
