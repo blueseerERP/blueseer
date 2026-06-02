@@ -73,7 +73,7 @@
 
 
     <!--Creates the deployable jar file  -->
-    <target name="jar" depends="compile17">
+    <target name="jar" >
         <jar destfile="${dist.dir}\blueseer.jar" basedir="${build.dir}">
 		<fileset dir="${src.dir}" includes="images/**/*.png,images/**/*.gif,resources/**/*.properties" />
 		<!--	<fileset dir="${lib.dir}" includes="**/*.jar"/> -->
