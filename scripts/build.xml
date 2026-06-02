@@ -14,6 +14,7 @@
     <property name="JDK17dir" location="C:\java\jdk-17" />
     <property name="javac17" location="${JDK17dir}/bin/javac" />
     <property name="javaclinux" location="/home/vcs/jdk-17/bin/javac" />
+    <property name="javaclinux26" location="/usr/lib/jvm/jdk-26.0.1/bin/javac" />
     <property name="java17" location="${JDK17dir}/bin/java" />
     <property name="java17l" location="/opt/jdk-17/bin/java" />
     <property name="lang" value="en" />
@@ -58,6 +59,10 @@
 	    <javac  executable="${javaclinux}" fork="yes" srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
         </javac>
     </target>
+    <target name="compilelinux26" depends="clean, makedir">
+	    <javac  executable="${javaclinux26}" fork="yes" srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
+        </javac>
+    </target>
 
 
     <!--Creates the deployable jar file  -->
@@ -67,6 +72,7 @@
 		<!--	<fileset dir="${lib.dir}" includes="**/*.jar"/> -->
             <manifest>
                 <attribute name="Main-Class" value="bsmf" />
+                <attribute name="Enable-Native-Access" value="ALL-UNNAMED" />
             </manifest>
         </jar>
 	<copy file="${dist.dir}\blueseer.jar" todir="${install.dir}" overwrite="true"/> 
@@ -164,6 +170,9 @@
     </target>
     <target name="mainl" depends="compilelinux, jar">
         <description>Main target</description>
+    </target>
+    <target name="mainl26" depends="compilelinux26, jar">
+        <description>Compile and create Jar using Javac 26</description>
     </target>
     <target name="main23" depends="compile23, jar">
         <description>Main target</description>
