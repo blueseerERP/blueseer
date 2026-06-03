@@ -7334,15 +7334,31 @@ public class ordData {
               con = DriverManager.getConnection(url + db, user, pass);  
             }
         Statement st = con.createStatement();
+        ResultSet res = null;
+        double disc = 0.0;
+        double netprice = 0.0;
         try{
            st.executeUpdate(
                  " update so_mstr set so_due_date = " + "'" + duedate + "'" + "," +
                  " so_mod_date = " + "'" + now + "'" +
                  " where so_po = " + "'" + po + "'" + ";" );
            for (String[] det : detlist) { // custline, item, custitem, qty, listprice
+               
+               res = st.executeQuery("select sod_disc from sod_det " +
+                    " where sod_po = " + "'" + po + "'" +
+                 " and sod_custline = " + "'" + det[0] + "'" + ";" );
+                while (res.next()) {
+                    if (res.getDouble("sod_disc") != 0) {
+                    netprice = bsParseDouble(det[4]) - (bsParseDouble(det[4]) * (res.getDouble("sod_disc") / 100) );
+                    } else {
+                        netprice = bsParseDouble(det[4]);
+                    }
+                }
+               
                st.executeUpdate(
                  " update sod_det set sod_ord_qty = " + "'" + det[3] + "'" + "," +
                  " sod_listprice = " + "'" + det[4] + "'" + "," +
+                 " sod_netprice = " + "'" + bsNumber(netprice) + "'" + "," +        
                  " sod_item = " + "'" + det[1] + "'" + "," +
                  " sod_custitem = " + "'" + det[2] + "'" +         
                  " where sod_po = " + "'" + po + "'" +
