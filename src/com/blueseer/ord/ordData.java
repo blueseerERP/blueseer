@@ -7335,7 +7335,6 @@ public class ordData {
             }
         Statement st = con.createStatement();
         ResultSet res = null;
-        double disc = 0.0;
         double netprice = 0.0;
         try{
            st.executeUpdate(
