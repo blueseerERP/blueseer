@@ -172,17 +172,17 @@
  </target>
 
 
-    <target name="main" depends="compile17, jar">
-        <description>Main target</description>
+    <target name="main" depends="compile26, jar">
+        <description>Main target using compile JDK 26</description>
     </target>
-    <target name="main26" depends="compile26, jar">
-        <description>Main Compile target using JDK 26</description>
+    <target name="main17" depends="compile17, jar">
+        <description>Main Compile target using JDK 17</description>
     </target>
-    <target name="mainl" depends="compilelinux, jar">
-        <description>Main target</description>
+    <target name="mainl" depends="compilelinux26, jar">
+        <description>Main target using compile JDK 26</description>
     </target>
-    <target name="mainl26" depends="compilelinux26, jar">
-        <description>Compile and create Jar using Javac 26</description>
+    <target name="mainl17" depends="compilelinux, jar">
+        <description>Compile and create Jar using Javac 17</description>
     </target>
     <target name="main23" depends="compile23, jar">
         <description>Main target</description>
