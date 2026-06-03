@@ -3576,11 +3576,7 @@ public class EDI {
 
                    changedesc = "custline: " + e.getDetLine(j) + " sod_listprice-> " + " Old: " + sales.sod().get(j).sod_listprice() + "  New: " + e.getDetListPrice(j); 
                    cl = new change_log(null, "", e.po, "so_mstr", "OrderMaint", "EDI_850", changedesc, "", "EDI_05", "");
-                   cllist.add(cl);
-                   
-                   changedesc = "custline: " + e.getDetLine(j) + " sod_netprice-> " + " Old: " + sales.sod().get(j).sod_netprice() + "  New: " + e.getDetListPrice(j); 
-                   cl = new change_log(null, "", e.po, "so_mstr", "OrderMaint", "EDI_850", changedesc, "", "EDI_05", "");
-                   cllist.add(cl);
+                   cllist.add(cl);   
                    
                    changedesc = "custline: " + e.getDetLine(j) + " sod_ord_qty-> " + " Old: " + sales.sod().get(j).sod_ord_qty() + "  New: " + e.getDetQty(j); 
                    cl = new change_log(null, "", e.po, "so_mstr", "OrderMaint", "EDI_850", changedesc, "", "EDI_05", "");
