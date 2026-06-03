@@ -3726,12 +3726,12 @@ public class cusData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                res = st.executeQuery("select cpr_disc, cpr_item from cpr_mstr where cpr_cust = " + "'" + cust + "'" + 
+                res = st.executeQuery("select cpr_price, cpr_item from cpr_mstr where cpr_cust = " + "'" + cust + "'" + 
                         " AND cpr_type = " + "'" + "DISCOUNT" + "'" +
                         " AND ( cpr_expire is null OR cpr_expire >= " + "'" + BlueSeerUtils.setDateFormat(now) + "'" + " ) " +
                         ";");                
                while (res.next()) {
-                    myarray.add(new String[]{res.getString("cpr_item"), res.getString("cpr_disc")});
+                    myarray.add(new String[]{res.getString("cpr_item"), res.getString("cpr_price")});
                 }
            }
             catch (SQLException s){

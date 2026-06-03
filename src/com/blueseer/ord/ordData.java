@@ -4240,13 +4240,33 @@ public class ordData {
             }
             Statement st = con.createStatement();
             ResultSet res = null;
-            
+            double charges = 0.00;
             try{
                 
+                // lets select 'charges' first...as it will be applied to all rows returned by sod_det search
+                res = st.executeQuery("select " +
+                      " case when sos_amttype = 'percent' and sos_type <> 'tax' then (myamt * (sos_amt / 100.0)) " +
+                      " when sos_amttype = 'percent' and sos_type = 'tax' then (myamt * (sos_amt / 100.0)) " +
+                      " else sos_amt end as 'amt' " +
+                      " from sos_det, (select sod_nbr, sum(sod_ord_qty * sod_listprice) as 'myamt' from sod_det group by sod_nbr) sub " +
+                      " where sub.sod_nbr = sos_nbr and sos_nbr = " + "'" + order + "'");
+                while (res.next()) {
+                    charges = res.getDouble("amt");
+                }
+                
+                res = st.executeQuery("select case when sum(sos_amt) is null then 0 else sum(sos_amt) end as amt from sos_det " +
+                " where sos_nbr = " + "'" + order + "'" + " and sos_amttype = 'amount' " +
+                " and sos_type <> 'tax' and sos_type <> 'passive' " +
+                " and sos_type <> 'shipping BIL' and sos_type <> 'shipping PPD' ");
+                while (res.next()) {
+                    charges += res.getDouble("amt");
+                }
+                
+                
                 res = st.executeQuery("select so_nbr, sod_nbr, so_curr, sod_desc, so_shipvia, cm_terms,  " + 
-                " (select case when sum(sos_amt) is null then 0 else sum(sos_amt) end from sos_det " +
-                " where sos_nbr = " + "'" + order + "'" + " and sos_amttype = 'amount' and sos_type <> 'tax' and sos_type <> 'passive' and sos_type <> 'shipping BIL' and sos_type <> 'shipping PPD' " +
-                " ) as charges, " +
+               // " (select case when sum(sos_amt) is null then 0 else sum(sos_amt) end from sos_det " +
+               // " where sos_nbr = " + "'" + order + "'" + " and sos_amttype = 'amount' and sos_type <> 'tax' and sos_type <> 'passive' and sos_type <> 'shipping BIL' and sos_type <> 'shipping PPD' " +
+               // " ) as charges, " +
                 " (select case when sum(sos_amt) is null then 0 else sum(sos_amt) end from sos_det " +
                 " where sos_nbr = " + "'" + order + "'" + " and sos_amttype = 'amount' and sos_type = 'tax' ) as taxes, " +        
                 " so_cust, so_rmks, sod_po, sod_item, sod_custitem, sod_ord_qty, " +
@@ -4275,8 +4295,8 @@ public class ordData {
                         rowArray.put(res.getString("sod_po"));
                         rowArray.put(res.getString("sod_item"));
                         rowArray.put(res.getString("sod_custitem"));
-                        rowArray.put(res.getDouble("sod_ord_qty"));
-                        rowArray.put(res.getDouble("sod_netprice")); 
+                        rowArray.put(res.getDouble("sod_ord_qty"));  
+                        rowArray.put(res.getDouble("sod_netprice"));  
                         rowArray.put(res.getString("cm_code"));
                         rowArray.put(res.getString("cm_name")); // 10 zero base
                         rowArray.put(res.getString("cm_line1"));
@@ -4310,7 +4330,7 @@ public class ordData {
                         rowArray.put(res.getString("ov_jasper_directory"));
                         rowArray.put(res.getString("so_nbr")); // 40 zero base
                         rowArray.put(res.getString("so_curr")); 
-                        rowArray.put(res.getDouble("charges"));
+                        rowArray.put(bsNumber(charges)); // rowArray.put(res.getDouble("charges"));
                         rowArray.put(res.getDouble("taxes"));
                         rowArray.put(res.getDouble("sod_listprice"));
                         rowArray.put(res.getString("cms_line2"));
@@ -4322,7 +4342,7 @@ public class ordData {
               // get SAC
               if (i > 0) {
               res = st.executeQuery("select sos_desc, " +
-                      " case when sos_amttype = 'percent' and sos_type <> 'tax' then (myamt * -1 * (sos_amt / 100.0)) " +
+                      " case when sos_amttype = 'percent' and sos_type <> 'tax' then (myamt * (sos_amt / 100.0)) " +
                       " when sos_amttype = 'percent' and sos_type = 'tax' then (myamt * (sos_amt / 100.0)) " +
                       " else sos_amt end as 'amt' " +
                       " from sos_det, (select sod_nbr, sum(sod_ord_qty * sod_listprice) as 'myamt' from sod_det group by sod_nbr) sub " +
