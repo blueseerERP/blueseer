@@ -5599,15 +5599,17 @@ public class invData {
                     partner = disccode;
                 }
 
-               res = st.executeQuery("select cpr_disc from cpr_mstr where cpr_cust = " + "'" + partner + "'" + 
+               res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + partner + "'" + 
                                      " AND ( cpr_expire is null OR cpr_expire >= " + "'" + BlueSeerUtils.setDateFormat(now) + "'" + " ) " +
                                      " AND cpr_type = " + "'" + "DISCOUNT" + "'" + ";");
                int i = 0;
                while (res.next()) {
-                      if (i == 0)
-                      disc = res.getDouble("cpr_disc");
-                      if (i > 0)
-                      disc = disc + res.getDouble("cpr_disc");                   
+                      if (i == 0) {
+                      disc = res.getDouble("cpr_price");
+                      }
+                      if (i > 0) {
+                      disc = disc + res.getDouble("cpr_price");     
+                      }
                   i++;
                }
                }

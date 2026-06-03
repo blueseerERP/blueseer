@@ -8,6 +8,7 @@ jre11
 jre16
 jre17
 test2
+*.zip
 !scripts/build.xml
 nbproject/private/
 .nb-gradle/
