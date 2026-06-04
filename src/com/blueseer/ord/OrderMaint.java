@@ -150,6 +150,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -694,6 +695,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
         
         String defaultsite = null;
         
+    if (init) {    
         ddshipfrom.removeAllItems();
         ddsite.removeAllItems();
         ddwh.removeAllItems();
@@ -706,8 +708,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
         ddstatus.removeAllItems();
         ddsalesrep.removeAllItems();
         ddsalesrep2.removeAllItems();
-        
-        
         
         for (String[] s : initDataSets) {
             if (s[0].equals("currency")) {
@@ -812,7 +812,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
             ddsactype.addItem("shipping BIL");
        }
         ddsactype.setSelectedIndex(0);
-        
+    }
         
         
         lbqtyavailable.setBackground(Color.gray);
@@ -1446,6 +1446,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                 ludialog.dispose();
+                DefaultComboBoxModel model = (DefaultComboBoxModel) ddcust.getModel();
+                if (model.getIndexOf(target.getValueAt(row,1).toString()) < 0) {
+                    ddcust.addItem(target.getValueAt(row,1).toString());
+                } 
                 ddcust.setSelectedItem(target.getValueAt(row,1).toString());
                 }
             }
@@ -4619,6 +4623,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
         BlueSeerUtils.messagereset(); 
+        initDataSets = null;
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
