@@ -59,8 +59,10 @@ includes="images/**/*.png,images/**/*.gif,resources/**/*.properties" />
                  <attribute name="Main-Class" value="bsmf" />
              </manifest>
          </jar>
+<!--
         <copy file="scripts/bs.cfg.us" tofile="${test.dir}/bs.cfg"
 overwrite="true"/>
+-->
          <mkdir dir="${test.dir}/data" />
          <copy todir="${test.dir}/data" overwrite="true">
           <fileset dir="sf/data"/>
