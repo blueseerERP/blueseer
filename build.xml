@@ -59,34 +59,6 @@ includes="images/**/*.png,images/**/*.gif,resources/**/*.properties" />
                  <attribute name="Main-Class" value="bsmf" />
              </manifest>
          </jar>
-<!--
-        <copy file="scripts/bs.cfg.us" tofile="${test.dir}/bs.cfg"
-overwrite="true"/>
--->
-         <mkdir dir="${test.dir}/data" />
-         <copy todir="${test.dir}/data" overwrite="true">
-          <fileset dir="sf/data"/>
-          </copy>
-         <mkdir dir="${test.dir}/jasper" />
-         <copy todir="${test.dir}/jasper" overwrite="true">
-          <fileset dir="sf/jasper"/>
-          </copy>
-         <mkdir dir="${test.dir}/zebra" />
-         <copy todir="${test.dir}/zebra" overwrite="true">
-          <fileset dir="sf/zebra"/>
-          </copy>
-         <mkdir dir="${test.dir}/edi" />
-         <copy todir="${test.dir}/edi" overwrite="true">
-          <fileset dir="sf/edi"/>
-          </copy>
-         <mkdir dir="${test.dir}/conf" />
-         <copy todir="${test.dir}/conf" overwrite="true">
-          <fileset dir="sf/conf"/>
-          </copy>
-         <mkdir dir="${test.dir}/temp" />
-         <mkdir dir="${test.dir}/logs" />
-         <mkdir dir="${test.dir}/attachments" />
-         <mkdir dir="${test.dir}/custom" />
      </target>
 
 
