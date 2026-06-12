@@ -26,7 +26,6 @@ SOFTWARE.
 package com.blueseer.utl;
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.bslog;
 import javax.swing.InputMap;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
@@ -66,14 +65,8 @@ public class mf {
                 
             }
             
-        } catch (ClassNotFoundException ex) {
-            bslog(ex);
-        } catch (InstantiationException ex) {
-            bslog(ex);
-        } catch (IllegalAccessException ex) {
-            bslog(ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            bslog(ex);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            MainFrame.bslog(ex);
         }
         
        
