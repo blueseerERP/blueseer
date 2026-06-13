@@ -7,9 +7,9 @@
      <property name="build.dir" location="${test.dir}/build" />
      <property name="dist.dir" location="${test.dir}/dist" />
      <property name="lib.dir" location="lib" />
-     <property name="JDK17" location="/path/to/your/jdk" />
-     <property name="javac17" location="${JDK17}/bin/javac" />
-     <property name="java17" location="${JDK17}/bin/java" />
+     <property name="JDK" location="/path/to/your/jdk" />
+     <property name="javac" location="${JDK}/bin/javac" />
+     <property name="java" location="${JDK}/bin/java" />
      <property name="classpath.property"
             value="${test.dir}/dist/" />
 
@@ -42,7 +42,7 @@
 
      <!-- Compiles the java code (including the usage of library for JUnit -->
      <target name="compile" depends="clean, makedir">
-         <javac executable="${javac17}" fork="yes" srcdir="${src.dir}"
+         <javac executable="${javac}" fork="yes" srcdir="${src.dir}"
 destdir="${build.dir}" classpathref="build.classpath"
 includeantruntime="false" debug="true">
          </javac>
@@ -69,7 +69,7 @@ includes="images/**/*.png,images/**/*.gif,resources/**/*.properties" />
            <!-- <fileset dir="lib" includes="*.jar"/> -->
      </path>
      <echo>running in ....${test.dir}</echo>
-    <java classname="bsmf.MainFrame" jvm="${java17}" fork="true"
+    <java classname="bsmf.MainFrame" jvm="${java}" fork="true"
 classpathref="runtime.path" dir="${test.dir}">
             <arg value="-debug"/>
             <jvmarg
