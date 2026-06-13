@@ -2180,12 +2180,13 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     continue;
                 }
                 String[] v = dfs.split(",", -1);
-                x = new dfs_mstr(null, v[0],
+                x = new dfs_mstr(null, 
+                    v_inddf, 
+                    v[0], // desc
                     v[1],
                     v[2],
                     v[3],
                     v[4],
-                    v[5],
                     "", // misc
                     "0", // default no suppression
                     "0", // default no suppress root (json)
@@ -2199,6 +2200,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 }
                 String[] v = det.split(",", -1);
                 dfs_det y = new dfs_det(null, 
+                    v_inddf,    
                     v[0],
                     v[1],
                     v[2],
@@ -2210,8 +2212,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     v[8],
                     v[9],
                     v[10],
-                    v[11],
-                    v[12]
+                    v[11]
                     );
                 detlist.add(y);
             }
@@ -2242,12 +2243,13 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     continue;
                 }
                 String[] v = dfs.split(",", -1);
-                x = new dfs_mstr(null, v[0],
+                x = new dfs_mstr(null, 
+                    v_outddf,    
+                    v[0],
                     v[1],
                     v[2],
                     v[3],
                     v[4],
-                    v[5],
                     "", // misc
                     "0", // default no suppression
                     "0", // default no suppress root (json)
@@ -2261,6 +2263,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 }
                 String[] v = det.split(",", -1);
                 dfs_det y = new dfs_det(null, 
+                    v_outddf,
                     v[0],
                     v[1],
                     v[2],
@@ -2272,8 +2275,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     v[8],
                     v[9],
                     v[10],
-                    v[11],
-                    v[12]
+                    v[11]
                     );
                 detlist.add(y);
             }
