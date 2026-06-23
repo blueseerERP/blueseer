@@ -3322,6 +3322,16 @@ public class OVData {
     }
 
     public static ArrayList getdeptanddesclist() {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "getdeptanddesclist"});
+            try {
+                return jsonToArrayListString(sendServerPost(list, "", null, "dataServOV")); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        }
         ArrayList myarray = new ArrayList();
         try {
             
@@ -23591,7 +23601,7 @@ MainFrame.bslog(e);
      }
     
     public static ArrayList getClockCodes() {
-    if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
             ArrayList<String[]> list = new ArrayList<String[]>();
             list.add(new String[]{"id", "getClockCodes"});
             try {
@@ -23641,6 +23651,18 @@ return mylist;
  }
 
     public static ArrayList getClockCodesAndDesc() {
+    
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getClockCodesAndDesc"});
+            try {
+                return jsonToArrayListString(sendServerPost(list, "", null, "dataServOV"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        } 
+        
     ArrayList<String> mylist = new ArrayList<String>();
 
     try{
@@ -23682,7 +23704,19 @@ return mylist;
  }
 
     public static ArrayList getEmployeeIDAndName() {
-    ArrayList<String> mylist = new ArrayList<String>();
+    
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "getEmployeeIDAndName"});
+            try {
+                return jsonToArrayListString(sendServerPost(list, "", null, "dataServOV"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+        } 
+        
+        ArrayList<String> mylist = new ArrayList<String>();
 
     try{
 

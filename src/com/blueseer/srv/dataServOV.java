@@ -59,12 +59,14 @@ import static com.blueseer.utl.OVData.deleteMenuToUser;
 import static com.blueseer.utl.OVData.deleteSysMeta;
 import static com.blueseer.utl.OVData.getChartRptPickerData;
 import static com.blueseer.utl.OVData.getClockCodes;
+import static com.blueseer.utl.OVData.getClockCodesAndDesc;
 import static com.blueseer.utl.OVData.getCodeDescByCode;
 import static com.blueseer.utl.OVData.getCodeKeyByCode;
 import static com.blueseer.utl.OVData.getCodeMstrKeyList;
 import static com.blueseer.utl.OVData.getCodeMstrValueList;
 import static com.blueseer.utl.OVData.getCodeValueByCode;
 import static com.blueseer.utl.OVData.getCodeValueByCodeKey;
+import static com.blueseer.utl.OVData.getEmployeeIDAndName;
 import static com.blueseer.utl.OVData.getExchangeBaseValue;
 import static com.blueseer.utl.OVData.getExchangeRate;
 import static com.blueseer.utl.OVData.getJasperByGroup;
@@ -86,6 +88,7 @@ import static com.blueseer.utl.OVData.getTaxPercentElementsApplicableByItem;
 import static com.blueseer.utl.OVData.getTermsResults;
 import static com.blueseer.utl.OVData.getUsersOfMenusList;
 import static com.blueseer.utl.OVData.getWeekNbrByDate;
+import static com.blueseer.utl.OVData.getdeptanddesclist;
 import static com.blueseer.utl.OVData.getmenutree;
 import static com.blueseer.utl.OVData.getpsmstrcompSerialized;
 import static com.blueseer.utl.OVData.getpsmstrparents;
@@ -280,7 +283,19 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             
         case "getClockCodes" :        
             response.getWriter().print(ArrayListStringToJson(getClockCodes()));
+            break;   
+            
+        case "getClockCodesAndDesc" :        
+            response.getWriter().print(ArrayListStringToJson(getClockCodesAndDesc()));
+            break;  
+            
+        case "getEmployeeIDAndName" :        
+            response.getWriter().print(ArrayListStringToJson(getEmployeeIDAndName()));
             break;     
+            
+        case "getdeptanddesclist" :        
+            response.getWriter().print(ArrayListStringToJson(getdeptanddesclist()));
+            break;    
             
         case "getOperationsByItem" :        
             response.getWriter().print(ArrayListStringToJson(getOperationsByItem(request.getHeader("param1"))));

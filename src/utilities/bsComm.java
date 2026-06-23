@@ -33,19 +33,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +50,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 /**
  *
  * @author TerryVa
@@ -64,7 +61,7 @@ public class bsComm {
     public void startService(int cycle) {
         scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(new MyScheduledTask(), 0, cycle, TimeUnit.SECONDS);
-        System.out.println("Service started. Task scheduled every cycle seconds.");
+        System.out.println("Service started. Task scheduled every " + cycle + " seconds.");
 
         // Register shutdown hook
         Runtime.getRuntime().addShutdownHook(new Thread(() -> shutdownService()));
@@ -106,15 +103,18 @@ public class bsComm {
     
     public class MyScheduledTask implements Runnable {
         private int counter = 0;
-
+        //  Reuse the thread pool across runs instead of creating/destroying it every time
+      // private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+       private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        
         @Override
         public void run() {
             System.out.println("Executing task. Count: " + ++counter);
             
           //  boolean eFlag = false;
           //  String p = "";
-            String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-            ArrayList<String[]> trafficlist = new ArrayList<String[]>();
+            String  now = LocalDateTime.now().format(FORMATTER);
+            ArrayList<String[]> trafficlist = new ArrayList<>();
             Path filePath = Paths.get("bscomm.cfg");
                 try {                    
                     List<String> lines = Files.readAllLines(filePath);
@@ -213,7 +213,68 @@ public class bsComm {
                     } // for each record
                     
                 }); // executor.submit
-                    
+                  
+                /*
+                executor.submit(() -> {
+                Path folderPath = Paths.get(s[2]);
+                if (!Files.exists(folderPath) || !Files.isDirectory(folderPath)) {
+                    return;
+                }
+
+                // 5. Use Stream API to process files lazily instead of loading all File[] into memory
+                try (Stream<Path> fileStream = Files.list(folderPath)) {
+                    long processedCount = fileStream.filter(Files::isRegularFile).peek(sourcepath -> {
+                        try {
+                            String fileName = sourcepath.getFileName().toString();
+                            Path destinationpath = Paths.get(s[3]).resolve(fileName);
+                            
+                            // Generate unique timestamp string with minimal allocations
+                            String hexTime = Long.toHexString(System.currentTimeMillis());
+                            Path archivefilepath = Paths.get(s[4]).resolve(fileName + "." + hexTime);
+
+                            boolean isExtraction = false;
+
+                            if ("1".equals(s[5])) { // Parse file
+                                try {
+                                    String p = filterFile(sourcepath, s[0], trafficlist, s[3], s[6]);
+                                    isExtraction = "extraction".equals(p);
+                                    if (!p.isEmpty()) {
+                                        destinationpath = Paths.get(p);
+                                    }
+                                } catch (Exception ex) {
+                                    System.err.println(ex.getMessage());
+                                }
+                            }
+
+                            if (isExtraction) { 
+                                Files.copy(sourcepath, archivefilepath, StandardCopyOption.REPLACE_EXISTING);
+                                Files.delete(sourcepath);
+                                System.out.printf("%s Thread: %s client: %s moved file: %s to extraction override%n", 
+                                        now, Thread.currentThread().getName(), s[0], fileName);
+                            } else {
+                                Files.move(sourcepath, destinationpath, StandardCopyOption.REPLACE_EXISTING);
+                                Files.copy(destinationpath, archivefilepath, StandardCopyOption.REPLACE_EXISTING);
+                                System.out.printf("%s Thread: %s client: %s moved file: %s to %s%n", 
+                                        now, Thread.currentThread().getName(), s[0], fileName, destinationpath);
+                            }
+
+                        } catch (IOException ex) {
+                            System.err.printf("%s client: %s unable to move file: %s%n%s%n", 
+                                    now, s[0], sourcepath.getFileName(), ex.getMessage());
+                        }
+                    }).count();
+
+                    if (processedCount == 0) {
+                        System.out.printf("%s Thread: %s client: %s no files to process%n", 
+                                now, Thread.currentThread().getName(), s[0]);
+                    }
+
+                } catch (IOException e) {
+                    System.err.println("Error reading directory: " + s[2]);
+                }
+            });
+                */
+                
                 } // for trafficlist
                 
                     executor.shutdown();
@@ -225,6 +286,12 @@ public class bsComm {
                 
                 
         }
+    
+        /*
+        public void shutdownExecutor() {
+        executor.shutdown();
+        }
+        */
     }
 
 
