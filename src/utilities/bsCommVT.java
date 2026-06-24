@@ -69,7 +69,7 @@ public class bsCommVT {
                 
                 // validate proper config file
                 for (String[] s : trafficlist) {
-                    if (s.length != 7) {
+                    if (s.length != 8) {
                         System.out.println(now + " invalid config file format...each line must have 7 elements");
                         return;
                     }
@@ -165,8 +165,27 @@ public class bsCommVT {
     private static void moveFile(Path sourceFile, String[] s) {
         long delay = INITIAL_RETRY_DELAY_MS;
         int attempts = 0;
-
+        Path destinationFile = FileSystems.getDefault().getPath(s[3]).resolve(sourceFile.getFileName());
+        String[] maskarray;
         System.out.println("Executing on virtual thread: " + Thread.currentThread().getName() + " / " + Thread.currentThread().threadId());
+        
+        if (s[7] != null && ! s[7].isBlank()) {
+            maskarray = s[7].split("\\|", -1);
+            System.out.println("HERE 1 " + s[7]);
+            for (String m : maskarray) {
+                if (! m.contains("=")) {
+                    break;
+                }
+                
+                String[] pair = m.split("=");
+                System.out.println("HERE 2 " + pair[0] + " " + sourceFile.getFileName().toString());
+                if (sourceFile.getFileName().toString().matches(pair[0])) {
+                    destinationFile = FileSystems.getDefault().getPath(pair[1]).resolve(sourceFile.getFileName());
+                    System.out.println("FOUND MATCH " + destinationFile);
+                    break;
+                }
+            }
+        }
         
         try {
             // 1. Concurrency throttle
@@ -180,7 +199,6 @@ public class bsCommVT {
                         throw new IOException("File is actively being written to by another process.");
                     }
 
-                    Path destinationFile = FileSystems.getDefault().getPath(s[3]).resolve(sourceFile.getFileName());
                     
                     // 3. Attempt the move operation
                     try {
@@ -191,7 +209,7 @@ public class bsCommVT {
                         Files.move(sourceFile, destinationFile, StandardCopyOption.REPLACE_EXISTING);
                     }
 
-                    System.out.println("Moved successfully: " + sourceFile.getFileName() + " on attempt " + attempts);
+                    System.out.println("Moved successfully: " + sourceFile.getFileName() + " on attempt " + attempts + " on thread ID " + Thread.currentThread().threadId());
                     return; // Success, break out of loop
 
                 } catch (IOException e) {
