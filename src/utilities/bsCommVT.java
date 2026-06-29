@@ -29,13 +29,16 @@ import java.util.concurrent.TimeUnit;
 /// execution directory.   
 ///
 /// ## config file definition
-/// column names separated by "," :  tpname, rectype, sourcedir|trantype, destdir, archdir, parse, extract
+/// column names separated by "," :  tpname, rectype, sourcedir|trantype, destdir, archdir, parse, extract, regex|destdir
 /// the rectype element (p or c) determines master directories to loop
 /// the 'parse' 5th column (0 or 1) indicates a second loop through for trans type specific output directory
-/// parent example:  acme, p, /somesourcedir, /somedestdir, /somearchdir, 0, 0   (no children transaction type determination...no file parsing...just movement)
-/// parent example:  acme, p, /somesourcedir, /somedestdir, /somearchdir, 1, 1   (parse each file for transaction type override of dest directory)
-/// child example:   acme, c, trans type    , /somedestdir, /somearchdir, 0, 1  
-
+/// parent example:  acme, p, /somesourcedir, /somedestdir, /somearchdir, 0, 0,   (no children transaction type determination...no file parsing...just movement)
+/// parent example:  acme, p, /somesourcedir, /somedestdir, /somearchdir, 1, 1,   (parse each file for transaction type override of dest directory)
+/// child example:   acme, c, trans type    , /somedestdir, /somearchdir, 0, 1,  
+///
+/// The 8th column allows for regex matches on source file names...and deviates destination if a match is found
+/// example:  acme, p, /somesourcedir, /somedestdir, /somearchdir, 0, 0,^abc.*=/someotherdestdir|^def.*=/someotherdestdir2
+/// Application supports multiple regex/destdir entries in column 8...separated by a | .   The key/value for each entry is separated by an =
 /// @author Terry Vaughn
 
 
@@ -167,21 +170,18 @@ public class bsCommVT {
         int attempts = 0;
         Path destinationFile = FileSystems.getDefault().getPath(s[3]).resolve(sourceFile.getFileName());
         String[] maskarray;
-        System.out.println("Executing on virtual thread: " + Thread.currentThread().getName() + " / " + Thread.currentThread().threadId());
+      //  System.out.println("Executing on virtual thread: " + Thread.currentThread().getName() + " / " + Thread.currentThread().threadId());
         
         if (s[7] != null && ! s[7].isBlank()) {
             maskarray = s[7].split("\\|", -1);
-            System.out.println("HERE 1 " + s[7]);
             for (String m : maskarray) {
                 if (! m.contains("=")) {
                     break;
                 }
                 
                 String[] pair = m.split("=");
-                System.out.println("HERE 2 " + pair[0] + " " + sourceFile.getFileName().toString());
                 if (sourceFile.getFileName().toString().matches(pair[0])) {
                     destinationFile = FileSystems.getDefault().getPath(pair[1]).resolve(sourceFile.getFileName());
-                    System.out.println("FOUND MATCH " + destinationFile);
                     break;
                 }
             }
@@ -209,7 +209,7 @@ public class bsCommVT {
                         Files.move(sourceFile, destinationFile, StandardCopyOption.REPLACE_EXISTING);
                     }
 
-                    System.out.println("Moved successfully: " + sourceFile.getFileName() + " on attempt " + attempts + " on thread ID " + Thread.currentThread().threadId());
+                    System.out.println("Moved successfully: " + sourceFile + " to " + destinationFile + " on attempt " + attempts + " on thread ID " + Thread.currentThread().threadId());
                     return; // Success, break out of loop
 
                 } catch (IOException e) {
