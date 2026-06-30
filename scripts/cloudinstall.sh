@@ -57,6 +57,12 @@ if [[ -z "$KEYPASS" || "$KEYPASS" == "placeholder" ]]; then
    exit 1
 fi
 ssh-keygen -t rsa -b 2048 -m PEM -f "$KEYNAME" -N "$KEYPASS"
+
+log "sleeping 10 secs to generate key with ssh-keygen..."
+sleep 10
+
+
+log "now attempting to create .p12 from key"
 openssl req -new -x509 -key "$KEYNAME" -out "$KEYNAME.crt" -days 365 \
 -subj "/C=US/ST=somestate/L=somecity/O=someorg/CN=localhost" \
 -passin pass:"$KEYPASS"
@@ -67,7 +73,12 @@ openssl pkcs12 -export -out "$KEYNAME.p12" \
 -password pass:"$KEYPASS" \
 -passin pass:"$KEYPASS"
 
+log "sleeping 5 secs after openssl command issued to generate .p12..."
+sleep 5 
+
+
 if [[ -f "$KEYNAME.p12" ]]; then
+log "p12 file was created...$kEYNAME.p12 ...copying to /opt/blueseer/conf"
 cp $KEYNAME.p12 /opt/blueseer/conf/
 cp $KEYNAME.pub /opt/blueseer/conf/
 cp $KEYNAME.crt /opt/blueseer/conf/
@@ -75,6 +86,8 @@ rm $KEYNAME.p12
 rm $KEYNAME
 rm $KEYNAME.pub
 rm $KEYNAME.crt
+else
+log "p12 was not created...must create manually"
 fi
 
 }
@@ -152,6 +165,7 @@ cd /opt/blueseer
 log "step:  update relevant tables for access"
 mysql -u root -p$mysqlpasswd bsdb -e "insert into usr_meta values ('access', 'ip', 'admin', '$clientsideip','');"
 mysql -u root -p$mysqlpasswd bsdb -e "update ov_mstr set ov_currency = 'USD';"
+mysql -u root -p$mysqlpasswd bsdb -e "update user_mstr set user_passwd = '' where  user_id = 'admin';"
 
 
 log "creating web.properties file"
