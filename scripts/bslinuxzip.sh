@@ -28,7 +28,6 @@ zip -u $bszip login.sh
 zip -u $bszip mysql_install.sh
 zip -u $bszip langconvert.sh
 zip -u $bszip controlM.sh
-zip -u $bszip cloudinstall.sh
 zip -u $bszip bsapi.service
 zip -u $bszip bsapi.service.sh
 cd /home/vcs

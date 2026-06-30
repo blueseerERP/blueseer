@@ -58,8 +58,8 @@ if [[ -z "$KEYPASS" || "$KEYPASS" == "placeholder" ]]; then
 fi
 ssh-keygen -t rsa -b 2048 -m PEM -f "$KEYNAME" -N "$KEYPASS"
 
-log "sleeping 10 secs to generate key with ssh-keygen..."
-sleep 10
+log "sleeping 5 secs to generate key with ssh-keygen..."
+sleep 5
 
 
 log "now attempting to create .p12 from key"
@@ -76,19 +76,6 @@ openssl pkcs12 -export -out "$KEYNAME.p12" \
 log "sleeping 5 secs after openssl command issued to generate .p12..."
 sleep 5 
 
-
-if [[ -f "$KEYNAME.p12" ]]; then
-log "p12 file was created...$kEYNAME.p12 ...copying to /opt/blueseer/conf"
-cp $KEYNAME.p12 /opt/blueseer/conf/
-cp $KEYNAME.pub /opt/blueseer/conf/
-cp $KEYNAME.crt /opt/blueseer/conf/
-rm $KEYNAME.p12
-rm $KEYNAME
-rm $KEYNAME.pub
-rm $KEYNAME.crt
-else
-log "p12 was not created...must create manually"
-fi
 
 }
 
@@ -156,6 +143,21 @@ log "step:  unzip into /opt/blueseer"
 unzip -o blueseer.generic.linux.v8.0.zip -d /opt/blueseer &
 PID=$!
 wait $PID
+
+
+log "step:  attempt to copy previous .p12 file creation to newly created /opt/blueseer/conf directory"
+if [[ -f "$KEYNAME.p12" ]]; then
+log "copying $KEYNAME.p12 to /opt/blueseer/conf"
+cp $KEYNAME.p12 /opt/blueseer/conf/
+cp $KEYNAME.pub /opt/blueseer/conf/
+cp $KEYNAME.crt /opt/blueseer/conf/
+rm $KEYNAME.p12
+rm $KEYNAME
+rm $KEYNAME.pub
+rm $KEYNAME.crt
+else
+log "p12 was not created...must create manually and drop into /opt/blueseer/conf"
+fi
 
 log "step:  run blueseer mysql install script"
 cd /opt/blueseer
