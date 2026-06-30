@@ -137,10 +137,10 @@ fi
 
 
 log "step:  download blueseer server"
-wget https://github.com/blueseerERP/blueseer/releases/download/v7.0/blueseer.generic.linux.v7.0.zip
+wget https://github.com/blueseerERP/blueseer/releases/download/v8.0/blueseer.generic.linux.v8.0.zip
 
 log "step:  unzip into /opt/blueseer"
-unzip -o blueseer.generic.linux.v7.0.zip -d /opt/blueseer &
+unzip -o blueseer.generic.linux.v8.0.zip -d /opt/blueseer &
 PID=$!
 wait $PID
 
