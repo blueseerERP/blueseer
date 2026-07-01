@@ -1,0 +1,59 @@
+#Create VM Instance in cloud platform (GCP, AWS, Azure, etc).
+
+#If using GCP, choose Ubuntu in lieu of default Debian Trixie (better supports mysql silent install)
+#If using AWS, amazon linux should suffice
+
+#Get remote IP (z.z.z.z) as assigned by new VM Instance
+
+#Go to Network Security in VM Instance and add firewall/VPN rule to allow your client IP to connect
+client IP = x.x.x.x    Port = 22   (for SSH connection from client PC)
+client IP = x.x.x.x    Port = 8099 (for BlueSeer connection from client PC)
+
+#Add SSH Key to Instance VM (upload public SSH key to portal)
+  You can create SSH keypair with:
+  ssh-keygen -t rsa -b 4096 -f mykey -C "name@domain.com" (you will be prompted for new pass phrase)
+  This will create two files (mykey and mykey.pub) ...upload mykey.pub to VM Instance as new SSH key
+
+#Connect from client PC to VM instance using:
+ssh -i "mykey" name@z.z.z.z   ...where z.z.z.z is remote IP of VM Instance
+
+#Once connected to VM Instance ...use wget to retrieve install script
+wget https://raw.githubusercontent.com/BlueSeerERP/blueseer/bsmaster/scripts/cloudinstall.sh
+chmod 755 cloudinstall.sh
+sudo ./cloudinstall.sh
+    choose option 2 (blueseer + mysql)
+    Note...script should install mysql, create SSL cert, install blueseer, and start blueseer service on port 8099
+
+#confirm installation and service using:
+sudo systemctl status bsapi.service
+sudo journalctl -u bsapi -n 50
+
+exit VM Instance
+On Client PC do:
+    cd /home/name/blueseer
+    jre26/bin/java -cp "dist/*" utilities.InstallCert z.z.z.z:8099
+    enter '1' and press enter (this installs the server SSL cert into jre26/lib/security/cacerts
+    you can view cacerts by cd to jre26/lib/security and typing:
+    keytool -list -keystore cacerts -storepass changeit |more
+
+Update bs.cfg file in parent blueseer directory on client side to reflect:
+DBTYPE=mysql
+DB=bsdb
+USER=.
+PASS=.
+IP=.
+PORT=.
+DRIVER=com.mysql.cj.jdbc.Driver
+LANGUAGE=en
+COUNTRY=US
+SSHRHOST=z.z.z.z   ...where z.z.z.z is remote IP of VM instance
+REMOTEDB=1
+SERVERPORT=8099
+PROTOCOL=https
+
+
+# test connection from client to VM
+jre26/bin/java -cp "dist/*" bsmf.MainFrame -debug
+
+
+

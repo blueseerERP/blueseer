@@ -1,2 +1,0 @@
-wget https://raw.githubusercontent.com/BlueSeerERP/blueseer/bsmaster/scripts/cloudinstall.sh
-jre26/bin/java -cp "dist/*" utilities.InstallCert x.x.x.x:8099
