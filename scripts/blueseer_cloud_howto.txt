@@ -1,4 +1,5 @@
 **These instructions assume you're choosing a linux OS for your cloud platform VM instance
+** Reach out to support@blueseer.com for any questions or issues
 
 #Create VM Instance in cloud platform (GCP, AWS, Azure, etc).
 
@@ -18,7 +19,8 @@ Repeat port 8099 rule for each client that will access from remote location
   This will create two files (mykey and mykey.pub) ...upload mykey.pub to VM Instance as new SSH key
 
 #Connect from client PC to VM instance using:
-ssh -i "mykey" name@z.z.z.z   ...where z.z.z.z is remote IP of VM Instance
+ssh -i "/path/to/mykey" name@z.z.z.z   ...where z.z.z.z is remote IP of VM Instance
+    Note...'name' is platform specific...could be 'ec2-user' on AWS...or name@gmail.com on GCP platform.
     This will connect you to the VM instance console
 
 #Once connected to VM Instance console ...use wget to retrieve install script
