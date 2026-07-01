@@ -7,6 +7,7 @@ NO_APT_UPDATE="0"
 NO_P12="0"
 KEYNAME="bscert"
 KEYPASS="placeholder"
+OS=""
 
 log() {
 echo "$(date '+%Y%m%d%H%M%S') -> $1" |tee -a "$LOG_FILE"
@@ -16,6 +17,23 @@ installMySQL() {
 
 if [ "$NO_APT_UPDATE" == "0" ]; then
   aptupdate
+fi
+
+if [ -f /etc/os-release ]; then
+    # Source the file to read its variables
+    source /etc/os-release
+
+    if [ "$ID" = "ubuntu" ]; then
+        echo "This system is running Ubuntu."
+        OS="ubuntu"
+    elif [ "$ID" = "debian" ]; then
+        echo "This system is running Debian."
+        OS="debian"
+    else
+        echo "Unknown OS detected: $ID"
+    fi
+else
+    echo "Cannot determine OS. /etc/os-release not found."
 fi
 
 log "step:  checking for mysql installation"
@@ -31,10 +49,18 @@ else
         log "step:  attempting to silently install mysql with entered mysql admin passwd applied"
 	debconf-set-selections <<< "mysql-server mysql-server/root_password password $mysqlpasswd"
 	debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $mysqlpasswd"
+        if [ "$OS" == "ubuntu" ]; then
      	DEBIAN_FRONTEND=noninteractive apt install -y mysql-server
+        else
+     	DEBIAN_FRONTEND=noninteractive apt install -y default-mysql-server
+        fi
         systemctl enable mysql
         systemctl start mysql
+        if [ "$OS" == "ubuntu" ]; then
 	mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$mysqlpasswd'; FLUSH PRIVILEGES;"
+        else
+	mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mysqlpasswd'; FLUSH PRIVILEGES;"
+        fi
 fi
 }
 
