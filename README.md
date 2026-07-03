@@ -73,7 +73,7 @@ given the menu/class management and
 permissions functionality that's built into the BlueSeer framework.
 </br>
 
-<h1>Build/Compile Instructions (all builds should utilize JDK version 26 or higher</h1>
+<h1>Build/Compile Instructions (all builds should utilize JDK version 26 or higher)</h1>
 </br>
 
 <h2>Using Apache Netbeans</h2>
