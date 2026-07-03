@@ -104,11 +104,12 @@ Pre-requisite: You will need the JDK (version 26 or higher preferred) installed 
 
 Pre-requisite:  You will need the JDK (version 26 or higher preferred) installed to run Maven.  You will then need to download the maven build tool and install.  Make sure the mvn executable is in your Environment Variables.  Once you have maven installed, the following steps can be used to compile BlueSeer and bring up a test instance of the application:
 
-1. Download the blueseer source from github. You can either 'git clone https://github.com/BlueSeerERP/blueseer.git' or download the zipped version of Blueseer from github.com/BlueseerERP and extract the contents into a directory called 'blueseer'.
-2. Open a powershell prompt and cd to the blueseer directory
-3. type and execute: mvn package dependency:copy-dependencies -DoutputDirectory="./target/lib"
+1.  Download the blueseer source from github. You can either 'git clone https://github.com/BlueSeerERP/blueseer.git' or download the zipped version of Blueseer from github.com/BlueseerERP and extract the contents into a directory called 'blueseer'.
+2.  Open a powershell prompt or bash shell and cd to the blueseer directory
+3.  type and execute: mvn -U package dependency:copy-dependencies -DoutputDirectory="./target/lib"
 4.  cd to the newly created target directory
-5.  type and execute: java -classpath ".;lib/*" bsmf.MainFrame
+5.  (windows) type and execute: java -classpath ".;lib/*" bsmf.MainFrame
+5.  (linux) type and execute: java -cp ".:lib/*" bsmf.MainFrame
 </br>
 
 
