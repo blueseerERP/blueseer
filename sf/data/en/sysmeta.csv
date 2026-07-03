@@ -18,3 +18,4 @@ system,smtp_server_properties,mail.smtp.auth,true
 system,smtp_server_properties,mail.smtp.starttls.enable,true
 system,smtp_server_properties,mail.smtp.ssl.protocols,TLSv1.2
 system,shippercontrol,auto_generate_shipper_number,1
+system,jasper,pickticket,pick_generic.jasper

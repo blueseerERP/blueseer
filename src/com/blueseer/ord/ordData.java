@@ -4378,7 +4378,10 @@ public class ordData {
         JSONArray jsonarray = new JSONArray();
         
         // get generic pick jasper from sysmeta
-        String jasperfile = getSysMetaValue("system", "jasper", "generic");
+        String jasperfile = getSysMetaValue("system", "jasper", "pickticket");
+        if (jasperfile.isBlank()) {
+            jasperfile = "pick_generic.jasper";
+        }
         try {
             
             Connection con = null;

@@ -3,8 +3,7 @@
 
 #Create VM Instance in cloud platform (GCP, AWS, Azure, etc).
 
-#If using GCP, choose Ubuntu in lieu of default Debian Trixie (better supports mysql silent install)
-#If using AWS, amazon linux should suffice
+#Note...choose an OS that is Debian based (Debian, Ubuntu, etc)...as the script exclusively uses the apt package installer
 
 #Get remote IP (z.z.z.z) as assigned by new VM Instance
 
