@@ -73,15 +73,15 @@ given the menu/class management and
 permissions functionality that's built into the BlueSeer framework.
 </br>
 
-<h1>Build/Compile Instructions</h1>
+<h1>Build/Compile Instructions (all builds should utilize JDK version 26 or higher</h1>
 </br>
 
 <h2>Using Apache Netbeans</h2>
 
-To use Netbeans, you will first need to download the Netbeans IDE (version 12 or higher). Once you have Netbeans installed, the following steps can be used to compile BlueSeer and bring up a test instance of the application :
+To use Netbeans, you will first need to download the Netbeans IDE. Once you have Netbeans installed, the following steps can be used to compile BlueSeer and bring up a test instance of the application :
 1. Download the blueseer source from github. You can either 'git clone https://github.com/BlueSeerERP/blueseer.git' or download the zipped version of Blueseer from github.com/BlueseerERP and extract the contents into a directory called 'blueseer'.
 2. Open a command prompt and cd to the install directory 'blueseer/test'. This will be your working/testing directory
-3. Type './refresh.bat' or ('./refresh.sh' for linux) to establish a test instance of the blueseer application along with the bs.cfg file and database instance
+3. Type './refresh_test_win.bat' or ('./refresh_test_linux.sh' for linux) to establish a test instance of the blueseer application along with the bs.cfg file and database instance
 4. Start Netbeans and choose 'Open Project' to open the blueseer project files.
 5. Right click on the blueseer project and go to Project Properties
 6. Click on the 'run' portion of the properties and set the working directory to the 'test' directory where the instance config files and data directories are located.
@@ -90,7 +90,7 @@ To use Netbeans, you will first need to download the Netbeans IDE (version 12 or
 
 <h2>Using Ant</h2>
 
-Pre-requisite: You will need the JDK (version 26 preferred) installed to run Ant.  You will then need to download the Ant build tool and install.  Make sure the ant executable is in your Environment Variables.  Once you have Ant installed, the following steps can be used to compile BlueSeer and bring up a test instance of the application:
+Pre-requisite: You will need the JDK (version 26 or higher preferred) installed to run Ant.  You will then need to download the Ant build tool and install.  Make sure the ant executable is in your Environment Variables.  Once you have Ant installed, the following steps can be used to compile BlueSeer and bring up a test instance of the application:
 
 1. Download the blueseer source from github. You can either 'git clone https://github.com/BlueSeerERP/blueseer.git' or download the zipped version of Blueseer from github.com/BlueseerERP and extract the contents into a directory called 'blueseer'.
 2. In the newly created blueseer directory, edit the build.xml file to adjust the location of your JDK (search the file for property name 'JDK')
@@ -102,7 +102,7 @@ Pre-requisite: You will need the JDK (version 26 preferred) installed to run Ant
 
 <h2>Using Maven</h2>
 
-Pre-requisite:  You will need the JDK (version 26 preferred) installed to run Maven.  You will then need to download the maven build tool and install.  Make sure the mvn executable is in your Environment Variables.  Once you have maven installed, the following steps can be used to compile BlueSeer and bring up a test instance of the application:
+Pre-requisite:  You will need the JDK (version 26 or higher preferred) installed to run Maven.  You will then need to download the maven build tool and install.  Make sure the mvn executable is in your Environment Variables.  Once you have maven installed, the following steps can be used to compile BlueSeer and bring up a test instance of the application:
 
 1. Download the blueseer source from github. You can either 'git clone https://github.com/BlueSeerERP/blueseer.git' or download the zipped version of Blueseer from github.com/BlueseerERP and extract the contents into a directory called 'blueseer'.
 2. Open a powershell prompt and cd to the blueseer directory
