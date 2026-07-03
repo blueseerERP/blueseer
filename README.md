@@ -93,10 +93,11 @@ To use Netbeans, you will first need to download the Netbeans IDE (version 12 or
 Pre-requisite: You will need the JDK (version 26 preferred) installed to run Ant.  You will then need to download the Ant build tool and install.  Make sure the ant executable is in your Environment Variables.  Once you have Ant installed, the following steps can be used to compile BlueSeer and bring up a test instance of the application:
 
 1. Download the blueseer source from github. You can either 'git clone https://github.com/BlueSeerERP/blueseer.git' or download the zipped version of Blueseer from github.com/BlueseerERP and extract the contents into a directory called 'blueseer'.
-2. In the newly created blueseer directory, edit the build.xml file to adjust the location of your JDK26 (search the file for property name 'JDK26')
-3. Once you've updated the build.xml with your JDK26 path, open a powershell prompt and cd to the blueseer directory
-4. type the following to compile: ant main
-5. type the following to run: ant run
+2. In the newly created blueseer directory, edit the build.xml file to adjust the location of your JDK (search the file for property name 'JDK')
+3. Once you've updated the build.xml with your JDK path, open a bash or powershell prompt and cd to the blueseer directory
+4. type the following to compile: ant main   # this will compile your code into the blueseer/test/dist directory
+5. cd to blueseer/test and execute type ./refresh_test_linux.sh  (or refresh_test_win.bat)  # this will create the necessary files to run the app
+6. cd to parent blueseer directory and type the following to run: ant run
 </br>
 
 <h2>Using Maven</h2>

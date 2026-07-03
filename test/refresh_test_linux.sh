@@ -82,6 +82,6 @@ cp ../scripts/.patch .patch
 
 echo ""
 echo ""
-echo "NOTE!!  you will need to adjust the property name 'JDK17dir' in the build.xml file "
-echo " for your JDK17 path. "
-echo "Assign the path to the parameter as (example) /some/path/to/jdk-17  "
+echo "NOTE!!  you will need to adjust the property name 'JDK' in the build.xml file "
+echo " for your JDK path. "
+echo "Assign the path to the parameter as (example) /some/path/to/jdk  "
