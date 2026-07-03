@@ -5,18 +5,26 @@
 
   <groupId>blueseer</groupId>
   <artifactId>blueseer</artifactId>
-  <version>7.0</version>
+  <version>8.0</version>
 
   <name>blueseer</name>
   <url>http://www.blueseer.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.release>26</maven.compiler.release>
   </properties>
 
 
 <repositories>
+<repository>
+        <id>osgeo</id>
+        <name>OSGeo Release Repository</name>
+        <url>https://repo.osgeo.org/repository/release/</url>
+        <snapshots>
+            <enabled>false</enabled>
+        </snapshots>
+    </repository>
 	<repository>
                 <id>1_maven.apache.org</id>
                 <releases>  <enabled>true</enabled>  </releases>
@@ -24,11 +32,13 @@
                 <url>https://repo.maven.apache.org/maven2</url>
                 <layout>default</layout>
             </repository>
+<!--
     <repository>
         <id>maven-geotoolkit</id>
         <name>Geotoolkit</name>
         <url>https://maven.geotoolkit.org</url>
     </repository>
+-->
 </repositories>
 
 
@@ -172,19 +182,19 @@
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-core</artifactId>
-    <version>2.21.1</version>
+    <version>2.22.0</version>
 </dependency>
 
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-annotations</artifactId>
-    <version>2.21.1</version>
+    <version>2.22</version>
 </dependency>
 
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
-    <version>2.21.1</version>
+    <version>2.22.0</version>
 </dependency>
 
 <dependency>
@@ -234,14 +244,14 @@
     <groupId>org.icepdf.os</groupId>
     <artifactId>icepdf-viewer</artifactId>
     <version>6.2.2</version>
-<!--  
  <exclusions>
+<!--
     <exclusion>
         <groupId>javax.media</groupId>
         <artifactId>jai-core</artifactId>
     </exclusion>
-</exclusions>
 -->
+</exclusions>
 </dependency>
 
 <dependency>
@@ -507,6 +517,20 @@
       <swt.version>3.129.0</swt.version>
     </properties>
   </profile>
+  <profile>
+        <id>linux-x86_64</id>
+        <activation>
+            <os>
+                <name>linux</name>
+                <arch>amd64</arch>
+            </os>
+        </activation>
+        <properties>
+            <swt.groupId>org.eclipse.swt</swt.groupId>
+            <swt.artifactId>org.eclipse.swt.gtk.linux.x86_64</swt.artifactId>
+            <swt.version>4.3</swt.version>
+        </properties>
+    </profile>
 </profiles>
 
 
