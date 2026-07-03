@@ -1,8 +1,8 @@
 ![ScreenShot](/src/images/bs65image.png)
 <a href="https://foojay.io/today/works-with-openjdk"><img align="right" src="https://github.com/foojayio/badges/raw/main/works_with_openjdk/Works-with-OpenJDK.png" width="100"></a>
 <h3>Developer: Terry Vaughn</h3>
-<h3>latest release version: 7.0</h3>
-<h3>latest release date: 2024-09-01</h3>
+<h3>latest release version: 8.0</h3>
+<h3>latest release date: 2026-06-15</h3>
 <h3>programming language: Java programming language</h3> 
 <h3>operating system: Cross-Platform</h3>
 <h3>genre:  Enterprise Resource Planning (ERP), EDI, Accounting, Personal Finance</h3> 
@@ -19,7 +19,7 @@ extendable while providing generic functionality that is typically observed in
 most manufacturing environments.  BlueSeer also provides a fully functional EDI mapping tool for EDI translations and file traffic monitoring. 
 BlueSeer is released for free use under the MIT License.   The application and source code
 are available for download at github.com. BlueSeer was originally launched in 2017 and continues to evolve to meet user demands.
-The latest 'stable' release of version 7.0 was released on 2024-09-01.</br>
+The latest 'stable' release of version 8.0 was released on 2026-06-15.</br>
 
 <h1>Functionality</h1>
 
@@ -90,18 +90,18 @@ To use Netbeans, you will first need to download the Netbeans IDE (version 12 or
 
 <h2>Using Ant</h2>
 
-Pre-requisite: You will need the JDK (version 17 preferred) installed to run Ant.  You will then need to download the Ant build tool and install.  Make sure the ant executable is in your Environment Variables.  Once you have Ant installed, the following steps can be used to compile BlueSeer and bring up a test instance of the application:
+Pre-requisite: You will need the JDK (version 26 preferred) installed to run Ant.  You will then need to download the Ant build tool and install.  Make sure the ant executable is in your Environment Variables.  Once you have Ant installed, the following steps can be used to compile BlueSeer and bring up a test instance of the application:
 
 1. Download the blueseer source from github. You can either 'git clone https://github.com/BlueSeerERP/blueseer.git' or download the zipped version of Blueseer from github.com/BlueseerERP and extract the contents into a directory called 'blueseer'.
-2. In the newly created blueseer directory, edit the build.xml file to adjust the location of your JDK17 (search the file for property name 'JDK17')
-3. Once you've updated the build.xml with your JDK17 path, open a powershell prompt and cd to the blueseer directory
+2. In the newly created blueseer directory, edit the build.xml file to adjust the location of your JDK26 (search the file for property name 'JDK26')
+3. Once you've updated the build.xml with your JDK26 path, open a powershell prompt and cd to the blueseer directory
 4. type the following to compile: ant main
 5. type the following to run: ant run
 </br>
 
 <h2>Using Maven</h2>
 
-Pre-requisite:  You will need the JDK (version 17 preferred) installed to run Maven.  You will then need to download the maven build tool and install.  Make sure the mvn executable is in your Environment Variables.  Once you have maven installed, the following steps can be used to compile BlueSeer and bring up a test instance of the application:
+Pre-requisite:  You will need the JDK (version 26 preferred) installed to run Maven.  You will then need to download the maven build tool and install.  Make sure the mvn executable is in your Environment Variables.  Once you have maven installed, the following steps can be used to compile BlueSeer and bring up a test instance of the application:
 
 1. Download the blueseer source from github. You can either 'git clone https://github.com/BlueSeerERP/blueseer.git' or download the zipped version of Blueseer from github.com/BlueseerERP and extract the contents into a directory called 'blueseer'.
 2. Open a powershell prompt and cd to the blueseer directory
