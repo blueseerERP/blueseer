@@ -87,7 +87,8 @@ public class bsCommVT {
         this.scheduler = Executors.newScheduledThreadPool(1);
 
         scheduler.scheduleWithFixedDelay(() -> {
-            System.out.println("\n[Scan Task] Scanning source directories...");
+            String  ts = LocalDateTime.now().format(FORMATTER);
+            System.out.println(ts + " [Scan Task] Scanning source directories...");
             
             // BEST PRACTICE: Instantiate the virtual thread executor as a short-lived local asset
             try (ExecutorService virtualExecutor = Executors.newVirtualThreadPerTaskExecutor()) {
@@ -146,7 +147,9 @@ public class bsCommVT {
     }
 
     private static void streamAndProcessDirectory(Path sourceDir, ExecutorService executor, ArrayList<String[]> trafficlist, String[] s) {
+        
         if (!Files.exists(sourceDir)) {
+            System.out.println(" No files in source directory: " + sourceDir);
             return;
         } 
 
@@ -171,6 +174,7 @@ public class bsCommVT {
         int attempts = 0;
         Path destinationFile = FileSystems.getDefault().getPath(s[3]).resolve(sourceFile.getFileName());
         String[] maskarray;
+        
       //  System.out.println("Executing on virtual thread: " + Thread.currentThread().getName() + " / " + Thread.currentThread().threadId());
         
         if (s[7] != null && ! s[7].isBlank()) {
@@ -206,7 +210,7 @@ public class bsCommVT {
                         Files.move(sourceFile, destinationFile, 
                                 StandardCopyOption.REPLACE_EXISTING, 
                                 StandardCopyOption.ATOMIC_MOVE);
-                    } catch (AtomicMoveNotSupportedException e) {
+                    } catch (AtomicMoveNotSupportedException e) {                   
                         Files.move(sourceFile, destinationFile, StandardCopyOption.REPLACE_EXISTING);
                     }
 
@@ -215,10 +219,11 @@ public class bsCommVT {
 
                 } catch (IOException e) {
                     System.err.println("[Attempt " + attempts + "/" + MAX_RETRIES + "] File locked or incomplete: " 
-                            + sourceFile.getFileName() + ". Error: " + e.getMessage());
+                            + sourceFile.getFileName() + ". Error: " + e.getMessage());                    
 
                     if (attempts >= MAX_RETRIES) {
                         System.err.println("CRITICAL: Exceeded max retries for file: " + sourceFile.getFileName());
+                        e.printStackTrace();
                         return; // Abandon task for this scan cycle
                     }
 
@@ -313,6 +318,7 @@ public class bsCommVT {
             return sizeBefore != sizeAfter;
         } catch (IOException | InterruptedException e) {
             // If we can't read the size, it's likely exclusively locked by an active stream
+            System.err.println("cant read filesize of: " + file.toString() + " --> " + e.getMessage());
             return true; 
         }
     }
