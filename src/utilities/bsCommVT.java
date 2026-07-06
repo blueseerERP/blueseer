@@ -47,10 +47,11 @@ public class bsCommVT {
     
     // Throttles maximum concurrent physical disk operations (Backpressure Control)
     private static final Semaphore DISK_IO_SEMAPHORE = new Semaphore(100);
-
     private ScheduledExecutorService scheduler;
-
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    private static final int MAX_RETRIES = 5;
+    private static final long INITIAL_RETRY_DELAY_MS = 500;
+    private static final long STABILITY_CHECK_DELAY_MS = 200;
     
     public void startService(int cycleSeconds) {
         
@@ -59,11 +60,13 @@ public class bsCommVT {
             Path filePath = Paths.get("bscomm.cfg");
                 try {                    
                     List<String> lines = Files.readAllLines(filePath);
+                    System.out.println(now + " Found config file: " + filePath);
                     for (String line : lines) {
                        if (line.startsWith("#")) {
                            continue;
                        }
                        trafficlist.add(line.split(",", -1));  
+                       System.out.println(now + " adding line to trafficlist: " + line);
                     }                   
                 } catch (IOException ex) {
                     System.out.println(now + " No config file or unable to read config file");
@@ -161,9 +164,7 @@ public class bsCommVT {
         }
     }
 
-    private static final int MAX_RETRIES = 5;
-    private static final long INITIAL_RETRY_DELAY_MS = 500;
-    private static final long STABILITY_CHECK_DELAY_MS = 200;
+    
 
     private static void moveFile(Path sourceFile, String[] s) {
         long delay = INITIAL_RETRY_DELAY_MS;
