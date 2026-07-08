@@ -163,7 +163,7 @@ public class bsCommVT {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error streaming directory " + sourceDir + ": " + e.getMessage());
+            System.err.println("CRITICAL: Error streaming directory " + sourceDir + ": " + e.getMessage());
         }
     }
 
@@ -234,7 +234,7 @@ public class bsCommVT {
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            System.err.println("File movement task interrupted for: " + sourceFile.getFileName());
+            System.err.println("CRITICAL: File movement task interrupted for: " + sourceFile.getFileName());
         } finally {
             DISK_IO_SEMAPHORE.release();
         }
@@ -318,7 +318,7 @@ public class bsCommVT {
             return sizeBefore != sizeAfter;
         } catch (IOException | InterruptedException e) {
             // If we can't read the size, it's likely exclusively locked by an active stream
-            System.err.println("cant read filesize of: " + file.toString() + " --> " + e.getMessage());
+            System.err.println("CRITICAL: cant read filesize of: " + file.toString() + " --> " + e.getMessage());
             return true; 
         }
     }
