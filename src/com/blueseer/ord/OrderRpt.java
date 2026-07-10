@@ -750,6 +750,7 @@ public class OrderRpt extends javax.swing.JPanel {
         list.add(new String[]{"tocust",tocust});
         list.add(new String[]{"site",ddsite.getSelectedItem().toString()});
         list.add(new String[]{"datetype",dddatetype.getSelectedItem().toString()});
+        list.add(new String[]{"po",tbpo.getText()});
         try {
                 jsonString = sendServerPost(list, "", null, "dataServORD"); 
             } catch (IOException ex) {
@@ -762,7 +763,8 @@ public class OrderRpt extends javax.swing.JPanel {
                 fromcust, 
                 tocust, 
                 ddsite.getSelectedItem().toString(), 
-                dddatetype.getSelectedItem().toString()
+                dddatetype.getSelectedItem().toString(),
+                tbpo.getText()
             });
         }
         

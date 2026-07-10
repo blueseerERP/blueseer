@@ -4230,8 +4230,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
         }
         
         
-        } // can proceed
-        
+        } else {// can proceed
+        bsmf.MainFrame.show("validate detail: " + canproceed + " unable to proceed");
+        }
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
@@ -4275,10 +4276,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
         } 
         
                 refreshDisplayTotals();         
-                listprice.setText("");
-                netprice.setText("");
-                discount.setText("");
-                qtyshipped.setText("");
+                listprice.setText("0");
+                netprice.setText("0");
+                discount.setText("0");
+                qtyshipped.setText("0");
                 tbitem.setText("");
                 custnumber.setText("");
                 tbdesc.setText("");

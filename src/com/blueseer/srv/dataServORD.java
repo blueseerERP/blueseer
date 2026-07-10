@@ -367,7 +367,8 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                request.getHeader("fromcust"), 
                request.getHeader("tocust"), 
                request.getHeader("site"), 
-               request.getHeader("datetype")
+               request.getHeader("datetype"),
+               request.getHeader("po")
                };     
         response.getWriter().print(getOrderBrowseView(x));  
         break;
