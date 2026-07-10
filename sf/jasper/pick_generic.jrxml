@@ -25,7 +25,7 @@
 	<parameter name="ship_csz" class="java.lang.String"/>
 	<parameter name="ship_country" class="java.lang.String"/>
 	<parameter name="sacdatasource" class="net.sf.jasperreports.engine.JRDataSource"/>
-	<parameter name="notesdatasource" class="java.lang.String"/>
+	<parameter name="notesdatasource" class="net.sf.jasperreports.engine.JRDataSource"/>
 	<queryString>
 		<![CDATA[select so_nbr, sod_nbr, so_curr, sod_desc, 
 (select case when sum(sos_amt) is null then 0 else sum(sos_amt) end from sos_det 
