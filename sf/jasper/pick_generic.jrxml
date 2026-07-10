@@ -25,6 +25,7 @@
 	<parameter name="ship_csz" class="java.lang.String"/>
 	<parameter name="ship_country" class="java.lang.String"/>
 	<parameter name="sacdatasource" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<parameter name="notesdatasource" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select so_nbr, sod_nbr, so_curr, sod_desc, 
 (select case when sum(sos_amt) is null then 0 else sum(sos_amt) end from sos_det 
@@ -383,11 +384,16 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 		<band height="28" splitType="Stretch"/>
 	</pageFooter>
 	<lastPageFooter>
-		<band height="108" splitType="Stretch">
+		<band height="289" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="40" width="90" height="18" uuid="125b4e3a-91ee-4e77-b838-d2d1ac2b1d4b"/>
 				<text><![CDATA[Notes:]]></text>
 			</staticText>
+			<subreport>
+				<reportElement x="10" y="58" width="519" height="82" uuid="28cbd482-8050-4b75-9452-b3bed29a69c4"/>
+				<dataSourceExpression><![CDATA[$P{notesdatasource}]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "notes.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</lastPageFooter>
 	<summary>
