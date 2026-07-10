@@ -4392,6 +4392,7 @@ public class ordData {
             }
             Statement st = con.createStatement();
             ResultSet res = null;
+            String cust = "";
             
             try{
                 
@@ -4419,6 +4420,8 @@ public class ordData {
                     String shipper = "";
                     int i = 0;
                     while (res.next()) {
+                        cust = res.getString("so_cust");
+                        
                         JSONArray rowArray = new JSONArray(); 
                         rowArray.put(res.getString("sod_nbr")); 
                         rowArray.put(res.getString("sod_desc"));
@@ -4473,8 +4476,10 @@ public class ordData {
                         i++;
                     }
                 
-              // get SAC
+              
               if (i > 0) {
+                  
+              // get SAC    
               res = st.executeQuery("select sos_desc, " +
                       " case when sos_amttype = 'percent' and sos_type <> 'tax' then (myamt * -1 * (sos_amt / 100.0)) " +
                       " when sos_amttype = 'percent' and sos_type = 'tax' then (myamt * (sos_amt / 100.0)) " +
@@ -4487,6 +4492,19 @@ public class ordData {
                         rowArray.put(res.getString("sos_desc")); 
                         rowArray.put(res.getString("amt"));
                         jsonarray.put(rowArray);
+              }
+              
+              // get pick ticket notes    
+              res = st.executeQuery("select txt_value from txt_meta where txt_type = 'pickticketprint' and txt_id = 'custkey' and " +
+                      " txt_key = " + "'" + cust + "'" );                     
+              while (res.next()) {
+                  String[] notes = res.getString("txt_value").split("\\n", -1);
+                  for (String note : notes) {
+                  JSONArray rowArray = new JSONArray(); 
+                        rowArray.put("notesarray");
+                        rowArray.put(note); 
+                        jsonarray.put(rowArray);
+                  }
               }
               
               
