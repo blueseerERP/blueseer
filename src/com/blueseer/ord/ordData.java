@@ -4339,8 +4339,10 @@ public class ordData {
                         i++;
                     }
                 
-              // get SAC
+              
               if (i > 0) {
+                  
+              // get SAC    
               res = st.executeQuery("select sos_desc, " +
                       " case when sos_amttype = 'percent' and sos_type <> 'tax' then (myamt * (sos_amt / 100.0)) " +
                       " when sos_amttype = 'percent' and sos_type = 'tax' then (myamt * (sos_amt / 100.0)) " +
@@ -4353,6 +4355,18 @@ public class ordData {
                         rowArray.put(res.getString("sos_desc")); 
                         rowArray.put(res.getString("amt"));
                         jsonarray.put(rowArray);
+              }
+              
+              
+              // get order notes (order notes from Order Maintenance) ...not txt_meta    
+              res = st.executeQuery("select som_value from so_meta where som_type = 'ordernotes' and " +
+                      " som_id = " + "'" + order + "'" + " order by som_key; " );                     
+              while (res.next()) {
+                  JSONArray rowArray = new JSONArray(); 
+                        rowArray.put("notesarray");
+                        rowArray.put(res.getString("som_value")); 
+                        jsonarray.put(rowArray);
+                  
               }
               
               
@@ -4496,8 +4510,11 @@ public class ordData {
               
               // get pick ticket notes    
               res = st.executeQuery("select txt_value from txt_meta where txt_type = 'pickticketprint' and txt_id = 'custkey' and " +
-                      " txt_key = " + "'" + cust + "'" );                     
-              while (res.next()) {
+                      " txt_key = " + "'" + cust + "'" );    
+              
+              if (! res.isBeforeFirst()) { 
+                  res = st.executeQuery("select txt_value from txt_meta where txt_type = 'pickticketprint' and txt_id = 'syskey' ; " );                   
+                  while (res.next()) {
                   String[] notes = res.getString("txt_value").split("\\n", -1);
                   for (String note : notes) {
                   JSONArray rowArray = new JSONArray(); 
@@ -4505,7 +4522,21 @@ public class ordData {
                         rowArray.put(note); 
                         jsonarray.put(rowArray);
                   }
+                 } 
+                  
+              } else {
+                 while (res.next()) {
+                  String[] notes = res.getString("txt_value").split("\\n", -1);
+                  for (String note : notes) {
+                  JSONArray rowArray = new JSONArray(); 
+                        rowArray.put("notesarray");
+                        rowArray.put(note); 
+                        jsonarray.put(rowArray);
+                  }
+                 } 
               }
+              
+              
               
               
               }

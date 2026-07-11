@@ -186,16 +186,20 @@
         <Component class="javax.swing.JComboBox" name="ddkeytype">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="6">
+              <StringArray count="7">
                 <StringItem index="0" value="custkey"/>
                 <StringItem index="1" value="orderkey"/>
                 <StringItem index="2" value="shipperkey"/>
                 <StringItem index="3" value="pokey"/>
                 <StringItem index="4" value="receiverkey"/>
                 <StringItem index="5" value="prodkey"/>
+                <StringItem index="6" value="syskey"/>
               </StringArray>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddkeytypeActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>

@@ -321,14 +321,14 @@ public class TextMaint extends javax.swing.JPanel implements IBlueSeerV {
         
         Map<String,Integer> f = OVData.getTableInfo(new String[]{"txt_meta"});
         int fc;        
-        fc = checkLength(f,"txt_type");
-        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
-        bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+        fc = checkLength(f,"txt_key");
+        if (tbkey.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
         tbkey.requestFocus();
         return false;
         } 
         
-        fc = checkLength(f,"txt_key");
+        fc = checkLength(f,"txt_type");
         if (ddtype.getSelectedItem().toString().length() > fc) {
         bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
         ddtype.requestFocus();
@@ -532,7 +532,12 @@ public class TextMaint extends javax.swing.JPanel implements IBlueSeerV {
             }
         });
 
-        ddkeytype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "custkey", "orderkey", "shipperkey", "pokey", "receiverkey", "prodkey" }));
+        ddkeytype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "custkey", "orderkey", "shipperkey", "pokey", "receiverkey", "prodkey", "syskey" }));
+        ddkeytype.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddkeytypeActionPerformed(evt);
+            }
+        });
 
         ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "psprint", "invoiceprint", "orderprint", "pickticketprint" }));
 
@@ -651,6 +656,16 @@ public class TextMaint extends javax.swing.JPanel implements IBlueSeerV {
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
         executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
+
+    private void ddkeytypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddkeytypeActionPerformed
+        if (! isLoad && ddkeytype.getSelectedItem() != null) {
+            if (ddkeytype.getSelectedItem().toString().equals("syskey")) {
+                tbkey.setEnabled(false);
+            } else {
+                tbkey.setEnabled(true);
+            }
+        }
+    }//GEN-LAST:event_ddkeytypeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
