@@ -521,12 +521,15 @@ where shd_id =  $P{myid}]]>
 	<summary>
 		<band height="98">
 			<subreport>
-				<reportElement x="-3" y="20" width="555" height="78" uuid="805050d5-0413-45ae-95cd-2d49dbc87300"/>
+				<reportElement x="-3" y="30" width="555" height="68" uuid="805050d5-0413-45ae-95cd-2d49dbc87300"/>
 				<dataSourceExpression><![CDATA[$P{notesdatasource}]]></dataSourceExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "notes.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
-				<reportElement x="0" y="7" width="71" height="10" uuid="5b24ffe6-80db-4e50-b2b4-746527f60a5f"/>
+				<reportElement x="0" y="4" width="71" height="26" uuid="5b24ffe6-80db-4e50-b2b4-746527f60a5f"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
 				<text><![CDATA[Notes:]]></text>
 			</staticText>
 		</band>
