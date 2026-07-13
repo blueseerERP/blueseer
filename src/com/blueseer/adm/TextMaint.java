@@ -283,6 +283,7 @@ public class TextMaint extends javax.swing.JPanel implements IBlueSeerV {
            
         }
         tbkey.setText("");
+        tacomments.setText("");
        isLoad = false;
     }
     
@@ -385,6 +386,7 @@ public class TextMaint extends javax.swing.JPanel implements IBlueSeerV {
     public String[] getRecord(String[] key) {
       txt_meta x = getTxtMeta(key);
       tbkey.setText(x.txt_key());   
+      ddkeytype.setSelectedItem(x.txt_id());
       ddtype.setSelectedItem(x.txt_type());  
       tacomments.setText(x.txt_value());
       setAction(x.m());

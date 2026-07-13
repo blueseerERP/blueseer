@@ -721,11 +721,11 @@ public class admData {
             psi.setString(4, x.txt_value);
              rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-            } else {
-            psu.setString(1, x.txt_value);
+            } else {            
             psu.setString(2, x.txt_id);
             psu.setString(3, x.txt_type);
             psu.setString(4, x.txt_key);
+            psu.setString(1, x.txt_value);
             
             rows = psu.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
