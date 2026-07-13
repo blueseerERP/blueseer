@@ -18804,10 +18804,15 @@ return mystring;
         String order = "";
         String currency = "";
         ArrayList<Object[]> saclist = new ArrayList<>();
+        ArrayList<Object[]> noteslist = new ArrayList<>();
         int k = 0;
         for (Object[] rowData : rData) {
             if (rowData[0].toString().equals("sacarray")) {
                 saclist.add(new Object[]{rowData[1], bsParseDouble(rowData[2].toString())});
+                continue;
+            }
+            if (rowData[0].toString().equals("notesarray")) {
+                noteslist.add(new Object[]{rowData[1]});
                 continue;
             }
             if (k == 0) {
@@ -18856,7 +18861,7 @@ return mystring;
         
         JRDataSource datasource = new ListOfArrayDataSource(list, columnnamesarray);
         JRDataSource sacds = new ListOfArrayDataSource(saclist, new String[]{"shs_desc", "amt"});
-        
+        JRDataSource notesds = new ListOfArrayDataSource(noteslist, new String[]{"note"});
                 
         Path imagepath = FileSystems.getDefault().getPath(cleanDirString(imagedir) + logo);
         HashMap hm = new HashMap();
@@ -18876,7 +18881,7 @@ return mystring;
         hm.put("REPORT_LOCALE", BlueSeerUtils.getCurrencyLocale(currency));
         hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
         hm.put("sacdatasource", sacds);
-       
+        hm.put("notesdatasource", notesds);
         
         
         // assumes explicit jasper file name is larger than 3 chars.....if 3 chars or less...then must be key based L8, L8C, etc

@@ -2171,10 +2171,12 @@ public class shpData {
                 }
                     
                     String shipper = "";
+                    String cust = "";
                     int i = 0;
                     while (res.next()) {
                         if (i == 0) {
                          shipper = res.getString("shd_id");
+                         cust = res.getString("sh_cust");
                         }
                         JSONArray rowArray = new JSONArray(); 
                         rowArray.put(res.getString("shd_id").toUpperCase()); 
@@ -2184,7 +2186,7 @@ public class shpData {
                         rowArray.put(res.getString("shd_po"));
                         rowArray.put(res.getString("shd_item"));
                         rowArray.put(res.getString("shd_custitem"));
-                        rowArray.put(res.getString("shd_qty"));
+                        rowArray.put(res.getString("shd_qty")); 
                         rowArray.put(res.getDouble("shd_netprice")); 
                         rowArray.put(res.getString("cm_code"));
                         rowArray.put(res.getString("cm_name")); // 10 zero base
@@ -2256,6 +2258,35 @@ public class shpData {
                         rowArray.put(res.getString("shs_desc")); 
                         rowArray.put(res.getString("amt"));
                         jsonarray.put(rowArray);
+              }
+              
+              
+              // get pick ticket notes    
+              res = st.executeQuery("select txt_value from txt_meta where txt_type = 'invoiceprint' and txt_id = 'custkey' and " +
+                      " txt_key = " + "'" + cust + "'" );    
+              
+              if (! res.isBeforeFirst()) { 
+                  res = st.executeQuery("select txt_value from txt_meta where txt_type = 'invoiceprint' and txt_id = 'syskey' ; " );                   
+                  while (res.next()) {
+                  String[] notes = res.getString("txt_value").split("\\n", -1);
+                  for (String note : notes) {
+                  JSONArray rowArray = new JSONArray(); 
+                        rowArray.put("notesarray");
+                        rowArray.put(note); 
+                        jsonarray.put(rowArray);
+                  }
+                 } 
+                  
+              } else {
+                 while (res.next()) {
+                  String[] notes = res.getString("txt_value").split("\\n", -1);
+                  for (String note : notes) {
+                  JSONArray rowArray = new JSONArray(); 
+                        rowArray.put("notesarray");
+                        rowArray.put(note); 
+                        jsonarray.put(rowArray);
+                  }
+                 } 
               }
               
               
