@@ -23,7 +23,7 @@
 			<textField>
 				<reportElement x="0" y="0" width="800" height="14" uuid="cb969a1e-09e6-420f-8401-dd62a22754a8"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{note}]]></textFieldExpression>
 			</textField>
