@@ -192,6 +192,12 @@ public class bsCommVT {
             }
         }
         
+        // make unique if file exists in destination directory
+        if (Files.exists(destinationFile)) {
+          destinationFile = FileSystems.getDefault().getPath(destinationFile.getParent() + "/" + destinationFile.getFileName() + "." + Long.toHexString(System.currentTimeMillis()));   
+          System.out.println("File Exists...Renaming to: " + destinationFile);
+        }
+        
         try {
             // 1. Concurrency throttle
             DISK_IO_SEMAPHORE.acquire();
