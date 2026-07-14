@@ -2919,7 +2919,7 @@ public class shpData {
         String defaultsalescc = OVData.getDefaultSalesCC(); // sales cc
         String defaultshippingacct = OVData.getDefaultShippingAcct(); // shipping acct 
         
-        int batchid = Integer.valueOf(shipper);
+       // int batchid = Integer.valueOf(shipper);
         int voucher = getNextNbr("voucher", bscon);
         
         ArrayList<String[]> sac = shpData.getShipperSAC(shipper);
