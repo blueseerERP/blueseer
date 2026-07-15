@@ -996,7 +996,7 @@ public class ShipOrderLine extends javax.swing.JPanel {
                  
                 label_mstr x = new label_mstr(null, 
                      serialno_str, 
-                     shiptable.getModel().getValueAt(j, 5).toString(), //item
+                     shiptable.getModel().getValueAt(j, 3).toString(), //item
                      shiptable.getModel().getValueAt(j, 5).toString(), // custitem 
                      serialno_display, 
                      "XX", 
