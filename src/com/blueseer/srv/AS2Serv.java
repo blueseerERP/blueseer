@@ -37,6 +37,7 @@ import com.blueseer.edi.APIMaint;
 import com.blueseer.edi.apiUtils;
 import static com.blueseer.edi.apiUtils.calculateMIC;
 import static com.blueseer.edi.apiUtils.createMDN;
+import static com.blueseer.edi.apiUtils.createMDNTest;
 import static com.blueseer.edi.apiUtils.hashdigest;
 import com.blueseer.edi.apiUtils.mdn;
 import static com.blueseer.edi.apiUtils.verifySignature;
@@ -80,6 +81,7 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -153,20 +155,33 @@ public class AS2Serv extends HttpServlet {
         } else {
             
            // response.setContentType("multipart/report");
-            mdn thismdn = processRequest(request, isDebug);
-           
-             if (thismdn.isSigned().equals("1") ) {
-               response.setContentType("multipart/signed; protocol=" + "\"" + "application/pkcs7-signature" + "\"" + "; " + " micalg=sha1; boundary=" + "\"" + thismdn.boundary() + "\"");
-             } else {
-               response.setContentType("text/plain; report-type=disposition-notification");  
-             }
+            mdn thismdn = null;
+            try {
+                thismdn = processRequest(request, isDebug);
+            } catch (Exception ex) {
+                bslog(ex);
+            }
+            
              
+             if (thismdn.isSigned().equals("1") ) {
+               response.setContentType("multipart/signed; protocol=" + "\"" + "application/pkcs7-signature" + "\"" + "; " + " micalg=sha256; boundary=" + "\"" + thismdn.boundary() + "\"");
+               response.setHeader("Content-Transfer-Encoding", "binary"); 
+             } else {
+              // response.setContentType("message/disposition-notification");
+              // response.setHeader("Content-Type", "");
+               response.setContentType("multipart/report; report-type=disposition-notification; boundary=" + "\"" + thismdn.boundary() + "\""); 
+              // response.setHeader("Content-Transfer-Encoding", "binary"); 
+             }
+            
+           // response.setContentType("multipart/signed; protocol=" + "\"" + "application/pkcs7-signature" + "\"" + "; " + " micalg=sha1; boundary=" + "\"" + thismdn.boundary() + "\""); 
+           // response.setContentType("text/plain; report-type=disposition-notification"); 
+          //  response.setContentType("message/disposition-notification"); 
             if (thismdn.headers() != null) {
                 for (Map.Entry<String, String> z : thismdn.headers().entrySet()) {
                     response.setHeader(z.getKey(), z.getValue());
                 }
             } 
-            response.setHeader("Content-Transfer-Encoding", "binary");            
+                       
             response.setStatus(thismdn.status());
             response.getWriter().print(thismdn.message());
             
@@ -180,11 +195,21 @@ public class AS2Serv extends HttpServlet {
             String debugfile = "debugMDN." + now + "." + Long.toHexString(System.currentTimeMillis());
             Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
             try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
-              //  for (Map.Entry<String, String> z : thismdn.headers().entrySet()) {
-              //      String h = z.getKey() + ": " + z.getValue();
-              //      stream.write(h.getBytes());
-              //  }    
-           // stream.write("Content-Transfer-Encoding: binary".getBytes());
+                
+                Collection<String> headerNames = response.getHeaderNames();
+                for (String headerName : headerNames) {
+                    Collection<String> headerValues = response.getHeaders(headerName);
+                    for (String headerValue : headerValues) {
+                        stream.write((headerName + ": " + headerValue + "\r\n").getBytes());
+                    }
+                }
+              /*  
+                for (Map.Entry<String, String> z : thismdn.headers().entrySet()) {
+                    String h = z.getKey() + ": " + z.getValue() + "\r\n";
+                    stream.write(h.getBytes());
+                }    
+            stream.write("Content-Transfer-Encoding: binary\r\n".getBytes());
+            */
             stream.write(thismdn.message().getBytes());
             }
         }
@@ -194,7 +219,7 @@ public class AS2Serv extends HttpServlet {
     }
     
    
-    public static mdn processRequest(HttpServletRequest request, boolean isDebug) throws IOException {
+    public static mdn processRequest(HttpServletRequest request, boolean isDebug) throws IOException, Exception {
         String defaultsite = OVData.getDefaultSite();
         BufferedWriter output = null;
         String[] elementals = new String[]{"","","","","","","","1"}; // default elementals[7] to '1'...to sign MDN...can be override below once as2_id is determinable
@@ -593,8 +618,9 @@ public class AS2Serv extends HttpServlet {
              output.close(); 
             }
            try {
-            mymdn = createMDN("1000", elementals, returnheaders, isDebug, as2m);  // success assumes encryption and signed
-            } catch (MessagingException ex) {
+          // CHANGE HERE  mymdn = createMDN("1000", elementals, returnheaders, isDebug, as2m);  // success assumes encryption and signed
+            mymdn = createMDNTest("1000", elementals, returnheaders, isDebug, as2m); 
+           } catch (MessagingException ex) {
                 bslog(ex);
             }
            if (! logdet.isEmpty()) {

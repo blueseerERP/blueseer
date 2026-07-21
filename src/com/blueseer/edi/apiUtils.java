@@ -2547,22 +2547,8 @@ public class apiUtils {
         System.out.println("HERE IS privatekey format: "   + "->" + signingKey.getFormat());
          */
         
-            byte[] dataPartBytes = dataPart.getInputStream().readAllBytes();
-            
-            
-            
-           // String micfile = hashdigest(filecontent, as2m.as2_micalgo()); // calc the mic for debugging
-           
-            
-            MimeMultipart signedData = sGen.generate(dataPart);
-              /*      
-                    ByteArrayOutputStream aos = new ByteArrayOutputStream();
-                    signedData.getBodyPart(0).writeTo(aos);
-                    aos.close(); 
-                    byte[] FileWHeadersBytes = aos.toByteArray();
-                    System.out.println("HERE MIC RAWFILE: " + hashdigest(dataPartBytes, as2m.as2_micalgo())); // calc the mic for debugging)
-                    System.out.println("HERE MIC FILEwHeaders: " + hashdigest(FileWHeadersBytes, as2m.as2_micalgo())); // calc the mic for debugging)
-            */
+            byte[] dataPartBytes = dataPart.getInputStream().readAllBytes();            
+            MimeMultipart signedData = sGen.generate(dataPart);             
             MimeBodyPart tmpBody = new MimeBodyPart();
             tmpBody.setContent(signedData);
             String revisedContentType = signedData.getContentType();
@@ -2725,6 +2711,63 @@ public class apiUtils {
     }
      
     public static MimeMultipart signMDNFlat(MimeBodyPart mbp, String keyuser, String signalgo) throws Exception {
+      // SMIMESignedGenerator gen = new SMIMESignedGenerator(false ? SMIMESignedGenerator.RFC3851_MICALGS : SMIMESignedGenerator.RFC5751_MICALGS);
+       SMIMESignedGenerator gen = new SMIMESignedGenerator(); 
+        if (signalgo.isBlank()) {
+              signalgo = "SHA1withRSA";
+        }
+       
+        
+        X509Certificate certificate = getPublicKeyAsCert(keyuser);
+        PrivateKey privateKey = getPrivateKey(keyuser);
+        
+        List<X509Certificate> certList = new ArrayList<X509Certificate>();
+        certList.add(certificate);
+        Store certs = new JcaCertStore(certList);
+        
+        JcaSimpleSignerInfoGeneratorBuilder jSig = new JcaSimpleSignerInfoGeneratorBuilder().setProvider("BC");
+        SignerInfoGenerator sig = jSig.build(signalgo, privateKey, certificate);
+        gen.addCertificates(certs);
+        gen.addSignerInfoGenerator(sig); 
+        MimeMultipart signedContent = gen.generate(mbp);
+        return signedContent;
+    }
+    
+    public static MimeBodyPart signMDNFlatMBP(MimeBodyPart mbp, String keyuser, String signalgo) throws Exception {
+      //  SMIMESignedGenerator gen = new SMIMESignedGenerator(false ? SMIMESignedGenerator.RFC3851_MICALGS : SMIMESignedGenerator.RFC5751_MICALGS);
+        SMIMESignedGenerator gen = new SMIMESignedGenerator("binary");
+        if (signalgo.isBlank()) {
+              signalgo = "SHA1withRSA";
+        }
+        
+        MimeMessage dummyMessage = new MimeMessage((Session) null);
+        dummyMessage.setContent(mbp, mbp.getContentType());
+        dummyMessage.saveChanges();
+        
+        X509Certificate certificate = getPublicKeyAsCert(keyuser);
+        PrivateKey privateKey = getPrivateKey(keyuser);
+        
+        List<X509Certificate> certList = new ArrayList<X509Certificate>();
+        certList.add(certificate);
+        Store certs = new JcaCertStore(certList);
+        
+        JcaSimpleSignerInfoGeneratorBuilder jSig = new JcaSimpleSignerInfoGeneratorBuilder().setProvider("BC");
+        SignerInfoGenerator sig = jSig.build(signalgo, privateKey, certificate);
+        gen.addCertificates(certs);
+        gen.addSignerInfoGenerator(sig); 
+        MimeMultipart signedContent = gen.generate(dummyMessage);
+        
+        MimeBodyPart tmpBody = new MimeBodyPart();        
+        tmpBody.setContent(signedContent);
+        String revisedContentType = signedContent.getContentType();
+        revisedContentType = revisedContentType.replace("sha-1", "sha1");
+        revisedContentType = revisedContentType.replace("sha-256", "sha256");
+        tmpBody.setHeader("Content-Type", revisedContentType);
+            
+        return tmpBody; 
+    }
+     
+    public static String signMDNstr(MimeBodyPart mbp, String keyuser, String signalgo) throws Exception {
         SMIMESignedGenerator gen = new SMIMESignedGenerator(false ? SMIMESignedGenerator.RFC3851_MICALGS : SMIMESignedGenerator.RFC5751_MICALGS);
         
         if (signalgo.isBlank()) {
@@ -2744,8 +2787,26 @@ public class apiUtils {
         gen.addCertificates(certs);
         gen.addSignerInfoGenerator(sig); 
         MimeMultipart signedContent = gen.generate(mbp);
-        return signedContent;
+        BodyPart part = signedContent.getBodyPart(1);
+        java.util.Base64.Encoder encoder = java.util.Base64.getMimeEncoder(76, new byte[]{'\r','\n'});        
+        String output = new String(encoder.encode(part.getInputStream().readAllBytes()), StandardCharsets.UTF_8);
+        /*
+        try ( InputStream is = part.getInputStream();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) {
+                baos.write(buffer,0,bytesRead);
+            }
+            byte[] signatureBytes = baos.toByteArray();
+            output = new String(Base64.encode(signatureBytes));   
+            //output = Base64.toBase64String(signatureBytes);
+        }
+         */
+            
+        return output; 
     }
+     
     
     public static boolean isEncrypted(byte[] encryptedData) {
             CMSEnvelopedData envelopedData;
@@ -3417,7 +3478,7 @@ public class apiUtils {
             yb.append("Final-Recipient: rfc822; ").append(receiver).append("\r").append("\n");
             yb.append("Original-Message-ID: ").append(messageid).append("\r").append("\n");
             yb.append("Disposition: automatic-action/MDN-sent-automatically; ").append(status).append("\r").append("\n");
-            yb.append("Received-Content-MIC: ").append(mic).append(", ").append(micalgo).append("\r").append("\n");
+            yb.append("Received-Content-MIC: ").append(mic).append(", ").append(micalgo).append("\r").append("\n");            
             } else {
             yb.append("Reporting-UA: BlueSeer Software").append("\n");
             yb.append("Original-Recipient: rfc822; ").append(receiver).append("\n");
@@ -3467,9 +3528,15 @@ public class apiUtils {
                if (! elementals[6].isBlank() && elementals[7].equals("1")) { // decided 20250705 to not sign the MDN in cases where the incoming message fails early (before as2_id can be identified) for whatever reason
                 // elementals[7] is defined by as2_signmdn...and determines at the as2_mstr level whether to sign MDN...defaults to '1' in init of elementals array 
                   if (as2m.as2_flatmdn().equals("0")) {
-                    mpInner = signMDN(data, getSystemSignKeyAlt(elementals[6]), as2m.as2_signalgo(), boundary); // need to get tp[19] here for signing algo
+                   // mpInner = signMDN(data, getSystemSignKeyAlt(elementals[6]), as2m.as2_signalgo(), boundary); // need to get tp[19] here for signing algo
+                    MimeMultipart mpInnerTemp = new MimeMultipart();
+                    mpInnerTemp.addBodyPart(signMDNFlatMBP(mbpflat, getSystemSignKeyAlt(elementals[6]), as2m.as2_signalgo()));
+                    mpInner = mpInnerTemp;
                   } else {
                     mpInner = signMDNFlat(mbpflat, getSystemSignKeyAlt(elementals[6]), as2m.as2_signalgo());  
+                    MimeMultipart mpInnerTemp = new MimeMultipart();
+                    mpInnerTemp.addBodyPart(signMDNFlatMBP(mbpflat, getSystemSignKeyAlt(elementals[6]), as2m.as2_signalgo()));
+                    mpInner = mpInnerTemp;
                   }
                }
             } catch (Exception ex) {
@@ -4035,6 +4102,62 @@ public class apiUtils {
 
         
         return x; 
+    }
+        
+    public static mdn createMDNTest(String code, String[] e, HashMap<String, String> headers, boolean isDebug, as2_mstr as2m) throws IOException, MessagingException, Exception {
+        mdn x;
+        int httpResponseCode = HttpServletResponse.SC_OK;
+        String micalgo = as2m.as2_micalgo().toLowerCase();
+        micalgo = micalgo.replace("sha-1", "sha1");
+        micalgo = micalgo.replace("sha-256", "sha256");
+        micalgo = (micalgo.isBlank()) ? "sha1" : micalgo;
+        String status = "processed";
+        String boundary = "----1234554321";
+        String isSigned = "0";
+        StringBuilder sb_human = new StringBuilder();
+        StringBuilder sb_mdn = new StringBuilder();
+       
+        sb_human.append("Hee Haw then content you transmitted has been received").append("\r").append("\n").append("\r").append("\n");
+        
+        sb_mdn.append("Reporting-UA: BlueSeer Software").append("\r").append("\n");
+        sb_mdn.append("Original-Recipient: rfc822; ").append(e[1]).append("\r").append("\n");
+        sb_mdn.append("Final-Recipient: rfc822; ").append(e[1]).append("\r").append("\n");
+        sb_mdn.append("Original-Message-ID: ").append(e[4]).append("\r").append("\n");
+        sb_mdn.append("Disposition: automatic-action/MDN-sent-automatically; ").append(status).append("\r").append("\n");
+        sb_mdn.append("Received-Content-MIC: ").append(e[5]).append(", ").append(micalgo).append("\r").append("\n").append("\r").append("\n"); 
+       
+        
+        MimeMultipart mmp = new MimeMultipart("report");
+        
+        MimeBodyPart mbpmdn = new MimeBodyPart(); 
+        mbpmdn.setContent(sb_mdn.toString(), "message/disposition-notification");
+        
+        MimeBodyPart mbphuman = new MimeBodyPart(); 
+        mbphuman.setContent(sb_human.toString(), "text/plain; charset=utf-8");
+        
+        mmp.addBodyPart(mbphuman);
+        mmp.addBodyPart(mbpmdn);
+                
+        MimeBodyPart mbpcontainer = new MimeBodyPart();
+        mbpcontainer.setContent(mmp);
+            
+        if (! e[6].isBlank() && e[7].equals("1")) {  // isSigned ...reassign mmp
+        isSigned = "1";
+        mmp = signMDNFlat(mbpcontainer, getSystemSignKeyAlt(e[6]), as2m.as2_signalgo());         
+        } else {
+        mmp.getBodyPart(0).setHeader("Content-Type", "text/plain; charset=utf-8");
+        mmp.getBodyPart(1).setHeader("Content-Type", "message/disposition-notification");         
+        }
+        ContentType ct = new ContentType(mmp.getContentType());
+        boundary = ct.getParameter("boundary");
+        ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+        mmp.writeTo(bOut);
+        bOut.flush();
+        bOut.close();
+        byte[] data = bOut.toByteArray(); 
+        x = new mdn(httpResponseCode, headers, new String(data, StandardCharsets.UTF_8), boundary, isSigned);       
+        
+        return x;
     }
     
     public record mdn(int status, HashMap<String, String> headers, String message, String boundary, String isSigned) {       
