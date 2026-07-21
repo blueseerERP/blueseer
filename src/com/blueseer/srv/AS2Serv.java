@@ -37,7 +37,6 @@ import com.blueseer.edi.APIMaint;
 import com.blueseer.edi.apiUtils;
 import static com.blueseer.edi.apiUtils.calculateMIC;
 import static com.blueseer.edi.apiUtils.createMDN;
-import static com.blueseer.edi.apiUtils.createMDNTest;
 import static com.blueseer.edi.apiUtils.hashdigest;
 import com.blueseer.edi.apiUtils.mdn;
 import static com.blueseer.edi.apiUtils.verifySignature;
@@ -422,14 +421,22 @@ public class AS2Serv extends HttpServlet {
         // establish mimemultipart format of decrypted data
         MimeMultipart mp  = new MimeMultipart(new ByteArrayDataSource(finalContent, request.getContentType()));
         
-        if (mp.isComplete()) {
-        System.out.println("request ContentType=" + request.getContentType());
-        System.out.println("MimeMultipart count=" + mp.getCount() + "/" + mp.getContentType());
-        }
+        try {
+            boolean isComplete = mp.isComplete();
+            if (isComplete) {
+                System.out.println("MimeMultiPart isComplete = " + isComplete);    
+                System.out.println("request ContentType=" + request.getContentType());
+                System.out.println("MimeMultipart count=" + mp.getCount() + "/" + mp.getContentType());
+            }
         
-        if (mp.getContentType().isEmpty()) {  
+        } catch (MessagingException e) {            
+            System.out.println("Error evaluating multipart completion: " + e.getMessage());
             return createMDN("2005", elementals, returnheaders, isDebug, as2m);
         }
+        
+        //if (mp.getContentType().isEmpty()) {  
+        //    return createMDN("2005", elementals, returnheaders, isDebug, as2m);
+        //}
         
         // if signed...should have a parent mp with two sub-mps (one the file and the other the sig)
         logdet.add(new String[]{parentkey, "info", "MP count: " + mp.getCount() + " MP content-type: " + mp.getContentType()});
@@ -618,8 +625,7 @@ public class AS2Serv extends HttpServlet {
              output.close(); 
             }
            try {
-          // CHANGE HERE  mymdn = createMDN("1000", elementals, returnheaders, isDebug, as2m);  // success assumes encryption and signed
-            mymdn = createMDNTest("1000", elementals, returnheaders, isDebug, as2m); 
+            mymdn = createMDN("1000", elementals, returnheaders, isDebug, as2m); 
            } catch (MessagingException ex) {
                 bslog(ex);
             }

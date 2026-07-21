@@ -3451,176 +3451,40 @@ public class apiUtils {
         return sslcsf;
     }
          
-    public static MimeMultipart bundleit(String z, String receiver, String messageid, String mic, String status, String[] elementals, as2_mstr as2m) {
-        MimeBodyPart mbp = new MimeBodyPart();
-        MimeBodyPart mbp2 = new MimeBodyPart();
-        MimeBodyPart mbp3 = new MimeBodyPart();
-        MimeBodyPart mbpflat = new MimeBodyPart();
-        MimeMultipart mpInner = new MimeMultipart();
-        boolean unsigned = false;
-        String boundary = "";
-        
-        
-        String micalgo = as2m.as2_micalgo().toLowerCase();
-        micalgo = micalgo.replace("sha-1", "sha1");
-        micalgo = micalgo.replace("sha-256", "sha256");
-        micalgo = (micalgo.isBlank()) ? "sha1" : micalgo;
-        
-        try {
-            mbp.setText(z);
-            mbp.setHeader("Content-Type", "text/plain");
-            mbp.setHeader("Content-Transfer-Encoding", "binary");
-            
-            StringBuilder yb = new StringBuilder();
-            if (as2m.as2_eol().equals("1")) {
-            yb.append("Reporting-UA: BlueSeer Software").append("\r").append("\n");
-            yb.append("Original-Recipient: rfc822; ").append(receiver).append("\r").append("\n");
-            yb.append("Final-Recipient: rfc822; ").append(receiver).append("\r").append("\n");
-            yb.append("Original-Message-ID: ").append(messageid).append("\r").append("\n");
-            yb.append("Disposition: automatic-action/MDN-sent-automatically; ").append(status).append("\r").append("\n");
-            yb.append("Received-Content-MIC: ").append(mic).append(", ").append(micalgo).append("\r").append("\n");            
-            } else {
-            yb.append("Reporting-UA: BlueSeer Software").append("\n");
-            yb.append("Original-Recipient: rfc822; ").append(receiver).append("\n");
-            yb.append("Final-Recipient: rfc822; ").append(receiver).append("\n");
-            yb.append("Original-Message-ID: ").append(messageid).append("\n");
-            yb.append("Disposition: automatic-action/MDN-sent-automatically; ").append(status).append("\n");
-            yb.append("Received-Content-MIC: ").append(mic).append(", ").append(micalgo).append("\n");
-            
-            }
-            /*
-            String y = """
-                       Reporting-UA: BlueSeer Software
-                       Original-Recipient: rfc822; %s
-                       Final-Recipient: rfc822; %s
-                       Original-Message-ID: %s
-                       Disposition: automatic-action/MDN-sent-automatically; %s
-                       Received-Content-MIC: %s, sha1
-                       """.formatted(receiver, receiver, messageid, status, mic);
-            */
-            mbp2.setText(yb.toString());
-            mbp2.setHeader("Content-Type", "message/disposition-notification");
-            mbp2.setHeader("Content-Transfer-Encoding", "binary");
-            
-            
-            
-            
-            if (as2m.as2_flatmdn().equals("1")) {
-                mbpflat = new MimeBodyPart();
-                mbpflat.setText(yb.toString());
-                mbpflat.setHeader("Content-Type", "message/disposition-notification");
-                mbpflat.setHeader("Content-Transfer-Encoding", "binary");
-                mpInner.addBodyPart(mbpflat);
-            } else {
-                mpInner.addBodyPart(mbp);
-                mpInner.addBodyPart(mbp2); 
-                ContentType ct = new ContentType(mpInner.getContentType());
-                boundary = ct.getParameter("boundary");
-            }
-            
-            ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-            mpInner.writeTo(bOut);
-            bOut.flush();
-            bOut.close();
-            byte[] data = bOut.toByteArray();
-            
-            try {
-               if (! elementals[6].isBlank() && elementals[7].equals("1")) { // decided 20250705 to not sign the MDN in cases where the incoming message fails early (before as2_id can be identified) for whatever reason
-                // elementals[7] is defined by as2_signmdn...and determines at the as2_mstr level whether to sign MDN...defaults to '1' in init of elementals array 
-                  if (as2m.as2_flatmdn().equals("0")) {
-                   // mpInner = signMDN(data, getSystemSignKeyAlt(elementals[6]), as2m.as2_signalgo(), boundary); // need to get tp[19] here for signing algo
-                    MimeMultipart mpInnerTemp = new MimeMultipart();
-                    mpInnerTemp.addBodyPart(signMDNFlatMBP(mbpflat, getSystemSignKeyAlt(elementals[6]), as2m.as2_signalgo()));
-                    mpInner = mpInnerTemp;
-                  } else {
-                    mpInner = signMDNFlat(mbpflat, getSystemSignKeyAlt(elementals[6]), as2m.as2_signalgo());  
-                    MimeMultipart mpInnerTemp = new MimeMultipart();
-                    mpInnerTemp.addBodyPart(signMDNFlatMBP(mbpflat, getSystemSignKeyAlt(elementals[6]), as2m.as2_signalgo()));
-                    mpInner = mpInnerTemp;
-                  }
-               }
-            } catch (Exception ex) {
-                bslog(ex);
-            }
-            
-            
-        } catch (Exception ex) {
-            bslog(ex);
-        } 
-        
-        
-        
-        return mpInner;
-    }
-          
-    public static mmpx code1000(String[] elementals, as2_mstr as2m) {
+    public static String code1000(String[] elementals, as2_mstr as2m) {
         String sender = elementals[0];
         String receiver = elementals[1];
         String subject = elementals[2];
         String filename = elementals[3];
-        String messageid = elementals[4];
-        String mic = elementals[5];      
-        String boundary = "";
-        MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
        
-        StringBuilder zb = new StringBuilder();
-         if (as2m != null) {
-          if ( as2m.as2_eol().equals("0")) {  
-            zb.append("The message ").append(filename).append(" with subject ").append(subject).append(" has been received.").append("\n");
-            zb.append("Message ").append(filename).append(" was sent from: ").append(sender).append(" to: ").append(receiver).append("\n");
-            zb.append(" Message received at ").append(now).append("\n");
-            zb.append("Note: The origin and integrity of the message have been verified.").append("\n");
-          } else {
-            zb.append("The message ").append(filename).append(" with subject ").append(subject).append(" has been received.").append("\r").append("\n");
-            zb.append("Message ").append(filename).append(" was sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
-            zb.append(" Message received at ").append(now).append("\r").append("\n");
-            zb.append("Note: The origin and integrity of the message have been verified.").append("\r").append("\n");
-          }
-         }
-          
-        try {
-           mpInner = bundleit(zb.toString(), receiver, messageid, mic, "processed", elementals, as2m);
-           ContentType ct = new ContentType(mpInner.getContentType());
-           boundary = ct.getParameter("boundary");
-        } catch (Exception ex) {
-            bslog(ex);
-        }
+        StringBuilder zb = new StringBuilder();         
+        zb.append("The message ").append(filename).append(" with subject ").append(subject).append(" has been received.").append("\r").append("\n");
+        zb.append("Message ").append(filename).append(" was sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
+        zb.append(" Message received at ").append(now).append("\r").append("\n");
+        zb.append("Note: The origin and integrity of the message have been verified.").append("\r").append("\n").append("\r").append("\n");
+         
         
-        return new mmpx(mpInner, boundary);
-      //  return mymmpx;
+        return zb.toString();
     }
         
-    public static mmpx code2000(String[] elementals, as2_mstr as2m) {
+    public static String code2000(String[] elementals, as2_mstr as2m) {
         String sender = elementals[0];
         String receiver = elementals[1];
-        String subject = elementals[2];
         String filename = elementals[3];
-        String messageid = elementals[4];
-        String mic = elementals[5];
-        String as2id = elementals[6];
-        MimeBodyPart mbp = new MimeBodyPart();
-        String boundary = "";
-        MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         StringBuilder zb = new StringBuilder();
             zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
             zb.append(" at ").append(now).append("\r").append("\n");
-            zb.append("was not signed.");
-        try {
-           mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed", elementals, as2m);
-           ContentType ct = new ContentType(mpInner.getContentType());
-           boundary = ct.getParameter("boundary");
-        } catch (Exception ex) {
-            bslog(ex);
-        }
+            zb.append("was not signed.").append("\r").append("\n").append("\r").append("\n");
+       
         
-        return new mmpx(mpInner, boundary);
+        return zb.toString();
     }
         
-    public static mmpx code2005(String[] elementals, as2_mstr as2m) {
+    public static String code2005(String[] elementals, as2_mstr as2m) {
         String sender = elementals[0];
         String receiver = elementals[1];
         String subject = elementals[2];
@@ -3635,489 +3499,299 @@ public class apiUtils {
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
       
         StringBuilder zb = new StringBuilder();
-            zb.append("The message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\n");
-            zb.append(" at ").append(now).append(" failed.").append("\n");
-            zb.append("Error: MimeMultipart is incomplete ").append("\n");
-             
-               
-        try {
-           mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed", elementals, as2m);
-           ContentType ct = new ContentType(mpInner.getContentType());
-           boundary = ct.getParameter("boundary");
-        } catch (Exception ex) {
-            bslog(ex);
-        }
+            zb.append("The message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
+            zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
+            zb.append("Error: MimeMultipart is incomplete ").append("\r").append("\n").append("\r").append("\n");
+          
         
-        return new mmpx(mpInner, boundary);
+        return zb.toString();
     }
     
-    public static mmpx code2010(String[] elementals, as2_mstr as2m) {
+    public static String code2010(String[] elementals, as2_mstr as2m) {
         String sender = elementals[0];
         String receiver = elementals[1];
-        String subject = elementals[2];
         String filename = elementals[3];
-        String messageid = elementals[4];
-        String mic = elementals[5];
-        String as2id = elementals[6];
-        MimeBodyPart mbp = new MimeBodyPart();
-        String boundary = "";
-        MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
        
         StringBuilder zb = new StringBuilder();
             zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
             zb.append(" at ").append(now).append("\r").append("\n");
-            zb.append("failed. Error: unable to retrieve contents of File. Error:  FileBytesRead is null  ");
-        try {
-           mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed", elementals, as2m);
-           ContentType ct = new ContentType(mpInner.getContentType());
-           boundary = ct.getParameter("boundary");
-        } catch (Exception ex) {
-            bslog(ex);
-        }
+            zb.append("failed. Error: unable to retrieve contents of File. Error:  FileBytesRead is null  ").append("\r").append("\n").append("\r").append("\n");
         
-        return new mmpx(mpInner, boundary);
+        
+        return zb.toString();
     }
     
-    public static mmpx code2015(String[] elementals, as2_mstr as2m) {
+    public static String code2015(String[] elementals, as2_mstr as2m) {
         String sender = elementals[0];
         String receiver = elementals[1];
-        String subject = elementals[2];
         String filename = elementals[3];
-        String messageid = elementals[4];
-        String mic = elementals[5];
-        String as2id = elementals[6];
-        MimeBodyPart mbp = new MimeBodyPart();
-        String boundary = "";
-        MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         StringBuilder zb = new StringBuilder();
             zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
             zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
-            zb.append("Error: Signature content is null  ");
-        try {
-           mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed", elementals, as2m);
-           ContentType ct = new ContentType(mpInner.getContentType());
-           boundary = ct.getParameter("boundary");
-        } catch (Exception ex) {
-            bslog(ex);
-        }
+            zb.append("Error: Signature content is null  ").append("\r").append("\n").append("\r").append("\n");
         
-        return new mmpx(mpInner, boundary);
+        
+        return zb.toString();
     }
     
-    public static mmpx code2020(String[] elementals, as2_mstr as2m) {
+    public static String code2020(String[] elementals, as2_mstr as2m) {
         String sender = elementals[0];
         String receiver = elementals[1];
-        String subject = elementals[2];
         String filename = elementals[3];
-        String messageid = elementals[4];
-        String mic = elementals[5];
-        String as2id = elementals[6];
-        MimeBodyPart mbp = new MimeBodyPart();
-        String boundary = "";
-        MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         
         StringBuilder zb = new StringBuilder();
             zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
             zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
-            zb.append("Error: Invalid Signature  ");
-        try {
-           mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed", elementals, as2m);
-           ContentType ct = new ContentType(mpInner.getContentType());
-           boundary = ct.getParameter("boundary");
-        } catch (Exception ex) {
-            bslog(ex);
-        }
+            zb.append("Error: Invalid Signature  ").append("\r").append("\n").append("\r").append("\n");
         
-        return new mmpx(mpInner, boundary);
+        
+        return zb.toString();
     }
     
-    public static mmpx code3000(String[] elementals, as2_mstr as2m) {
+    public static String code3000(String[] elementals, as2_mstr as2m) {
         String sender = elementals[0];
         String receiver = elementals[1];
-        String subject = elementals[2];
         String filename = elementals[3];
-        String messageid = elementals[4];
-        String mic = elementals[5];
-        String as2id = elementals[6];
-        MimeBodyPart mbp = new MimeBodyPart();
-        String boundary = "";
-        MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         
         StringBuilder zb = new StringBuilder();
             zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
             zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
-            zb.append("Error: The message was transmitted with null content.  ");
+            zb.append("Error: The message was transmitted with null content.  ").append("\r").append("\n").append("\r").append("\n");
         
-        try {
-           mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed", elementals, as2m);
-           ContentType ct = new ContentType(mpInner.getContentType());
-           boundary = ct.getParameter("boundary");
-        } catch (Exception ex) {
-            bslog(ex);
-        }
         
-        return new mmpx(mpInner, boundary);
+        
+        return zb.toString();
     }
      
-    public static mmpx code3003(String[] elementals, as2_mstr as2m) {
+    public static String code3003(String[] elementals, as2_mstr as2m) {
         String sender = elementals[0];
         String receiver = elementals[1];
-        String subject = elementals[2];
         String filename = elementals[3];
-        String messageid = elementals[4];
-        String mic = elementals[5];
-        String as2id = elementals[6];
-        MimeBodyPart mbp = new MimeBodyPart();
-        String boundary = "";
-        MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         
         StringBuilder zb = new StringBuilder();
             zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
             zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
-            zb.append("Error: Unable to decrypt message transmitted at <%s>.  Potential bad public key.  ");
-        try {
-           mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed", elementals, as2m);
-           ContentType ct = new ContentType(mpInner.getContentType());
-           boundary = ct.getParameter("boundary");
-        } catch (Exception ex) {
-            bslog(ex);
-        }
+            zb.append("Error: Unable to decrypt message transmitted at <%s>.  Potential bad public key.  ").append("\r").append("\n").append("\r").append("\n");
         
-        return new mmpx(mpInner, boundary);
+        
+        return zb.toString();
     }
         
-    public static mmpx code3005(String[] elementals, as2_mstr as2m) {
+    public static String code3005(String[] elementals, as2_mstr as2m) {
         String sender = elementals[0];
         String receiver = elementals[1];
-        String subject = elementals[2];
         String filename = elementals[3];
-        String messageid = elementals[4];
-        String mic = elementals[5];
-        String as2id = elementals[6];
-        MimeBodyPart mbp = new MimeBodyPart();
-        String boundary = "";
-        MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
        
         StringBuilder zb = new StringBuilder();
             zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
             zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
-            zb.append("Error: The message had unrecognizable HTTP headers.  ");
-        try {
-           mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed", elementals, as2m);
-           ContentType ct = new ContentType(mpInner.getContentType());
-           boundary = ct.getParameter("boundary");
-        } catch (Exception ex) {
-            bslog(ex);
-        }
+            zb.append("Error: The message had unrecognizable HTTP headers.  ").append("\r").append("\n").append("\r").append("\n");
         
-        return new mmpx(mpInner, boundary);
+        
+        return zb.toString();
     }
     
-    public static mmpx code3007(String[] elementals, as2_mstr as2m) {
+    public static String code3007(String[] elementals, as2_mstr as2m) {
         String sender = elementals[0];
         String receiver = elementals[1];
-        String subject = elementals[2];
         String filename = elementals[3];
-        String messageid = elementals[4];
-        String mic = elementals[5];
-        String as2id = elementals[6];
-        MimeBodyPart mbp = new MimeBodyPart();
-        String boundary = "";
-        MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         
         StringBuilder zb = new StringBuilder();
             zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
             zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
-            zb.append("Error: The message had zero HTTP headers.  ");
-        try {
-           mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed", elementals, as2m);
-           ContentType ct = new ContentType(mpInner.getContentType());
-           boundary = ct.getParameter("boundary");
-        } catch (Exception ex) {
-            bslog(ex);
-        }
+            zb.append("Error: The message had zero HTTP headers.  ").append("\r").append("\n").append("\r").append("\n");
         
-        return new mmpx(mpInner, boundary);
+        
+        return zb.toString();
     }
    
-    public static mmpx code3100(String[] elementals, as2_mstr as2m) {
+    public static String code3100(String[] elementals, as2_mstr as2m) {
         String sender = elementals[0];
         String receiver = elementals[1];
-        String subject = elementals[2];
         String filename = elementals[3];
-        String messageid = elementals[4];
-        String mic = elementals[5];
-        String as2id = elementals[6];
-        MimeBodyPart mbp = new MimeBodyPart();
-        String boundary = "";
-        MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         
         StringBuilder zb = new StringBuilder();
             zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
             zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
-            zb.append("Error: The message was transmitted to unknown receiver ID.  ");
-        try {
-           mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed", elementals, as2m);
-           ContentType ct = new ContentType(mpInner.getContentType());
-           boundary = ct.getParameter("boundary");
-        } catch (Exception ex) {
-            bslog(ex);
-        }
+            zb.append("Error: The message was transmitted to unknown receiver ID.  ").append("\r").append("\n").append("\r").append("\n");
         
-        return new mmpx(mpInner, boundary);
+        
+        return zb.toString();
     }
     
-    public static mmpx code3200(String[] elementals, as2_mstr as2m) {
+    public static String code3200(String[] elementals, as2_mstr as2m) {
         String sender = elementals[0];
         String receiver = elementals[1];
-        String subject = elementals[2];
         String filename = elementals[3];
-        String messageid = elementals[4];
-        String mic = elementals[5];
-        String as2id = elementals[6];
-        MimeBodyPart mbp = new MimeBodyPart();
-        String boundary = "";
-        MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         
         StringBuilder zb = new StringBuilder();
             zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
             zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
-            zb.append("Error: The message was transmitted by unknown sender ID.  ");
-       try {
-           mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed", elementals, as2m);
-           ContentType ct = new ContentType(mpInner.getContentType());
-           boundary = ct.getParameter("boundary");
-        } catch (Exception ex) {
-            bslog(ex);
-        }
+            zb.append("Error: The message was transmitted by unknown sender ID.  ").append("\r").append("\n").append("\r").append("\n");
+       
         
-        return new mmpx(mpInner, boundary);
+        return zb.toString();
     }
     
-    public static mmpx code3300(String[] elementals, as2_mstr as2m) {
+    public static String code3300(String[] elementals, as2_mstr as2m) {
         String sender = elementals[0];
         String receiver = elementals[1];
-        String subject = elementals[2];
         String filename = elementals[3];
-        String messageid = elementals[4];
-        String mic = elementals[5];
-        String as2id = elementals[6];
-        MimeBodyPart mbp = new MimeBodyPart();
-        String boundary = "";
-        MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         
         StringBuilder zb = new StringBuilder();
             zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
             zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
-            zb.append("Error: unable to determine sender / receiver keys  ");
-        try {
-           mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed", elementals, as2m);
-           ContentType ct = new ContentType(mpInner.getContentType());
-           boundary = ct.getParameter("boundary");
-        } catch (Exception ex) {
-            bslog(ex);
-        }
+            zb.append("Error: unable to determine sender / receiver keys  ").append("\r").append("\n").append("\r").append("\n");
         
-        return new mmpx(mpInner, boundary);
+        
+        return zb.toString();
     }
     
-    public static mmpx code3400(String[] elementals, as2_mstr as2m) {
+    public static String code3400(String[] elementals, as2_mstr as2m) {
         String sender = elementals[0];
         String receiver = elementals[1];
-        String subject = elementals[2];
         String filename = elementals[3];
-        String messageid = elementals[4];
-        String mic = elementals[5];
-        String as2id = elementals[6];
-        MimeBodyPart mbp = new MimeBodyPart();
-        String boundary = "";
-        MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         
         StringBuilder zb = new StringBuilder();
             zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
             zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
-            zb.append("Error: encryption is required  ");
-        try {
-           mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed", elementals, as2m);
-           ContentType ct = new ContentType(mpInner.getContentType());
-           boundary = ct.getParameter("boundary");
-        } catch (Exception ex) {
-            bslog(ex);
-        }
+            zb.append("Error: encryption is required  ").append("\r").append("\n").append("\r").append("\n");
         
-        return new mmpx(mpInner, boundary);
+        
+        return zb.toString();
     }
         
-    public static mmpx code9999(String[] elementals, as2_mstr as2m) {
+    public static String code9999(String[] elementals, as2_mstr as2m) {
         String sender = elementals[0];
         String receiver = elementals[1];
-        String subject = elementals[2];
         String filename = elementals[3];
-        String messageid = elementals[4];
-        String mic = elementals[5];
-        String as2id = elementals[6];
-        MimeBodyPart mbp = new MimeBodyPart();
-        String boundary = "";
-        MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
         
         StringBuilder zb = new StringBuilder();
             zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
             zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
-            zb.append("Error: Internal server error 9999 ");
-        try {
-           mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed", elementals, as2m);
-           ContentType ct = new ContentType(mpInner.getContentType());
-           boundary = ct.getParameter("boundary");
-        } catch (Exception ex) {
-            bslog(ex);
-        }
+            zb.append("Error: Internal server error 9999 ").append("\r").append("\n").append("\r").append("\n");
+       
         
-        return new mmpx(mpInner, boundary);
+        return zb.toString();
     }
         
-    public static mdn createMDN(String code, String[] e, HashMap<String, String> headers, boolean isDebug, as2_mstr as2m) throws IOException, MessagingException {
-        mdn x;
-        MimeBodyPart mbp = new MimeBodyPart();
-        
-        String z;
-        String isSigned = "1";
-        int httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;  // init to bad request...code1000 MDN construct will flip to 200 if processed correctly
-        
-        String boundary = "";
-        mmpx mymmpx = null;
-        
-        switch (code) {
-            case "1000" :  // hee haw!!!   success          
-            mymmpx = code1000(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_OK;
-            break;     
-            
-            case "2000" :  // was not signed
-            mymmpx = code2000(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_NOT_ACCEPTABLE;
-            break;
-            
-            case "2005" :  //  Error: MimeMultipart is incomplete            
-            mymmpx = code2005(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
-            break;
-            
-            case "2010" :  // Error: unable to retrieve contents of File. Error:  FileBytesRead is null             
-            mymmpx = code2010(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
-            break;
-            
-            case "2015" :  // Error: Signature content is null            
-            mymmpx = code2015(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
-            break;
-            
-            case "2020" :  // Error: Invalid Signature             
-            mymmpx = code2020(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_NOT_ACCEPTABLE;
-            break;
-            
-            case "3000" :  // Error: The message was transmitted with null content.
-            mymmpx = code3000(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
-            break;
-            
-            case "3003" :  // Error: Unable to decrypt message transmitted at <%s>.  Potential bad public key.
-            mymmpx = code3003(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
-            break;
-            
-            case "3005" : // Error: The message had unrecognizable HTTP headers.
-            mymmpx = code3005(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
-            break;
-           
-            case "3007" : // Error: The message had zero HTTP headers.
-            mymmpx = code3007(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
-            break;
-            
-            case "3100" : // Error: The message was transmitted to unknown receiver ID.
-            mymmpx = code3100(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
-            break;
-            
-            case "3200" : // Error: The message was transmitted by unknown sender ID. 
-            mymmpx = code3200(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
-            break;
-            
-            case "3300" : // Error: unable to determine sender / receiver keys  
-            mymmpx = code3300(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
-            break;
-            
-            case "3400" : // Error: encryption is required 
-            mymmpx = code3400(e, as2m); 
-            httpResponseCode = HttpServletResponse.SC_NOT_ACCEPTABLE;
-            break;
-                                        
-            default:  // something unaccounted for...            
-            mymmpx = code9999(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-            
-        }        
-        
-        if (mymmpx.mmp().getCount() == 1) { // must be flat mdn
-            mbp.setText(new String(mymmpx.mmp().getBodyPart(0).getInputStream().readAllBytes(), StandardCharsets.UTF_8)); 
-            isSigned = "0";
-        } else {
-            mbp.setContent(mymmpx.mmp());
-        }            
-        boundary = mymmpx.boundary();
-        
-        
-        headers.put("Subject", "your requested MDN Response");            
-        headers.put("AS2-Version", "1.2");
-        x = new mdn(httpResponseCode, headers, new String(mbp.getInputStream().readAllBytes(), StandardCharsets.UTF_8), boundary, isSigned);
-
-        
-        return x; 
-    }
-        
-    public static mdn createMDNTest(String code, String[] e, HashMap<String, String> headers, boolean isDebug, as2_mstr as2m) throws IOException, MessagingException, Exception {
+    public static mdn createMDN(String code, String[] e, HashMap<String, String> headers, boolean isDebug, as2_mstr as2m) throws IOException, MessagingException, Exception {
         mdn x;
         int httpResponseCode = HttpServletResponse.SC_OK;
         String micalgo = as2m.as2_micalgo().toLowerCase();
         micalgo = micalgo.replace("sha-1", "sha1");
         micalgo = micalgo.replace("sha-256", "sha256");
         micalgo = (micalgo.isBlank()) ? "sha1" : micalgo;
-        String status = "processed";
+        String status;
         String boundary = "----1234554321";
         String isSigned = "0";
-        StringBuilder sb_human = new StringBuilder();
+        String str_human;
+        
+        switch (code) {
+            case "1000" :  // hee haw!!!   success          
+            str_human = code1000(e, as2m);
+            httpResponseCode = HttpServletResponse.SC_OK;
+            break;     
+            
+            case "2000" :  // was not signed
+            str_human = code2000(e, as2m);
+            httpResponseCode = HttpServletResponse.SC_OK;
+            break;
+            
+            case "2005" :  //  Error: MimeMultipart is incomplete            
+            str_human = code2005(e, as2m);
+            httpResponseCode = HttpServletResponse.SC_OK;
+            break;
+            
+            case "2010" :  // Error: unable to retrieve contents of File. Error:  FileBytesRead is null             
+            str_human = code2010(e, as2m);
+            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            break;
+            
+            case "2015" :  // Error: Signature content is null            
+            str_human = code2015(e, as2m);
+            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            break;
+            
+            case "2020" :  // Error: Invalid Signature             
+            str_human = code2020(e, as2m);
+            httpResponseCode = HttpServletResponse.SC_NOT_ACCEPTABLE;
+            break;
+            
+            case "3000" :  // Error: The message was transmitted with null content.
+            str_human = code3000(e, as2m);
+            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            break;
+            
+            case "3003" :  // Error: Unable to decrypt message transmitted at <%s>.  Potential bad public key.
+            str_human = code3003(e, as2m);
+            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            break;
+            
+            case "3005" : // Error: The message had unrecognizable HTTP headers.
+            str_human = code3005(e, as2m);
+            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            break;
+           
+            case "3007" : // Error: The message had zero HTTP headers.
+            str_human = code3007(e, as2m);
+            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            break;
+            
+            case "3100" : // Error: The message was transmitted to unknown receiver ID.
+            str_human = code3100(e, as2m);
+            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            break;
+            
+            case "3200" : // Error: The message was transmitted by unknown sender ID. 
+            str_human = code3200(e, as2m);
+            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            break;
+            
+            case "3300" : // Error: unable to determine sender / receiver keys  
+            str_human = code3300(e, as2m);
+            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            break;
+            
+            case "3400" : // Error: encryption is required 
+            str_human = code3400(e, as2m); 
+            httpResponseCode = HttpServletResponse.SC_NOT_ACCEPTABLE;
+            break;
+                                        
+            default:  // something unaccounted for...            
+            str_human = code9999(e, as2m);
+            httpResponseCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+            
+        }        
+        
+        status = (code.equals("1000")) ? "processed" : "failed"; 
+        
         StringBuilder sb_mdn = new StringBuilder();
        
-        sb_human.append("Hee Haw then content you transmitted has been received").append("\r").append("\n").append("\r").append("\n");
         
         sb_mdn.append("Reporting-UA: BlueSeer Software").append("\r").append("\n");
         sb_mdn.append("Original-Recipient: rfc822; ").append(e[1]).append("\r").append("\n");
@@ -4133,7 +3807,7 @@ public class apiUtils {
         mbpmdn.setContent(sb_mdn.toString(), "message/disposition-notification");
         
         MimeBodyPart mbphuman = new MimeBodyPart(); 
-        mbphuman.setContent(sb_human.toString(), "text/plain; charset=utf-8");
+        mbphuman.setContent(str_human, "text/plain; charset=utf-8");
         
         mmp.addBodyPart(mbphuman);
         mmp.addBodyPart(mbpmdn);
@@ -4141,7 +3815,7 @@ public class apiUtils {
         MimeBodyPart mbpcontainer = new MimeBodyPart();
         mbpcontainer.setContent(mmp);
             
-        if (! e[6].isBlank() && e[7].equals("1")) {  // isSigned ...reassign mmp
+        if (! e[6].isBlank() && e[7].equals("1")) {  // isSigned ...reassign/resuse mmp
         isSigned = "1";
         mmp = signMDNFlat(mbpcontainer, getSystemSignKeyAlt(e[6]), as2m.as2_signalgo());         
         } else {
@@ -4168,13 +3842,6 @@ public class apiUtils {
             this(i, hm, bs, "", "");     
         }
     }
-    
-    public record mmpx(MimeMultipart mmp, String boundary) {
-     
-    }
-    
-    
-    
     
     
 }
