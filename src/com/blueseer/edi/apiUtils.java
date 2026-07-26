@@ -3729,57 +3729,57 @@ public class apiUtils {
             
             case "2010" :  // Error: unable to retrieve contents of File. Error:  FileBytesRead is null             
             str_human = code2010(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            httpResponseCode = HttpServletResponse.SC_OK;
             break;
             
             case "2015" :  // Error: Signature content is null            
             str_human = code2015(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            httpResponseCode = HttpServletResponse.SC_OK;
             break;
             
             case "2020" :  // Error: Invalid Signature             
             str_human = code2020(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_NOT_ACCEPTABLE;
+            httpResponseCode = HttpServletResponse.SC_OK;
             break;
             
             case "3000" :  // Error: The message was transmitted with null content.
             str_human = code3000(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            httpResponseCode = HttpServletResponse.SC_OK;
             break;
             
             case "3003" :  // Error: Unable to decrypt message transmitted at <%s>.  Potential bad public key.
             str_human = code3003(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            httpResponseCode = HttpServletResponse.SC_OK;
             break;
             
             case "3005" : // Error: The message had unrecognizable HTTP headers.
             str_human = code3005(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            httpResponseCode = HttpServletResponse.SC_OK;
             break;
            
             case "3007" : // Error: The message had zero HTTP headers.
             str_human = code3007(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            httpResponseCode = HttpServletResponse.SC_OK;
             break;
             
             case "3100" : // Error: The message was transmitted to unknown receiver ID.
             str_human = code3100(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            httpResponseCode = HttpServletResponse.SC_OK;
             break;
             
             case "3200" : // Error: The message was transmitted by unknown sender ID. 
             str_human = code3200(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            httpResponseCode = HttpServletResponse.SC_OK;
             break;
             
             case "3300" : // Error: unable to determine sender / receiver keys  
             str_human = code3300(e, as2m);
-            httpResponseCode = HttpServletResponse.SC_BAD_REQUEST;
+            httpResponseCode = HttpServletResponse.SC_OK;
             break;
             
             case "3400" : // Error: encryption is required 
             str_human = code3400(e, as2m); 
-            httpResponseCode = HttpServletResponse.SC_NOT_ACCEPTABLE;
+            httpResponseCode = HttpServletResponse.SC_OK;
             break;
                                         
             default:  // something unaccounted for...            
