@@ -1114,7 +1114,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerV {
 
         panelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Project / Service Job View"));
         panelMain.setName("panelmain"); // NOI18N
-        panelMain.setPreferredSize(new java.awt.Dimension(850, 600));
+        panelMain.setPreferredSize(new java.awt.Dimension(900, 600));
 
         jLabel1.setText("Job:");
         jLabel1.setName("lblid"); // NOI18N
@@ -1477,7 +1477,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerV {
                                                 .addGap(18, 18, 18)
                                                 .addComponent(cbconsumable))
                                             .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -1578,7 +1578,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerV {
 
         add(panelMain);
 
-        panelNotes.setPreferredSize(new java.awt.Dimension(800, 550));
+        panelNotes.setPreferredSize(new java.awt.Dimension(900, 550));
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Operational Note"));
         jPanel4.setPreferredSize(new java.awt.Dimension(850, 600));
@@ -1612,7 +1612,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerV {
                 .addComponent(jLabel17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ddopnotes, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 457, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 551, Short.MAX_VALUE)
                 .addComponent(btupdatenotes)
                 .addContainerGap())
         );
@@ -1631,11 +1631,11 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerV {
         panelNotes.setLayout(panelNotesLayout);
         panelNotesLayout.setHorizontalGroup(
             panelNotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
+            .addGap(0, 900, Short.MAX_VALUE)
             .addGroup(panelNotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelNotesLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 888, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         panelNotesLayout.setVerticalGroup(

@@ -435,7 +435,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeerT 
         ddcust.insertItemAt("", 0);
         ddcust.setSelectedIndex(0);
         ddoptype.insertItemAt("lines", 0);
-        ddoptype.insertItemAt("generic", 0);
+        ddoptype.insertItemAt("generic", 1);
         ddoptype.setSelectedIndex(0);
         ddstatus.setSelectedItem(getGlobalProgTag("open"));
        isLoad = false;
@@ -504,8 +504,10 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeerT 
                          if (ddtype.getSelectedItem().toString().compareTo("order") == 0) {
                              btquotetoorder.setEnabled(false);
                              btquotetoorder.setBackground(null);
+                             btinvoice.setEnabled(true);
                          } else {
                              btquotetoorder.setBackground(Color.yellow);
+                             btinvoice.setEnabled(false);
                          }
                  rbservice.setSelected(true); // set this to toggle item versus service
                          
@@ -1959,6 +1961,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeerT 
 
     private void btquotetoorderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btquotetoorderActionPerformed
         updateServiceOrderType(bsNumberToUS(tbkey.getText()), "order");
+        bsmf.MainFrame.show("Quote to Order status complete");
+        executeTask(BlueSeerUtils.dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btquotetoorderActionPerformed
 
     private void btinvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btinvoiceActionPerformed

@@ -55,7 +55,9 @@ import com.blueseer.inv.invData;
 import static com.blueseer.inv.invData._updateInventoryBalance;
 import static com.blueseer.inv.invData.getQPRPrintData;
 import static com.blueseer.lbl.lblData.getJobOperationPrintData;
+import static com.blueseer.lbl.lblData.getJobOperationSRVPrintData;
 import static com.blueseer.lbl.lblData.getJobTicketPrintData;
+import static com.blueseer.lbl.lblData.getJobTicketSRVPrintData;
 import static com.blueseer.lbl.lblData.getLabelMultiPrintData;
 import static com.blueseer.ord.ordData.getOrderPrintData;
 import static com.blueseer.ord.ordData.getOrderTotalTax;
@@ -211,7 +213,7 @@ import org.json.JSONObject;
 public class OVData { 
     
    public static String major = "8.0"; 
-   public static String minor = "4";
+   public static String minor = "5";
     
    public static String[] states = {"AB","AL","AK","AZ","AR","BC","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","MB","ME","MD","MA","MI","MN","MS","MO","MT","NE","NL","NV","NH","NJ","NL","NM","NY","NC","ND","NS","OH","OK","ON","OR","PA","PE","QC","RI","SC","SD","SE","TN","TX","UT","VT","VA","WA","WV","WI","WY" };
    public static String[] countries = {"Afghanistan","Albania","Algeria","Andorra","Angola","Antigua & Deps","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Central African Rep","Chad","Chile","China","Colombia","Comoros","Congo","Congo {Democratic Rep}","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","East Timor","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland {Republic}","Israel","Italy","Ivory Coast","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Korea North","Korea South","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar, {Burma}","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palau","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russian Federation","Rwanda","St Kitts & Nevis","St Lucia","Saint Vincent & the Grenadines","Samoa","San Marino","Sao Tome & Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","Spain","Sri Lanka","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom", "USA","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe" }; 
@@ -20024,7 +20026,11 @@ return mystring;
                 return;
             }
         } else {
-            jsonString = getJobTicketPrintData(jobid); 
+            if (jobtype.equals("SRVC")) {
+                jsonString = getJobTicketSRVPrintData(jobid);  
+            } else {
+                jsonString = getJobTicketPrintData(jobid); 
+            }
         }        
         Object[][] rData = jsonToData(jsonString);
         
@@ -20059,8 +20065,8 @@ return mystring;
             rowData[2] = bsParseInt(rowData[2].toString());
             rowData[3] = bsParseDouble(rowData[3].toString());
             rowData[9] = bsParseInt(rowData[9].toString());
-            rowData[15] = bsParseInt(rowData[15].toString());
-            rowData[19] = bsParseDouble(rowData[19].toString());
+            //rowData[15] = bsParseInt(rowData[15].toString());
+            rowData[26] = bsParseDouble(rowData[26].toString());
             if (k == 0) {
                // logo = (rowData[39].toString().isBlank()) ? rowData[40].toString() : rowData[39].toString(); // if cm_logo = "" then site_logo
                // imagedir = rowData[41].toString();
@@ -20077,6 +20083,13 @@ return mystring;
                        "plan_cell,it_item,it_rev,it_desc,it_wf,wf_op,wf_desc,wf_cell," +
                        "assert,runrate,custpo,custcode,bomcode,custitem,ov_jasper_directory," +
                        "plo_operator,plo_operatorname,plo_cell,plo_op,plo_desc,plo_notes,plan_rmks";
+        if (jobtype.equals("SRVC")) {
+            columnnames = "plan_nbr,plan_item,plan_qty_req,plan_qty_sched,plan_date_due," +
+                       "plan_date_sched,plan_date_create,plan_order,plan_type,plan_line," +
+                       "plan_cell,ov_jasper_directory," +
+                       "plo_operator,plo_operatorname,plo_cell,plo_op,plo_desc,plo_notes,plan_rmks," +
+                       "sv_po,sv_cust,sv_rmks,sv_nbr,svd_line,svd_item,svd_desc,svd_qty,cm_name";
+        }
         String[] columnnamesarray = columnnames.split(",", -1);
         JRDataSource datasource = new ListOfArrayDataSource(list, columnnamesarray);
         Path imagepath = FileSystems.getDefault().getPath(cleanDirString(imagedir) + logo);
@@ -20118,8 +20131,13 @@ return mystring;
                 return;
             }
         } else {
-            jsonString = getJobOperationPrintData(jobid, op); 
+            if (plantype.equals("SRVC")) {
+                jsonString = getJobOperationSRVPrintData(jobid, op);  
+            } else {
+                jsonString = getJobOperationPrintData(jobid, op); 
             System.out.println("HERE operation: " + jobid + " / " + op);
+            }
+            
         }        
         Object[][] rData = jsonToData(jsonString);
         
@@ -20148,11 +20166,12 @@ return mystring;
         for (Object[] rowData : rData) {
             System.out.println("HERE operation: " + rowData[0] + " / " + rowData[1]);
             if (k == 0) {
-                rowData[2] = bsParseInt(rowData[2].toString());
+                rowData[0] = bsParseInt(rowData[0].toString());
+                rowData[2] = bsParseDouble(rowData[2].toString());
                 rowData[3] = bsParseDouble(rowData[3].toString());
-                rowData[9] = bsParseInt(rowData[9].toString());
-                rowData[15] = bsParseInt(rowData[15].toString());
-                rowData[19] = bsParseDouble(rowData[19].toString());
+                rowData[9] = bsParseInt(rowData[9].toString());     
+                rowData[17] = bsParseDouble(rowData[17].toString());
+                rowData[28] = bsParseDouble(rowData[28].toString());
                // logo = (rowData[39].toString().isBlank()) ? rowData[40].toString() : rowData[39].toString(); // if cm_logo = "" then site_logo
                // imagedir = rowData[41].toString();
               //  ship_csz = rowData[18].toString() + " " + rowData[19].toString() + " " + rowData[20].toString() + " " + rowData[21].toString();
@@ -20168,6 +20187,13 @@ return mystring;
                        "plan_cell,it_item,it_rev,it_desc,it_wf,wf_op,wf_desc,wf_cell," +
                        "assert,runrate,custpo,custcode,bomcode,custitem,ov_jasper_directory," +
                        "plo_operator,plo_operatorname,plo_cell,plo_op,plo_date,plo_qty,plo_desc,plo_notes,plan_rmks";
+        if (plantype.equals("SRVC")) {
+            columnnames = "plan_nbr,plan_item,plan_qty_req,plan_qty_sched,plan_date_due," +
+                       "plan_date_sched,plan_date_create,plan_order,plan_type,plan_line," +
+                       "plan_cell,ov_jasper_directory," +
+                       "plo_operator,plo_operatorname,plo_cell,plo_op,plo_date,plo_qty,plo_desc,plo_notes,plan_rmks," +
+                       "sv_po,sv_cust,sv_rmks,sv_nbr,svd_line,svd_item,svd_desc,svd_qty,cm_name";
+        }
         String[] columnnamesarray = columnnames.split(",", -1);
         JRDataSource datasource = new ListOfArrayDataSource(list, columnnamesarray);
         Path imagepath = FileSystems.getDefault().getPath(cleanDirString(imagedir) + logo);

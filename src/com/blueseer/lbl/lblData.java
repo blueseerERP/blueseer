@@ -856,6 +856,86 @@ public class lblData {
        return jsonarray.toString(); 
     }
     
+    public static String getJobTicketSRVPrintData(String jobid) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            
+            try{
+                String sqlquery = ""; 
+               
+               sqlquery = "select plan_nbr, plan_item, plan_qty_req, plan_qty_sched, plan_date_due, " +
+                       " plan_date_sched, plan_date_create, plan_order, plan_type, plan_line, " +
+                       " plan_cell, ov_jasper_directory,  " +
+                       " plo_operator, plo_operatorname, plo_cell, plo_op, plo_desc, plo_notes, plan_rmks, " + 
+                       " sv_po, sv_cust, sv_rmks, sv_nbr, svd_line, svd_item, svd_desc, svd_qty, cm_name " +
+                       " FROM plan_mstr " +
+                       " inner join ov_ctrl " +
+                       " inner join sv_mstr on sv_nbr = plan_order " +
+                       " inner join cm_mstr on cm_code = sv_cust " +
+                       " left outer join plan_operation on plo_parent = plan_nbr " +    
+                       " left outer join svd_det on svd_nbr = sv_nbr and svd_line = plo_op " +
+                       " where plan_nbr = " + "'" + jobid + "'" + ";"; 
+               res = st.executeQuery(sqlquery);
+                    int i = 0;
+                    while (res.next()) {
+                        JSONArray rowArray = new JSONArray(); 
+                        rowArray.put(res.getString("plan_nbr")); 
+                        rowArray.put(res.getString("plan_item"));
+                        rowArray.put(res.getString("plan_qty_req"));
+                        rowArray.put(res.getString("plan_qty_sched"));
+                        rowArray.put(res.getString("plan_date_due"));
+                        rowArray.put(res.getString("plan_date_sched"));
+                        rowArray.put(res.getString("plan_date_create"));
+                        rowArray.put(res.getString("plan_order"));
+                        rowArray.put(res.getString("plan_type"));
+                        rowArray.put(res.getString("plan_line")); 
+                        rowArray.put(res.getString("plan_cell")); // 10 zero base    
+                        rowArray.put(res.getString("ov_jasper_directory"));
+                        rowArray.put(xNull(res.getString("plo_operator")));
+                        rowArray.put(xNull(res.getString("plo_operatorname")));
+                        rowArray.put(xNull(res.getString("plo_cell")));
+                        rowArray.put(xNull(res.getString("plo_op")));
+                        rowArray.put(xNull(res.getString("plo_desc")));
+                        rowArray.put(xNull(res.getString("plo_notes")));
+                        rowArray.put(res.getString("plan_rmks"));                                            
+                        rowArray.put(res.getString("sv_po")); 
+                        rowArray.put(res.getString("sv_cust"));  // 20 zero base
+                        rowArray.put(res.getString("sv_rmks"));
+                        rowArray.put(res.getString("sv_nbr"));
+                        rowArray.put(res.getString("svd_line"));
+                        rowArray.put(res.getString("svd_item"));
+                        rowArray.put(res.getString("svd_desc"));
+                        rowArray.put(res.getString("svd_qty"));
+                        rowArray.put(res.getString("cm_name"));
+                        jsonarray.put(rowArray);
+                        i++;
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+       return jsonarray.toString(); 
+    }
+    
+    
     public static String getJobOperationPrintData(String jobid, String op) {
         JSONArray jsonarray = new JSONArray();
         try {
@@ -928,6 +1008,90 @@ public class lblData {
                         rowArray.put(xNull(res.getString("plo_desc")));
                         rowArray.put(xNull(res.getString("plo_notes")));    
                         rowArray.put(xNull(res.getString("plan_rmks")));
+                        jsonarray.put(rowArray);
+                        i++;
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+       return jsonarray.toString(); 
+    }
+    
+    public static String getJobOperationSRVPrintData(String jobid, String op) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            
+            try{
+               
+              
+              
+              
+              String sqlquery = "select plan_nbr, plan_item, plan_qty_req, plan_qty_sched, plan_date_due, " +
+                       " plan_date_sched, plan_date_create, plan_order, plan_type, plan_line, " +
+                       " plan_cell, ov_jasper_directory,  " +
+                       " plo_operator, plo_operatorname, plo_cell, plo_op, plo_date, plo_qty, plo_desc, plo_notes, plan_rmks, " + 
+                       " sv_po, sv_cust, sv_rmks, sv_nbr, svd_line, svd_item, svd_desc, svd_qty, cm_name " +
+                       " FROM plan_mstr " +
+                       " inner join ov_ctrl " +
+                       " inner join sv_mstr on sv_nbr = plan_order and plo_op = " + "'" + op + "'" +
+                       " inner join cm_mstr on cm_code = sv_cust " +
+                       " left outer join plan_operation on plo_parent = plan_nbr " +    
+                       " left outer join svd_det on svd_nbr = sv_nbr and svd_line = plo_op " +
+                       " where plan_nbr = " + "'" + jobid + "'" + ";"; 
+              
+               res = st.executeQuery(sqlquery);
+                    int i = 0;
+                    while (res.next()) {
+                        JSONArray rowArray = new JSONArray(); 
+                        rowArray.put(res.getString("plan_nbr")); 
+                        rowArray.put(res.getString("plan_item"));
+                        rowArray.put(res.getString("plan_qty_req"));
+                        rowArray.put(res.getString("plan_qty_sched"));
+                        rowArray.put(res.getString("plan_date_due"));
+                        rowArray.put(res.getString("plan_date_sched"));
+                        rowArray.put(res.getString("plan_date_create"));
+                        rowArray.put(res.getString("plan_order"));
+                        rowArray.put(res.getString("plan_type"));
+                        rowArray.put(res.getString("plan_line")); 
+                        rowArray.put(res.getString("plan_cell")); // 10 zero base    
+                        rowArray.put(res.getString("ov_jasper_directory"));
+                        rowArray.put(xNull(res.getString("plo_operator")));
+                        rowArray.put(xNull(res.getString("plo_operatorname")));
+                        rowArray.put(xNull(res.getString("plo_cell")));
+                        rowArray.put(xNull(res.getString("plo_op")));
+                        rowArray.put(xNull(res.getString("plo_date")));
+                        rowArray.put(xNull(res.getString("plo_qty")));
+                        rowArray.put(xNull(res.getString("plo_desc")));
+                        rowArray.put(xNull(res.getString("plo_notes")));
+                        rowArray.put(res.getString("plan_rmks")); // 20 zero base                                           
+                        rowArray.put(res.getString("sv_po")); 
+                        rowArray.put(res.getString("sv_cust"));  
+                        rowArray.put(res.getString("sv_rmks"));
+                        rowArray.put(res.getString("sv_nbr"));
+                        rowArray.put(res.getString("svd_line"));
+                        rowArray.put(res.getString("svd_item"));
+                        rowArray.put(res.getString("svd_desc"));
+                        rowArray.put(res.getString("svd_qty"));
+                        rowArray.put(res.getString("cm_name"));
                         jsonarray.put(rowArray);
                         i++;
                     }
