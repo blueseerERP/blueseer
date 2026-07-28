@@ -611,7 +611,7 @@ public class ordData {
             }
             bscon.setAutoCommit(false);
             for (String line : lines) {
-               _deleteOrderLines(x, line, bscon, ps);  // discard unwanted lines
+               _deleteOrderLines(so.so_nbr, line, bscon, ps);  // discard unwanted lines
              }
             for (sod_det z : sod) {
                 if (z.sod_status.equals(getGlobalProgTag("closed"))) {

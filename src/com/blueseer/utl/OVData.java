@@ -20061,12 +20061,17 @@ return mystring;
        // System.out.println("HERE: " + jasperfile + " / " + jobid + " / " + jobtype);
         int k = 0;
         for (Object[] rowData : rData) {            
+            if (jobtype.equals("SRVC")) {
            // rowData[0] = bsParseInt(rowData[0].toString());
             rowData[2] = bsParseInt(rowData[2].toString());
             rowData[3] = bsParseDouble(rowData[3].toString());
             rowData[9] = bsParseInt(rowData[9].toString());
             //rowData[15] = bsParseInt(rowData[15].toString());
             rowData[26] = bsParseDouble(rowData[26].toString());
+            } else {
+                rowData[2] = bsParseInt(rowData[2].toString());
+                rowData[3] = bsParseDouble(rowData[3].toString());
+            }
             if (k == 0) {
                // logo = (rowData[39].toString().isBlank()) ? rowData[40].toString() : rowData[39].toString(); // if cm_logo = "" then site_logo
                // imagedir = rowData[41].toString();
@@ -20166,12 +20171,19 @@ return mystring;
         for (Object[] rowData : rData) {
             System.out.println("HERE operation: " + rowData[0] + " / " + rowData[1]);
             if (k == 0) {
+                if (plantype.equals("SRVC")) {
                 rowData[0] = bsParseInt(rowData[0].toString());
                 rowData[2] = bsParseDouble(rowData[2].toString());
                 rowData[3] = bsParseDouble(rowData[3].toString());
                 rowData[9] = bsParseInt(rowData[9].toString());     
                 rowData[17] = bsParseDouble(rowData[17].toString());
                 rowData[28] = bsParseDouble(rowData[28].toString());
+                } else {                
+                rowData[2] = bsParseDouble(rowData[2].toString());
+                rowData[3] = bsParseDouble(rowData[3].toString());
+                rowData[9] = bsParseInt(rowData[9].toString());  
+                rowData[30] = bsParseDouble(rowData[30].toString());   
+                }
                // logo = (rowData[39].toString().isBlank()) ? rowData[40].toString() : rowData[39].toString(); // if cm_logo = "" then site_logo
                // imagedir = rowData[41].toString();
               //  ship_csz = rowData[18].toString() + " " + rowData[19].toString() + " " + rowData[20].toString() + " " + rowData[21].toString();
