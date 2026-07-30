@@ -148,7 +148,6 @@ public class venData {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
                 String jsonString = objectMapper.writeValueAsString(vendlist);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServVDR"));
             } catch (IOException ex) {
                 bslog(ex);

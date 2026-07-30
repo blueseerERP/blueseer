@@ -3214,7 +3214,6 @@ public class ediData {
                 String jsonString = objectMapper.writeValueAsString(apidm);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(apid);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(api);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServEDI"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -3624,7 +3623,6 @@ public class ediData {
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(apidm);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(apid);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(api);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServEDI"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -3698,7 +3696,6 @@ public class ediData {
                 String jsonString = objectMapper.writeValueAsString(x);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(apidm);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(apid);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServEDI"));
             } catch (IOException ex) {
                 bslog(ex);

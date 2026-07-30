@@ -109,7 +109,6 @@ public class invData {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
                 String jsonString = objectMapper.writeValueAsString(itemlist);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServINV"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -713,7 +712,6 @@ public class invData {
                 String jsonString = objectMapper.writeValueAsString(x);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(y);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(addBomID);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServINV"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -837,7 +835,6 @@ public class invData {
             try {
                 String jsonString = objectMapper.writeValueAsString(x);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(y);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServINV"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -1037,7 +1034,6 @@ public class invData {
             try {
                 String jsonString = objectMapper.writeValueAsString(x);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(y);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServINV"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -3357,7 +3353,6 @@ public class invData {
                 String jsonString = objectMapper.writeValueAsString(tm);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(in);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(gv);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServINV"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -8171,7 +8166,6 @@ public class invData {
             list.add(new String[]{"param4", type}); 
             try {
                 String jsonString = sendServerPost(list, "", null, "dataServINV");
-               // System.out.println("HERE: " + jsonString);
                 return jsonToHashMapStringStringArr(jsonString);
             } catch (IOException ex) { 
                 bslog(ex);

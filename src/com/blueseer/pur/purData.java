@@ -180,7 +180,6 @@ public class purData {
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(pot);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(potd);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(pom);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServPUR"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -428,7 +427,6 @@ public class purData {
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(pot);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(potd);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(pom);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServPUR"));
             } catch (IOException ex) {
                 bslog(ex);

@@ -5311,7 +5311,6 @@ public class fglData {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-       // System.out.println("HERE: " + jsonarray.toString());
         return jsonarray.toString();
     }
     
@@ -5467,7 +5466,6 @@ public class fglData {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-       // System.out.println("HERE: " + jsonarray.toString());
         return jsonarray.toString();
     }
     
@@ -5577,7 +5575,6 @@ public class fglData {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-       // System.out.println("HERE: " + jsonarray.toString());
         return jsonarray.toString();
     }
         

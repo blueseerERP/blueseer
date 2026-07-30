@@ -333,7 +333,6 @@ public class ordData {
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(sot);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(sotd);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(sos);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServORD"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -591,7 +590,6 @@ public class ordData {
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(sot);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(sotd);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(sos);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServORD"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -2241,7 +2239,6 @@ public class ordData {
                 String jsonString = objectMapper.writeValueAsString(qod);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(qo);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(qsac);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServORD"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -2317,7 +2314,6 @@ public class ordData {
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(qod);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(qo);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(qsac);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServORD"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -2942,7 +2938,6 @@ public class ordData {
                 String jsonString = objectMapper.writeValueAsString(bd);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(bm);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(bsac);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServORD"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -3021,7 +3016,6 @@ public class ordData {
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(bd);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(bm);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(bsac);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServORD"));
             } catch (IOException ex) {
                 bslog(ex);

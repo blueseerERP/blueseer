@@ -254,7 +254,6 @@ public class shpData {
                 String jsonString = objectMapper.writeValueAsString(shd);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(sh);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(sht);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServSHP"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -626,7 +625,6 @@ public class shpData {
                 String jsonString = objectMapper.writeValueAsString(lines);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(shd);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(sh);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServSHP"));
             } catch (IOException ex) {
                 bslog(ex);

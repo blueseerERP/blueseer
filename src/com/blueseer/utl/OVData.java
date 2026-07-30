@@ -15463,7 +15463,7 @@ return mystring;
               _packcell = mytable.getValueAt(i, 13).toString();
                _packdate = mytable.getValueAt(i, 14).toString();
                _assydate = mytable.getValueAt(i, 15).toString();
-               _expiredate = (mytable.getValueAt(i, 16).toString() != null && mytable.getValueAt(i, 16).toString().isBlank()) ? null : "'" + mytable.getValueAt(i, 16).toString() + "'";
+               _expiredate = (mytable.getValueAt(i, 16) == null || mytable.getValueAt(i, 16).toString().isBlank()) ? null : "'" + mytable.getValueAt(i, 16).toString() + "'";
                _program = mytable.getValueAt(i,17).toString();
                _bom = mytable.getValueAt(i,19).toString();
                // defaults to baseqty
@@ -20058,7 +20058,7 @@ return mystring;
           if (jobtype.isBlank()) {
                 jasperfile = "jobticket.jasper"; 
           }
-       // System.out.println("HERE: " + jasperfile + " / " + jobid + " / " + jobtype);
+        System.out.println("HERE: " + jasperfile + " / " + jobid + " / " + jobtype);
         int k = 0;
         for (Object[] rowData : rData) {            
             if (jobtype.equals("SRVC")) {
@@ -20068,9 +20068,15 @@ return mystring;
             rowData[9] = bsParseInt(rowData[9].toString());
             //rowData[15] = bsParseInt(rowData[15].toString());
             rowData[26] = bsParseDouble(rowData[26].toString());
+            } else if (jobtype.equals("GNRC")) {
+                rowData[2] = bsParseInt(rowData[2].toString());
+                rowData[3] = bsParseDouble(rowData[3].toString());
             } else {
                 rowData[2] = bsParseInt(rowData[2].toString());
                 rowData[3] = bsParseDouble(rowData[3].toString());
+                rowData[9] = bsParseInt(rowData[9].toString());
+                rowData[15] = bsParseInt(rowData[15].toString());
+                rowData[19] = bsParseDouble(rowData[19].toString());
             }
             if (k == 0) {
                // logo = (rowData[39].toString().isBlank()) ? rowData[40].toString() : rowData[39].toString(); // if cm_logo = "" then site_logo
@@ -20106,6 +20112,7 @@ return mystring;
         hm.put("myid",  jobid);
         
         Path template = checkForCustomPath(jasperdir, jasperfile);
+        
         
         JasperPrint jasperPrint; 
         try {

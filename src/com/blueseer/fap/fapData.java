@@ -210,7 +210,6 @@ public class fapData {
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(vod);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(ap);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(Void);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAP"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -501,7 +500,6 @@ public class fapData {
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(vod);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(ap);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(Void);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAP"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -1453,7 +1451,6 @@ public class fapData {
             try {
                 String jsonString = objectMapper.writeValueAsString(details);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(headers);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAP"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -1630,7 +1627,6 @@ public class fapData {
             try {
                 String jsonString = objectMapper.writeValueAsString(details);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(headers);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAP"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -1860,7 +1856,6 @@ public class fapData {
             try {
                 String jsonString = objectMapper.writeValueAsString(details);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(headers);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAP"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -1993,7 +1988,6 @@ public class fapData {
             try {
                 String jsonString = objectMapper.writeValueAsString(details);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(headers);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAP"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -2175,7 +2169,6 @@ public class fapData {
             try {
                 String jsonString = objectMapper.writeValueAsString(details);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(headers);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAP"));
             } catch (IOException ex) {
                 bslog(ex);

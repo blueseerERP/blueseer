@@ -1778,7 +1778,8 @@ public class Scheduler extends javax.swing.JPanel {
         if (commit) {
             ArrayList<String[]> list = new ArrayList<String[]>();
             for (int i = 0 ; i < mymodel.getRowCount(); i++) {
-                if ( (boolean) mymodel.getValueAt(i, 5) == true ) {
+                
+                if ( mymodel.getValueAt(i, 5).toString().equals("1")) {
                     continue;
                 }
                 if (  //  mymodel.getValueAt(i, 6).toString().isEmpty() || 

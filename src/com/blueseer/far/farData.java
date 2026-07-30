@@ -212,7 +212,6 @@ public class farData {
                 String jsonString = objectMapper.writeValueAsString(artype);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(ard);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(ar);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAR"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -1325,7 +1324,6 @@ public class farData {
         while (res.next()) {
          highbal += res.getDouble("ar_open_amt");
         }
-        //System.out.println("HERE: " + cust + "/" + highbal);
         // avg days to pay
         int avgdays = 0;
         if (bsmf.MainFrame.dbtype.equals("sqlite")) {

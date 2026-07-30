@@ -160,7 +160,6 @@ public class rcvData {
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(rv);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(ap);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(vod);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServRCV"));
             } catch (IOException ex) {
                 bslog(ex);
@@ -495,7 +494,6 @@ public class rcvData {
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(lines);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(rvd);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(rv);
-                System.out.println("HERE: " + jsonString);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServRCV"));
             } catch (IOException ex) {
                 bslog(ex);
