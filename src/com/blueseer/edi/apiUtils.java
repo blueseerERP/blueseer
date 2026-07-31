@@ -3809,7 +3809,9 @@ public class apiUtils {
         MimeBodyPart mbphuman = new MimeBodyPart(); 
         mbphuman.setContent(str_human, "text/plain; charset=utf-8");
         
-        mmp.addBodyPart(mbphuman);
+        if (! as2m.as2_flatmdn().equals("1")) {
+            mmp.addBodyPart(mbphuman);
+        }        
         mmp.addBodyPart(mbpmdn);
                 
         MimeBodyPart mbpcontainer = new MimeBodyPart();

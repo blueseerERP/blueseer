@@ -3560,26 +3560,26 @@ public class EDI {
             updateOrder05(e.po, e.duedate, changelines);
             
             changedesc = "so_due_date-> " + " Old: " + sales.so().so_due_date() + "  New: " + e.duedate;
-            change_log cl = new change_log(null, "", e.po, "so_mstr", "OrderMaint", "EDI_850", changedesc, "", "EDI_05", "");
+            change_log cl = new change_log(null, "", sales.so().so_nbr(), "so_mstr", "OrderMaint", "EDI_850", changedesc, "", "EDI_05", "");
             cllist.add(cl);
             
             if (sales.sod().size() != e.getDetCount()) {
                 changedesc = " Line item count has changed...must adjust manually -> " + " Old: " + sales.sod().size() + "  New: " + e.getDetCount();
-                change_log cli = new change_log(null, "", e.po, "so_mstr", "OrderMaint", "EDI_850", changedesc, "", "EDI_05", "");
+                change_log cli = new change_log(null, "", sales.so().so_nbr(), "so_mstr", "OrderMaint", "EDI_850", changedesc, "", "EDI_05", "");
                 cllist.add(cli); 
             } else {
                 for (int j = 0; j < e.getDetCount(); j++ ) {
                    // System.out.println("HERE: " + sales.sod().get(j).sod_listprice() + "/" + e.getDetListPrice(j) );
                    changedesc = "custline: " + e.getDetLine(j) + " sod_item-> " + " Old: " + sales.sod().get(j).sod_item() + "  New: " + e.getDetItem(j); 
-                   cl = new change_log(null, "", e.po, "so_mstr", "OrderMaint", "EDI_850", changedesc, "", "EDI_05", "");
+                   cl = new change_log(null, "", sales.so().so_nbr(), "so_mstr", "OrderMaint", "EDI_850", changedesc, "", "EDI_05", "");
                    cllist.add(cl);
 
                    changedesc = "custline: " + e.getDetLine(j) + " sod_listprice-> " + " Old: " + sales.sod().get(j).sod_listprice() + "  New: " + e.getDetListPrice(j); 
-                   cl = new change_log(null, "", e.po, "so_mstr", "OrderMaint", "EDI_850", changedesc, "", "EDI_05", "");
+                   cl = new change_log(null, "", sales.so().so_nbr(), "so_mstr", "OrderMaint", "EDI_850", changedesc, "", "EDI_05", "");
                    cllist.add(cl);   
                    
                    changedesc = "custline: " + e.getDetLine(j) + " sod_ord_qty-> " + " Old: " + sales.sod().get(j).sod_ord_qty() + "  New: " + e.getDetQty(j); 
-                   cl = new change_log(null, "", e.po, "so_mstr", "OrderMaint", "EDI_850", changedesc, "", "EDI_05", "");
+                   cl = new change_log(null, "", sales.so().so_nbr(), "so_mstr", "OrderMaint", "EDI_850", changedesc, "", "EDI_05", "");
                    cllist.add(cl);
                 }
             }

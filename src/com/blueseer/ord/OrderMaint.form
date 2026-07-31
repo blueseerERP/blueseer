@@ -1417,26 +1417,29 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="lbqtyavailable" max="32767" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="dduom" min="-2" pref="117" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="lbuomtext" min="-2" pref="161" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
+                              <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="tbaltitem" min="-2" pref="260" max="-2" attributes="0"/>
-                                          <Component id="tbitem" min="-2" pref="260" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="dduom" min="-2" pref="117" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="lbuomtext" min="-2" pref="161" max="-2" attributes="0"/>
                                       </Group>
+                                      <Component id="tbaltitem" min="-2" pref="260" max="-2" attributes="0"/>
                                       <Component id="tbdesc" min="-2" pref="260" max="-2" attributes="0"/>
+                                      <Component id="custnumber" min="-2" pref="260" max="-2" attributes="0"/>
+                                      <Component id="tbpackqty" alignment="0" min="-2" pref="46" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="btLookUpItemDesc" min="-2" pref="28" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="custnumber" min="-2" pref="260" max="-2" attributes="0"/>
-                              <Component id="tbpackqty" alignment="0" min="-2" pref="46" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="tbitem" min="-2" pref="243" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btLookUpItemDesc" min="-2" pref="28" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="btclearitem" min="-2" pref="28" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
-                          <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1446,9 +1449,12 @@
                           <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="lblCustItemAndDesc" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="tbitem" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="lblCustItemAndDesc" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="tbitem" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="btclearitem" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
@@ -1588,6 +1594,16 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbuomtext">
+                </Component>
+                <Component class="javax.swing.JButton" name="btclearitem">
+                  <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/images/file.png"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearitemActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -1853,7 +1869,7 @@
             <Component class="javax.swing.JButton" name="btitemkv">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/details.png"/>
+                  <Image iconType="3" name="/images/notes.png"/>
                 </Property>
               </Properties>
               <Events>
