@@ -2066,6 +2066,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
                     //custnumber.setEditable(false);
                     tbdesc.setForeground(Color.blue);
                     //tbdesc.setEditable(false);
+                    if (det[11].equals("SERVICE")) {
+                        tbaltitem.setText(det[12]); // service type description from code_mstr where code_code = 'servicetype'
+                    }
                 }
             
                 if (entry.getKey().equals("itemcust")) {

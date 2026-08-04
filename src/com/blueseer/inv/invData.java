@@ -8183,8 +8183,10 @@ public class invData {
             }
         } 
         HashMap<String,String[]> hm = new HashMap<>();
-        String[] x = new String[]{"","","","","","","","","","",""};
+        String[] x = new String[]{"","","","","","","","","","","","",""};
         int days = 0;
+        String servicetype = "";
+        
         Calendar caldate = Calendar.getInstance();
         try{
             Connection con = null;
@@ -8196,11 +8198,16 @@ public class invData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                res = st.executeQuery("select it_item, it_desc, it_uom, it_prodline, it_code, it_rev, it_status, it_site, it_loc, it_wh, it_expiredays from item_mstr where it_item = " + "'" + item + "';" );
+                res = st.executeQuery("select it_item, it_desc, it_uom, it_prodline, it_code, it_rev, it_status, it_site, it_loc, it_wh, it_expiredays, it_type, it_servicetype " +
+                        " from item_mstr " +
+                        " where it_item = " + "'" + item + "';" );
                while (res.next()) {
                    if (res.getString("it_expiredays") != null && ! res.getString("it_expiredays").isEmpty()) {
                    days = res.getInt("it_expiredays");
-                   }  
+                   } 
+                   if (res.getString("it_type").equals("SERVICE")) {
+                   servicetype = res.getString("it_servicetype");
+                   } 
                 x[0] = res.getString("it_item"); 
                 x[1] = res.getString("it_desc"); 
                 x[2] = res.getString("it_uom"); 
@@ -8215,7 +8222,17 @@ public class invData {
                   caldate.add(Calendar.DATE, days);
                   x[10] = BlueSeerUtils.setDateFormat(caldate.getTime());
                 }
+                x[11] = res.getString("it_type");
                 }
+               
+               if (servicetype != null && ! servicetype.isBlank()) {
+                   res = st.executeQuery("select code_value from code_mstr where " +
+                        " code_code = 'servicetype' AND code_key = " + "'" + servicetype + "';" );
+                   while (res.next()) {
+                       x[12] = res.getString("code_value"); // service code description
+                   }
+               }
+               
                hm.put("itemdata", x);
                
             // cust item info   

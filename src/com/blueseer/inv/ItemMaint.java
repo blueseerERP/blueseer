@@ -2624,6 +2624,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
         BlueSeerUtils.messagereset();
+        initDataSet = null;
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
