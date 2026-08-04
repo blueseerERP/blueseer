@@ -85,6 +85,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -452,7 +453,7 @@ public class InvoiceBrowse extends javax.swing.JPanel {
     public void done_Initialization() {
         setPanelComponentState(this, true);
         ddsite.removeAllItems();
-        
+        Calendar calfrom = Calendar.getInstance();
         String defaultsite = "";
         for (String[] s : initDataSets) {
             if (s[0].equals("site")) {
@@ -471,6 +472,9 @@ public class InvoiceBrowse extends javax.swing.JPanel {
         if (ddsite.getItemCount() > 0) {
             ddsite.setSelectedItem(defaultsite);
         }
+        
+        calfrom.add(Calendar.DATE, -365);
+        dcfrom.setDate(calfrom.getTime()); 
         
         modeltable.setNumRows(0);
         modeldetail.setNumRows(0);

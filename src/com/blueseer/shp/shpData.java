@@ -2125,7 +2125,7 @@ public class shpData {
                         " site_city, site_state, site_zip, site_country, site_site, " +
                         " cm_logo, site_logo, ov_image_directory, cm_iv_jasper, site_iv_jasper, ov_jasper_directory, " +
                         " sh_type, ifNull(cfod_date,'') as cfod_date, ifNull(cfo_mileage, '0') as cfo_mileage, ifNull(cfo_weight, '0') as cfo_weight, sh_so, sh_curr, " +
-                        " shd_taxamt, shd_taxpercent, shd_uom, sh_confdate, ar_duedate, shd_listprice, cms_line2, shd_desc " +
+                        " shd_taxamt, shd_taxpercent, shd_uom, sh_confdate, ar_duedate, shd_listprice, cms_line2, shd_desc, it_comments " +
                         " from ship_det " +
                         " left outer join item_mstr on it_item = shd_item " + 
                         " inner join ship_mstr on sh_id = shd_id " +
@@ -2153,7 +2153,7 @@ public class shpData {
                         " site_city, site_state, site_zip, site_country, site_site, " +
                         " cm_logo, site_logo, ov_image_directory, cm_iv_jasper, site_iv_jasper, ov_jasper_directory, " +
                         " sh_type, ifNull(cfod_date,'') as cfod_date, ifNull(cfo_mileage, '0') as cfo_mileage, ifNull(cfo_weight, '0') as cfo_weight, sh_so, sh_curr, " +
-                        " shd_taxamt, shd_taxpercent, shd_uom, sh_confdate, ar_duedate, shd_listprice, cms_line2, shd_desc " +
+                        " shd_taxamt, shd_taxpercent, shd_uom, sh_confdate, ar_duedate, shd_listprice, cms_line2, shd_desc, it_comments " +
                         " from ship_det " +
                         " left outer join item_mstr on it_item = shd_item " + 
                         " inner join ship_mstr on sh_id = shd_id " +
@@ -2238,6 +2238,7 @@ public class shpData {
                         rowArray.put(res.getDouble("shd_listprice"));
                         rowArray.put(res.getString("cms_line2"));
                         rowArray.put(res.getString("shd_desc"));
+                        rowArray.put(res.getString("it_comments"));
                         jsonarray.put(rowArray);
                         i++;
                     }

@@ -18858,7 +18858,7 @@ return mystring;
                         "site_city,site_state,site_zip,site_country,site_site,cm_logo,site_logo,ov_image_directory," +
                         "cm_iv_jasper,site_iv_jasper,ov_jasper_directory," +
                         "sh_type,cfod_date,cfo_mileage,cfo_weight,sh_so,sh_curr," +
-                        "shd_taxamt,shd_taxpercent,shd_uom,sh_confdate,ar_duedate,charges,taxes,shd_listprice,cms_line2,shd_desc";
+                        "shd_taxamt,shd_taxpercent,shd_uom,sh_confdate,ar_duedate,charges,taxes,shd_listprice,cms_line2,shd_desc,it_comments";
         String[] columnnamesarray = columnnames.split(",", -1);
         
         JRDataSource datasource = new ListOfArrayDataSource(list, columnnamesarray);

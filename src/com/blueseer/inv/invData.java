@@ -165,7 +165,8 @@ public class invData {
                 null, // expire date
                 0, // expire days
                 "0", // phantom boolean
-                "" // label
+                "", // label
+                "" // servicetype
                 );
                 item_cost y = new item_cost(null, 
                     ld[0], 
@@ -249,14 +250,14 @@ public class invData {
                         + "it_prodline, it_drawing, it_rev, it_custrev, it_wh, it_loc, it_site, it_comments, "
                         + "it_status, it_uom, it_net_wt, it_ship_wt, it_cont, it_contqty, "
                         + "it_leadtime, it_safestock, it_minordqty, it_mrp, it_sched, it_plan, it_wf, it_taxcode, it_createdate, it_expire, it_expiredays, "
-                        + "it_phantom, it_label ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + "it_phantom, it_label, it_servicetype ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         String sqlUpdate = "update item_mstr set it_desc = ?, it_lotsize = ?, " +
                 "it_sell_price = ?, it_pur_price = ?, it_ovh_cost = ?, it_out_cost = ?, it_mtl_cost = ?, it_code = ?, it_type = ?, it_group = ?, " +
                 "it_prodline = ?, it_drawing = ?, it_rev = ?, it_custrev = ?, it_wh = ?, it_loc = ?, it_site = ?, it_comments = ?, " +
                 "it_status = ?, it_uom = ?, it_net_wt = ?, it_ship_wt = ?, it_cont = ?, it_contqty = ?, " +
                 "it_leadtime = ?, it_safestock = ?, it_minordqty = ?, it_mrp = ?, it_sched = ?, it_plan = ?, it_wf = ?, it_taxcode = ?, it_createdate = ?, " +
-                "it_expire = ?, it_expiredays = ?, it_phantom = ?, it_label = ? " +
+                "it_expire = ?, it_expiredays = ?, it_phantom = ?, it_label = ?, it_servicetype = ? " +
                 " where it_item = ? ; ";
             PreparedStatement ps = con.prepareStatement(sqlSelect);
             ps.setString(1, x.it_item);
@@ -302,10 +303,11 @@ public class invData {
             psi.setInt(36, x.it_expiredays);
             psi.setString(37, x.it_phantom);
             psi.setString(38, x.it_label);
+            psi.setString(39, x.it_servicetype);
             rows = psi.executeUpdate();
             } else {
                 if (addupdate) {
-                  psu.setString(38, x.it_item);
+                  psu.setString(39, x.it_item);
             psu.setString(1, x.it_desc);
             psu.setInt(2, x.it_lotsize);
             psu.setDouble(3, x.it_sell_price);
@@ -343,6 +345,7 @@ public class invData {
             psu.setInt(35, x.it_expiredays);
             psu.setString(36, x.it_phantom);
             psu.setString(37, x.it_label);
+            psu.setString(38, x.it_servicetype);
             rows = psu.executeUpdate();
                 }
             }
@@ -471,10 +474,10 @@ public class invData {
                 "it_prodline = ?, it_drawing = ?, it_rev = ?, it_custrev = ?, it_wh = ?, it_loc = ?, it_site = ?, it_comments = ?, " +
                 "it_status = ?, it_uom = ?, it_net_wt = ?, it_ship_wt = ?, it_cont = ?, it_contqty = ?, " +
                 "it_leadtime = ?, it_safestock = ?, it_minordqty = ?, it_mrp = ?, it_sched = ?, it_plan = ?, it_wf = ?, it_taxcode = ?, it_createdate = ?, " +
-                "it_expire = ?, it_expiredays = ?, it_phantom = ?, it_label = ? " +
+                "it_expire = ?, it_expiredays = ?, it_phantom = ?, it_label = ?, it_servicetype = ? " +
                 " where it_item = ? ; ";
         PreparedStatement psu = con.prepareStatement(sql);
-            psu.setString(38, x.it_item);
+            psu.setString(39, x.it_item);
             psu.setString(1, x.it_desc);
             psu.setInt(2, x.it_lotsize);
             psu.setDouble(3, x.it_sell_price);
@@ -512,6 +515,7 @@ public class invData {
             psu.setInt(35, x.it_expiredays);
             psu.setString(36, x.it_phantom);
             psu.setString(37, x.it_label);
+            psu.setString(38, x.it_servicetype);
             rows = psu.executeUpdate();
             psu.close();
         return rows;
@@ -638,7 +642,7 @@ public class invData {
                     res.getInt("it_leadtime"), res.getDouble("it_safestock"), res.getDouble("it_minordqty"), res.getString("it_mrp"), 
                     res.getString("it_sched"), res.getString("it_plan"), res.getString("it_wf"), res.getString("it_taxcode"), 
                     res.getString("it_createdate"), res.getString("it_expire"), res.getInt("it_expiredays"), 
-                    res.getString("it_phantom"), res.getString("it_label")
+                    res.getString("it_phantom"), res.getString("it_label"), res.getString("it_servicetype")
         );
                     }
                 }
@@ -689,7 +693,7 @@ public class invData {
                     res.getInt("it_leadtime"), res.getDouble("it_safestock"), res.getDouble("it_minordqty"), res.getString("it_mrp"), 
                     res.getString("it_sched"), res.getString("it_plan"), res.getString("it_wf"), res.getString("it_taxcode"), 
                     res.getString("it_createdate"), res.getString("it_expire"), res.getInt("it_expiredays"), 
-                    res.getString("it_phantom"), res.getString("it_label")
+                    res.getString("it_phantom"), res.getString("it_label"), res.getString("it_servicetype")
         );
                     }
                 }
@@ -6091,6 +6095,12 @@ public class invData {
                     String[] arr = new String[]{"type",res.getString("code_key")};
                     lines.add(arr); 
                     }
+                    
+                    res = st.executeQuery("select code_key from code_mstr  where code_code = 'servicetype' order by code_key ;" );
+                    while (res.next()) {
+                    String[] arr = new String[]{"servicetype",res.getString("code_key")};
+                    lines.add(arr); 
+                    }
 
                     res = st.executeQuery("select distinct wf_id from wf_mstr order by wf_id ;" );
                     while (res.next()) {
@@ -9610,12 +9620,12 @@ public class invData {
         double it_net_wt, double it_ship_wt, String it_cont, int it_contqty,
         int it_leadtime, double it_safestock, double it_minordqty, String it_mrp,
         String it_sched, String it_plan, String it_wf, String it_taxcode, String it_createdate,
-        String it_expire, int it_expiredays, String it_phantom, String it_label) {
+        String it_expire, int it_expiredays, String it_phantom, String it_label, String it_servicetype) {
         public item_mstr(String[] m) {
             this(m, "", "", 0, 0, 0, 0, 0, 0, "", "",
                     "", "", "", "", "", "", "", "", "", "",
                     "", 0, 0, "", 0, 0, 0, 0, "", "",
-                    "", "", "", "", "", 0, "", "");
+                    "", "", "", "", "", 0, "", "", "");
         }
     }
     
