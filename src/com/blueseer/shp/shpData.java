@@ -3461,86 +3461,7 @@ public class shpData {
     }
          return billto;
      }
-
-    public static String getShipperChar1(String shipper) {
-         String r = "";
-          try{
-
-        Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-        Statement st = con.createStatement();
-        ResultSet res = null;
-        try{
-                  // sh_char1 is used by the CFO_Maint class to note the invoice status of a freight invoice:  "" = original, "1" = update, "2" = complete rebill
-                  res = st.executeQuery("select sh_char1 from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
-                while (res.next()) {
-                    r = res.getString("sh_char1");
-                }
-       }
-        catch (SQLException s){
-             MainFrame.bslog(s);
-
-        } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-
-    }
-         return r;
-     }
-
-    public static String getShipperChar2(String shipper) {
-         String r = "";
-          try{
-
-        Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-        Statement st = con.createStatement();
-        ResultSet res = null;
-        try{
-                  // sh_char1 is used by shipper creation methods to indicate that shipper is complete and ready to be ASN exported.
-                  res = st.executeQuery("select sh_char2 from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
-                while (res.next()) {
-                    r = res.getString("sh_char2");
-                }
-       }
-        catch (SQLException s){
-             MainFrame.bslog(s);
-
-        } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-
-    }
-         return r;
-     }
-
-    
+       
     public static String getShipperStatus(String shipper) {
          String r = "";
           try{
@@ -3586,7 +3507,6 @@ public class shpData {
     }
          return r;
      }
-
     
     public static String getShipperRef(String shipper) {
          String billto = "";

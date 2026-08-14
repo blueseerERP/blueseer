@@ -156,6 +156,7 @@ LedgerReportsMenu,StatementReport,9,JMenuItem,Statement Report Generator,,1,,1,1
 LedgerReportsMenu,IncomeStatementYear,10,JMenuItem,Income Statement (Year),,1,,1,1
 LedgerReportsMenu,ReconAccount,11,JMenuItem,Account Reconciliation,,1,,1,1
 LedgerReportsMenu,ChartMain,12,JMenuItem,Chart Reporting,,1,,1,1
+LedgerReportsMenu,GLExport,13,JMenuItem,GL Export,,1,,1,1
 Finance,PostGLTrans,3,JMenuItem,Post Transactions,,,,1,1
 Finance,GLTranMaint,4,JMenuItem,GL Transaction Maintenance,,,,1,1
 Finance,ExpenseMaint,5,JMenuItem,Expense Maintenance,,,,1,1

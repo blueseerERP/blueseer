@@ -360,3 +360,4 @@ CustBrowse,,com.blueseer.ctr.CustBrowse,JMenuItem,cusr
 VendBrowse,,com.blueseer.vdr.VendBrowse,JMenuItem,venr
 BalanceSheetReport,,com.blueseer.fgl.BalanceSheetReport,JMenuItem,bsrp
 print1099,,com.blueseer.fap.print1099,JMenuItem,1099
+GLExport,,com.blueseer.fgl.GLExport,JMenuItem,glex

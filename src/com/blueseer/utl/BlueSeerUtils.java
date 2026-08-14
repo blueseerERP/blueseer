@@ -1357,6 +1357,19 @@ public class BlueSeerUtils {
        return mydate;
     }
     
+    public static String convertDate(String toformat, String indate) {
+       String mydate = "";
+        // indate is assumed to be yyyy-MM-dd formatted string 10 chars length
+        if (toformat.equals("MM/dd/yy") && indate.length() == 10) {
+           mydate = indate.substring(5,7) + "/" + indate.substring(8) + "/" + indate.substring(2,4);
+        }
+        if (toformat.equals("MM/dd/yyyy") && indate.length() == 10) {
+           mydate = indate.substring(5,7) + "/" + indate.substring(8) + "/" + indate.substring(0,4);
+        }
+       
+       return mydate;
+    }
+    
     public static String transformDocToString(Document document) throws TransformerConfigurationException, TransformerException {
         String xml = "";
         TransformerFactory tf = TransformerFactory.newInstance();

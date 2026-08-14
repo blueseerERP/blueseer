@@ -412,3 +412,4 @@ admin,CustBrowse,0
 admin,VendBrowse,0
 admin,BalanceSheetReport,0
 admin,print1099,0
+admin,GLExport,0
