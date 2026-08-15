@@ -1640,7 +1640,7 @@ public class BlueSeerUtils {
             try {
                 r = sdf.parse(indate);
             } catch (ParseException ex) {
-                bsmf.MainFrame.show("parseDate Exception");
+                bsmf.MainFrame.show("parseDate Exception: " + indate);
             }
         }
         return r;

@@ -16845,6 +16845,7 @@ return mystring;
                        discdays = res.getInt("cut_discdays");
                     }
                 }
+               
                r = new String[]{setDateDB(duedate), setDateDB(discdate), bsNumber(discpct), bsNumber(discdays)};
                
            }
@@ -16962,6 +16963,7 @@ return mystring;
                         basetaxamt = OVData.getExchangeBaseValue(basecurr, curr, taxamt);
                     }
                     if (type.equals("I")) {
+                        String str_discdate = (setDateDB(discdate) == null) ? null : "'" + setDateDB(discdate) + "'" ;
                         st.executeUpdate("insert into ar_mstr "
                         + "(ar_cust, ar_nbr, ar_amt, ar_base_amt, ar_curr, ar_base_curr, " 
                         + " ar_amt_tax, ar_base_amt_tax, ar_open_amt, ar_type, ar_ref, ar_rmks, "
@@ -16983,7 +16985,7 @@ return mystring;
                         + "'" + setDateDB(now) + "'" + ","
                         + "'" + setDateDB(effdate) + "'" + ","
                         + "'" + setDateDB(duedate) + "'" + ","
-                        +  setDateDB(discdate) + ","        
+                        +  str_discdate + ","        
                         + "'" + acct + "'" + ","
                         + "'" + cc + "'" + ","
                         + "'" + terms + "'" + ","
