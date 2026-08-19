@@ -2267,14 +2267,15 @@ public class BlueSeerUtils {
         return x;
     }
     
-     public static change_log clog(String key, String table, String classname, String fieldname, String oldvalue, String newvalue) {
+     public static change_log clog(String key, String k, String table, String classname, String fieldname, String oldvalue, String newvalue) {
          String desc;
          String type;
+         String linestring = (k.equals("0")) ? "" : "line: " + k;
          if (fieldname.toLowerCase().equals("deletion")) {
              desc = fieldname + " of record key: " + key;
              type = "deletion";
          } else {
-             desc = fieldname + "-> Old: " + oldvalue + " New: " + newvalue; 
+             desc = linestring + " " + fieldname + "-> Old: " + oldvalue + " New: " + newvalue; 
              type = "update";
          }
          change_log x = new change_log(null, 
@@ -2296,10 +2297,11 @@ public class BlueSeerUtils {
         ArrayList<change_log> cf = new ArrayList<change_log>();
         for (int k = 0; k < x.size(); k++) {
             if (x.size() == y.size()) {
-            c = logChange(key, callclass, x.get(k), y.get(k));
+            c = logChange(key, k + 1, callclass, x.get(k), y.get(k));
             cf.addAll(c);
             } else {
-                cf.add(clog(key, 
+                cf.add(clog(key,
+                 String.valueOf(k),
                  x.getClass().getSimpleName(), 
                  callclass, 
                  "order line count difference", 
@@ -2311,7 +2313,7 @@ public class BlueSeerUtils {
         return cf;
      }
      
-     public static <T> ArrayList<change_log> logChange(String key, String callclass, T x, T y)  {
+     public static <T> ArrayList<change_log> logChange(String key, int k, String callclass, T x, T y)  {
         
         ArrayList<change_log> c = new ArrayList<change_log>();
         if (x != null && y != null && ! x.equals(y)) {  // if x != y...proceed to compare...else return empty c
@@ -2325,6 +2327,7 @@ public class BlueSeerUtils {
                     try {
                         if (f.get(x) != null && g.get(y) != null && ! g.get(y).equals(f.get(x))) {
                          c.add(clog(key, 
+                                 String.valueOf(k),
                                  x.getClass().getSimpleName(), 
                                  callclass, 
                                  f.getName(), 

@@ -436,7 +436,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerV {
      
      // change log check
      if (m[0].equals("0")) {
-       ArrayList<change_log> c = logChange(tbkey.getText(), this.getClass().getSimpleName(),_x,_y);
+       ArrayList<change_log> c = logChange(tbkey.getText(), 0, this.getClass().getSimpleName(),_x,_y);
        if (! c.isEmpty()) {
            addChangeLog(c);
        } 
@@ -461,7 +461,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerV {
         // change log check
         if (m[0].equals("0")) {
             ArrayList<change_log> c = new ArrayList<change_log>();
-            c.add(clog(this.x.cut_code(), 
+            c.add(clog(this.x.cut_code(), "0",
                      this.x.getClass().getName(), 
                      this.getClass().getSimpleName(), 
                      "deletion", 

@@ -662,7 +662,7 @@ public class EmployeeMaint extends javax.swing.JPanel  {
      
      // change log check
      if (m[0].equals("0")) {
-       ArrayList<admData.change_log> c = logChange(tbkey.getText(), this.getClass().getSimpleName(),_x,_y);
+       ArrayList<admData.change_log> c = logChange(tbkey.getText(), 0, this.getClass().getSimpleName(),_x,_y);
        if (! c.isEmpty()) {
            addChangeLog(c);
        } 

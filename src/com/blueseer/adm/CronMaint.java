@@ -455,7 +455,7 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
         String[] m = updateCronMstr(_y);
          
         if (m[0].equals("0")) {
-            ArrayList<admData.change_log> c = logChange(tbkey.getText(), this.getClass().getSimpleName(),_x,_y);
+            ArrayList<admData.change_log> c = logChange(tbkey.getText(), 0, this.getClass().getSimpleName(),_x,_y);
             if (! c.isEmpty()) {
                 addChangeLog(c);
             } 
@@ -476,7 +476,7 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
         if (m[0].equals("0")) {
             ArrayList<admData.change_log> c = new ArrayList<admData.change_log>();
-            c.add(clog(this.x.cron_jobid(), 
+            c.add(clog(this.x.cron_jobid(), "0",
                      this.x.getClass().getName(), 
                      this.getClass().getSimpleName(), 
                      "deletion", 

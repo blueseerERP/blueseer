@@ -965,7 +965,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
        if (m[0].equals("0")) {
            cfo_mstr _x = this.x;
            cfo_mstr _y = createRecord();     
-         ArrayList<admData.change_log> c = logChange(tbkey.getText(), this.getClass().getSimpleName(),_x,_y);
+         ArrayList<admData.change_log> c = logChange(tbkey.getText(), 0, this.getClass().getSimpleName(),_x,_y);
          if (! c.isEmpty()) {
              addChangeLog(c);
          } 
@@ -986,7 +986,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         // change log check
         if (m[0].equals("0")) {
             ArrayList<admData.change_log> c = new ArrayList<admData.change_log>();
-            c.add(clog(this.x.cfo_nbr(), 
+            c.add(clog(this.x.cfo_nbr(), "0",
                      this.x.getClass().getName(), 
                      this.getClass().getSimpleName(), 
                      "deletion", 

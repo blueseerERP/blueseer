@@ -644,7 +644,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
      
      // change log check
      if (m[0].equals("0")) {
-       ArrayList<admData.change_log> c = logChange(tbkey.getText(), this.getClass().getSimpleName(),_x,_y);
+       ArrayList<admData.change_log> c = logChange(tbkey.getText(), 0, this.getClass().getSimpleName(),_x,_y);
        if (! c.isEmpty()) {
            addChangeLog(c);
        } 
@@ -659,7 +659,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 }
             } 
             if (! z) {
-                c.add(clog(tbkey.getText(), q1.getClass().getSimpleName(), this.getClass().getSimpleName(), "added line/item", "", q1.quod_line() + "/" + q1.quod_item()));
+                c.add(clog(tbkey.getText(), "0", q1.getClass().getSimpleName(), this.getClass().getSimpleName(), "added line/item", "", q1.quod_line() + "/" + q1.quod_item()));
                 addChangeLog(c);
             }
             z = false;
@@ -676,7 +676,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 }
             } 
             if (! z) {
-                c.add(clog(tbkey.getText(), q1.getClass().getSimpleName(), this.getClass().getSimpleName(), "removed line/item", q1.quod_line() + "/" + q1.quod_item(), ""));
+                c.add(clog(tbkey.getText(), "0", q1.getClass().getSimpleName(), this.getClass().getSimpleName(), "removed line/item", q1.quod_line() + "/" + q1.quod_item(), ""));
                 addChangeLog(c);
             }
             z = false;
@@ -686,7 +686,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
        for (quo_det q1 : _c) {
         for (quo_det q2 : _d) { 
             if (q2.quod_line() == q1.quod_line()) {
-                c = logChange(tbkey.getText(), this.getClass().getSimpleName(),q1,q2);
+                c = logChange(tbkey.getText(), 0, this.getClass().getSimpleName(),q1,q2);
                 if (! c.isEmpty()) {
                     addChangeLog(c);
                 }

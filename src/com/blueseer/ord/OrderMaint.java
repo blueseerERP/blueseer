@@ -61,6 +61,7 @@ import static com.blueseer.ord.ordData.addOrderTransaction;
 import static com.blueseer.ord.ordData.addUpdateSOMeta;
 import static com.blueseer.ord.ordData.addUpdateSOMetaNotes;
 import static com.blueseer.ord.ordData.deleteOrderMstr;
+import static com.blueseer.ord.ordData.getOrderDet;
 import static com.blueseer.ord.ordData.getOrderItemAllocatedQty;
 import static com.blueseer.ord.ordData.getOrderLines;
 import static com.blueseer.ord.ordData.getOrderMstrSet;
@@ -179,6 +180,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
                 boolean isLoad = false;
                 Object[][] rData;
                 ArrayList<String[]> initDataSets = null;
+                String defaultSite = "";
+                String defaultCurrency = "";
+                String defaultCC = "";
                 String terms = "";
                 String aracct = "";
                 String arcc = "";
@@ -693,7 +697,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
         tbitem.setForeground(Color.black);
         discount.setEditable(false);
         
-        String defaultsite = null;
         
     if (init) {    
         ddshipfrom.removeAllItems();
@@ -739,7 +742,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
               ddsite.addItem(s[1]); 
             }
             if (s[0].equals("site")) {
-              defaultsite = s[1]; 
+              defaultSite = s[1]; 
             }
             if (s[0].equals("salesreps")) {
               ddsalesrep.addItem(s[1]); 
@@ -776,7 +779,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
         }
         
         cbisallocated.setSelected(autoallocate);
-        ddsite.setSelectedItem(defaultsite);
+        ddsite.setSelectedItem(defaultSite);
         ddwh.insertItemAt("", 0);
         ddwh.setSelectedIndex(0);
         ddshipfrom.insertItemAt("", 0);
@@ -799,7 +802,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
         ddshipvia.setSelectedIndex(0);
        
       
-        ddstatus.setSelectedItem(getGlobalProgTag("open"));
+        
         
         
         ddsactype.removeAllItems();
@@ -812,7 +815,21 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
             ddsactype.addItem("shipping BIL");
        }
         ddsactype.setSelectedIndex(0);
-    }
+    } 
+    
+    // reset dropdown fields to index 0...should always have a value if 'init' was called first    
+    ddstatus.setSelectedItem(getGlobalProgTag("open"));
+    ddsite.setSelectedItem(defaultSite);
+    ddwh.setSelectedIndex(0);
+    ddshipfrom.setSelectedIndex(0);
+    ddsalesrep.setSelectedIndex(0);
+    ddsalesrep2.setSelectedIndex(0);
+    ddloc.setSelectedIndex(0);
+    ddcurr.setSelectedIndex(0);
+    dduom.setSelectedIndex(0);
+    ddtax.setSelectedIndex(0);
+    ddcust.setSelectedIndex(0);
+    ddshipvia.setSelectedIndex(0);
         
         
         lbqtyavailable.setBackground(Color.gray);
@@ -1113,10 +1130,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
         
         // change log check
      if (m[0].equals("0")) {
-       ArrayList<admData.change_log> c = logChange(tbkey.getText(), this.getClass().getSimpleName(),so,_so);
+       ArrayList<admData.change_log> c = logChange(tbkey.getText(), 0, this.getClass().getSimpleName(),so,_so);
        if (! c.isEmpty()) {
            addChangeLog(c);
        } 
+       sodlist = getOrderDet(new String[]{tbkey.getText()}); // refresh sodlist original if item action add, update, delete has altered picture
+                                                            //...so as to not duplicate change twice
        ArrayList<admData.change_log> c2 = logChangeArrays(tbkey.getText(), this.getClass().getSimpleName(),sodlist,_sodlist);
        if (! c2.isEmpty()) {
            addChangeLog(c2);
@@ -4242,7 +4261,14 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
         // now update
         if (isSOCommitted) {   // assuming the order already exists in DB
            ArrayList<String> badlines = getBadLines(tbkey.getText());
-           updateOrderTransaction(tbkey.getText(), badlines, createDetRecord(), createRecord(), null, createTaxDetRecord(), null);
+           ArrayList<sod_det> _sodlist = createDetRecord();
+           String[] m = updateOrderTransaction(tbkey.getText(), badlines, _sodlist, createRecord(), null, createTaxDetRecord(), null);
+           if (m[0].equals("0")) {
+            ArrayList<admData.change_log> c2 = logChangeArrays(tbkey.getText(), this.getClass().getSimpleName(),sodlist,_sodlist);
+            if (! c2.isEmpty()) {
+                addChangeLog(c2);
+            }
+           }
         }
         
         
@@ -4288,7 +4314,14 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
        // now update
         if (isSOCommitted) {   // assuming the order already exists in DB
            ArrayList<String> badlines = getBadLines(tbkey.getText());
-           updateOrderTransaction(tbkey.getText(), badlines, createDetRecord(), createRecord(), null, createTaxDetRecord(), null);
+           ArrayList<sod_det> _sodlist = createDetRecord();
+           String[] m = updateOrderTransaction(tbkey.getText(), badlines, _sodlist, createRecord(), null, createTaxDetRecord(), null);
+           if (m[0].equals("0")) {
+            ArrayList<admData.change_log> c2 = logChangeArrays(tbkey.getText(), this.getClass().getSimpleName(),sodlist,_sodlist);
+            if (! c2.isEmpty()) {
+                addChangeLog(c2);
+            }
+           }
         } 
         
                 refreshDisplayTotals();         
@@ -4727,10 +4760,16 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
         
        
         
-        // now update
-        ArrayList<String> badlines = getBadLines(tbkey.getText());
-        
-        updateOrderTransaction(tbkey.getText(), badlines, createDetRecord(), createRecord(), null, createTaxDetRecord(), null);
+        // now update       
+           ArrayList<String> badlines = getBadLines(tbkey.getText());
+           ArrayList<sod_det> _sodlist = createDetRecord();
+           String[] m = updateOrderTransaction(tbkey.getText(), badlines, _sodlist, createRecord(), null, createTaxDetRecord(), null);
+           if (m[0].equals("0")) {
+            ArrayList<admData.change_log> c2 = logChangeArrays(tbkey.getText(), this.getClass().getSimpleName(),sodlist,_sodlist);
+            if (! c2.isEmpty()) {
+                addChangeLog(c2);
+            }
+           }
         
         
     }//GEN-LAST:event_btupdateitemActionPerformed
