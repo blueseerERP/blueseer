@@ -1,5 +1,13 @@
 #!/bin/bash
 
+
+if (( $# == 0 )); then
+    echo "Warning: No parameters provided." >&2
+    echo "Usage: $0 must pass patch number as first parameter" >&2
+    exit 1
+fi
+
+jaronly="blueseer.jaronly.8.0.$1.zip"
 ## creation of generic zip for both sqlite and mysql versions
 bsdir=$(pwd)
 bszip="blueseer.generic.linux.v8.0.zip"
@@ -30,5 +38,9 @@ zip -u $bszip langconvert.sh
 zip -u $bszip controlM.sh
 zip -u $bszip bsapi.service
 zip -u $bszip bsapi.service.sh
+
+zip -j $jaronly /home/vcs/bs/blueseer/dist/blueseer.jar /home/vcs/bs/blueseer/dist/bsmf.jar
+
 cd /home/vcs
 zip -ru $bsdir/$bszip jre26/*
+

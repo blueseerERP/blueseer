@@ -29,16 +29,16 @@ import java.util.concurrent.TimeUnit;
 /// execution directory.   
 ///
 /// ## config file definition
-/// column names separated by "," :  tpname, rectype, sourcedir|trantype, destdir, archdir, parse, extract, regex|destdir
+/// column names separated by "," :  tpname, rectype, sourcedir|trantype, destdir, archdir, parse, extract, replace|unique, regex|destdir
 /// the rectype element (p or c) determines master directories to loop
 /// the 'parse' 5th column (0 or 1) indicates a second loop through for trans type specific output directory
 /// parent example:  acme, p, /somesourcedir, /somedestdir, /somearchdir, 0, 0,   (no children transaction type determination...no file parsing...just movement)
 /// parent example:  acme, p, /somesourcedir, /somedestdir, /somearchdir, 1, 1,   (parse each file for transaction type override of dest directory)
 /// child example:   acme, c, trans type    , /somedestdir, /somearchdir, 0, 1,  
 ///
-/// The 8th column allows for regex matches on source file names...and deviates destination if a match is found
+/// The 9th column allows for regex matches on source file names...and deviates destination if a match is found
 /// example:  acme, p, /somesourcedir, /somedestdir, /somearchdir, 0, 0,^abc.*=/someotherdestdir|^def.*=/someotherdestdir2
-/// Application supports multiple regex/destdir entries in column 8...separated by a | .   The key/value for each entry is separated by an =
+/// Application supports multiple regex/destdir entries in column 9...separated by a | .   The key/value for each entry is separated by an =
 /// @author Terry Vaughn
 
 
@@ -75,8 +75,8 @@ public class bsCommVT {
                 
                 // validate proper config file
                 for (String[] s : trafficlist) {
-                    if (s.length != 8) {
-                        System.out.println(now + " invalid config file format...each line must have 7 elements");
+                    if (s.length != 9) {
+                        System.out.println(now + " invalid config file format...each line must have 9 elements");
                         return;
                     }
                 }
@@ -177,8 +177,8 @@ public class bsCommVT {
         
       //  System.out.println("Executing on virtual thread: " + Thread.currentThread().getName() + " / " + Thread.currentThread().threadId());
         
-        if (s[7] != null && ! s[7].isBlank()) {
-            maskarray = s[7].split("\\|", -1);
+        if (s[8] != null && ! s[8].isBlank()) {
+            maskarray = s[8].split("\\|", -1);
             for (String m : maskarray) {
                 if (! m.contains("=")) {
                     break;
@@ -192,10 +192,10 @@ public class bsCommVT {
             }
         }
         
-        // make unique if file exists in destination directory
-        if (Files.exists(destinationFile)) {
+        // make unique if file exists in destination directory and s[7] is 'u'  [ (r)eplace, (u)nique ]
+        if (Files.exists(destinationFile) && s[7].equals("u")) {
           destinationFile = FileSystems.getDefault().getPath(destinationFile.getParent() + "/" + destinationFile.getFileName() + "." + Long.toHexString(System.currentTimeMillis()));   
-          System.out.println("File Exists...Renaming to: " + destinationFile);
+          System.out.println("File Exists...and flag is unique...Renaming to: " + destinationFile);
         }
         
         try {
