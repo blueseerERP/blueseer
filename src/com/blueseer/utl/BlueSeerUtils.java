@@ -1063,6 +1063,29 @@ public class BlueSeerUtils {
         return x;
     }
     
+    public static String bsNumberWithSymbol(double invalue, String currency) {
+        String x = "0";
+        String pattern = "#0.########"; 
+        String symbol = "$";
+        Currency c = Currency.getInstance(currency);
+        if (! currency.equals("USD")) {
+            symbol = c.getSymbol(bsmf.MainFrame.currencymap.get(c)); 
+        }
+         if (invalue != 0) {
+         if (Locale.getDefault().getLanguage().equals("zh") && ! Locale.getDefault().getCountry().equals("US")) {
+            Locale cn = new Locale("C@numbers=hans");
+            com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
+            x = symbol + formatter.format(invalue); 
+         }  else { 
+           // String adjvalue = String.valueOf(invalue).replace('.', defaultDecimalSeparator);
+            DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+            df.applyPattern(pattern);
+            x = symbol + df.format(invalue);
+         }
+        }
+        return x;
+    }
+    
     public static String bsNumber(String invalue) {
         // invalue will come over as a . decimal regardless of Locale
         // currformat will return 3,56 for the following scenarios if
@@ -1090,41 +1113,7 @@ public class BlueSeerUtils {
         }
         return x;
     }
-    
-    public static String bsNumberWithSymbol(String invalue, String currency) {
-        // invalue will come over as a . decimal regardless of Locale
-        // currformat will return 3,56 for the following scenarios if
-        // default separator is ','   
-        // currformat("3.56")
-        // currformat("3,56") 
-         
-        String x = "0";
-        String pattern = "#0.########";
-        String symbol = "$";
-        Currency c = Currency.getInstance(currency);
-        if (! currency.equals("USD")) {
-            symbol = c.getSymbol(bsmf.MainFrame.currencymap.get(c)); 
-        }
-        if (invalue != null && ! invalue.isBlank()) {
-         if (Locale.getDefault().getLanguage().equals("zh") && ! Locale.getDefault().getCountry().equals("US")) {
-            Locale cn = new Locale("C@numbers=hans");
-            com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
-            x = symbol + formatter.format(bsParseDouble(invalue));
-         }  else { 
-            String adjvalue = invalue.replace('.', defaultDecimalSeparator);
-            DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
-            df.applyPattern(pattern);
-            try { 
-                x = symbol + df.format(df.parse(adjvalue));
-            } catch (ParseException ex) {
-                bslog(ex);
-            }
-         }
-        }
-        return x;
-    }
-    
-    
+        
     public static String bsNumberToUS(String invalue) {
                 
         String x = "0";
