@@ -421,7 +421,7 @@ where shd_id =  $P{myid}]]>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.bsNumber($F{shd_listprice})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.bsNumberWithSymbol($F{shd_listprice}, $F{sh_curr})]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="501" y="0" width="64" height="16" uuid="be6c6e00-ced3-4654-a526-512503b386e0"/>
