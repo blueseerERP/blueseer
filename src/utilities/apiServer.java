@@ -314,7 +314,7 @@ public class apiServer {
         CustomRequestLog requestLog = new CustomRequestLog(logWriter, CustomRequestLog.EXTENDED_NCSA_FORMAT + " \"%C\"");
         logWriter.setFilenameDateFormat("yyyy_MM_dd");
         logWriter.setRetainDays(90);
-        logWriter.setTimeZone("GMT");
+        logWriter.setTimeZone("America/New_York");
         server.setRequestLog(requestLog);
 
         // === jetty-lowresources.xml ===
