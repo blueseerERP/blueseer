@@ -975,7 +975,7 @@ public class InvoiceBrowse extends javax.swing.JPanel {
             // assumes explicit jasper file name is larger than 3 chars.....if 3 chars or less...then must be key based L8, L8C, etc
             // type = "L8C";  ...or type = genericJTableL8.jasper
             // String jasperfile = (type.length() > 3) ? jasperfile = type  : OVData.getCodeValueByCodeKey("jasper", type)  ;
-            Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + "genericJTableL8.jasper");
+            Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + "genericJTableL10A.jasper");
             JasperPrint jasperPrint; 
             try {
              jasperPrint = JasperFillManager.fillReport(template.toString(), hm, datasource );
