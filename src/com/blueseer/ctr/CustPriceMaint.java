@@ -83,6 +83,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
     String defaultCC = "";
       
     cm_mstr cm = null;
+    public static cpr_mstr cprx = null;
     
     DefaultListModel disclistmodel = new DefaultListModel();
     DefaultListModel pricelistmodel = new DefaultListModel();
@@ -125,9 +126,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
                 case "delete":
                     message = deleteRecord(key);    
                     break;
+                case "get":
+                    message = getRecord(key);    
+                    break; 
                     
                 default:
-                    message = new String[]{"1", "unknown action"};
+                    message = new String[]{"1", "unknown action: " + this.type};
             }
             
             return message;
@@ -140,7 +144,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
            
             BlueSeerUtils.endTask(message);
                if (this.type.equals("get")) {
-                // updateForm();
+                updateForm();
                 // tbkey.requestFocus();
                } else {
                  initvars(null);  
@@ -452,7 +456,34 @@ public class CustPriceMaint extends javax.swing.JPanel {
          return m;
     }
     
+    public String[] getRecord(String[] x) {
+        cprx = getCprMstr(new String[]{x[0],
+                    x[1], x[2], x[3], x[4], x[5]}); // cust, item, uom, curr, type, volqty
+        //System.out.println(cprx.cpr_cust() + "/" + cprx.cpr_item() + "/" + cprx.cpr_type());
+        return cprx.m();
+    }
     
+    public void updateForm() {
+        if (cprx != null) {
+            if (cprx.cpr_type().equals("DISCOUNT")) {
+            disclistmodel.addElement(cprx.cpr_item());
+            ddcustcode_disc.setSelectedItem(cprx.cpr_cust());
+            tbdisckey.setText(cprx.cpr_item());
+            tbdisc.setText(bsNumber(cprx.cpr_price()));
+            dcexpiredisc.setDate(BlueSeerUtils.parseDate(cprx.cpr_expire())); 
+            } else {            
+            ddcustcode.setSelectedItem(cprx.cpr_cust());
+            dduom.setSelectedItem(cprx.cpr_uom());
+            ddcurr.setSelectedItem(cprx.cpr_curr());
+            dditem.setSelectedItem(cprx.cpr_item());
+            ddtype.setSelectedItem(cprx.cpr_type());
+            dcexpire.setDate(BlueSeerUtils.parseDate(cprx.cpr_expire())); 
+            tbprice.setText(bsNumber(cprx.cpr_price())); 
+            tbqty.setText(bsNumber(cprx.cpr_volqty()));
+            }
+            
+        }
+    }
     public void setDiscList() {
    
         if (! isLoad) {
