@@ -4906,6 +4906,9 @@ public class OVData {
                     OVData.addItemCostRec(item, site, "standard", 
                             bsParseDouble(cost), bsParseDouble("0"), bsParseDouble("0"), 
                             (bsParseDouble(cost) + bsParseDouble("0") + bsParseDouble("0")));
+                    OVData.addItemCostRec(item, site, "current", 
+                            bsParseDouble(cost), bsParseDouble("0"), bsParseDouble("0"), 
+                            (bsParseDouble(cost) + bsParseDouble("0") + bsParseDouble("0")));
                     }
                  
             } // if proceed

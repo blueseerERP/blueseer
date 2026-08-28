@@ -614,6 +614,7 @@ public class SerialBrowse extends javax.swing.JPanel {
             if (roData[i][3].toString().isBlank()) {
                         continue;
             }
+            roData[i][6] = bsParseDouble(rowData[6].toString());
             i++;
             mymodel.addRow(rowData);
         }

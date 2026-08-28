@@ -179,8 +179,20 @@ public class invData {
                     ld[11], 
                     ld[12],
                     "0", "0", "0", "0", "0");
+                item_cost z = new item_cost(null, 
+                    ld[0], 
+                    ld[3], 
+                    "current",
+                    String.valueOf((bsParseDouble(ld[10]) + bsParseDouble(ld[11]) + bsParseDouble(ld[12]))),
+                    ld[10], 
+                    "0", 
+                    "0", 
+                    ld[11], 
+                    ld[12],
+                    "0", "0", "0", "0", "0");
                 invData._addItemMstr(x, con, true);
                 invData._addItemCostRec(y, con, true);
+                invData._addItemCostRec(z, con, true);
             }
         } catch (SQLException s) {
              MainFrame.bslog(s);

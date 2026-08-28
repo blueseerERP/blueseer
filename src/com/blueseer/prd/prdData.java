@@ -411,6 +411,9 @@ public class prdData {
             ResultSet res = null;
             try {
                 
+                keys[2] = (keys[2].isBlank()) ? bsmf.MainFrame.lowchar : keys[2]; 
+                keys[3] = (keys[3].isBlank()) ? bsmf.MainFrame.hichar : keys[3];
+                
                 if (keys[6].equals("ALL")) {
                     res = st.executeQuery("SELECT tr_id, tr_op, tr_cost, tr_item, tr_type, tr_wh, tr_loc, tr_qty, tr_base_qty, tr_uom, tr_eff_date, tr_timestamp, tr_ref, tr_serial, tr_program , tr_userid, tr_lot " +
                         " FROM  tran_mstr  " +
