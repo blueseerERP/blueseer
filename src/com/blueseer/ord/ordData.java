@@ -4241,14 +4241,15 @@ public class ordData {
                 res = st.executeQuery("select " +
                       " case when sos_amttype = 'percent' and sos_type <> 'tax' then (myamt * (sos_amt / 100.0)) " +
                       " when sos_amttype = 'percent' and sos_type = 'tax' then (myamt * (sos_amt / 100.0)) " +
-                      " else sos_amt end as 'amt' " +
+                    //  " else sos_amt end as 'amt' " +
+                      " end as 'amt' " +  
                       " from sos_det, (select sod_nbr, sum(sod_ord_qty * sod_listprice) as 'myamt' from sod_det group by sod_nbr) sub " +
                       " where sub.sod_nbr = sos_nbr and sos_nbr = " + "'" + order + "'");
                 while (res.next()) {
                     charges = res.getDouble("amt");
                 }
                 
-                /*
+                
                 res = st.executeQuery("select case when sum(sos_amt) is null then 0 else sum(sos_amt) end as amt from sos_det " +
                 " where sos_nbr = " + "'" + order + "'" + " and sos_amttype = 'amount' " +
                 " and sos_type <> 'tax' and sos_type <> 'passive' " +
@@ -4256,7 +4257,7 @@ public class ordData {
                 while (res.next()) {
                     charges += res.getDouble("amt");
                 }
-                */
+                
                 
                 res = st.executeQuery("select so_nbr, sod_nbr, so_curr, sod_desc, so_shipvia, cm_terms,  " + 
                // " (select case when sum(sos_amt) is null then 0 else sum(sos_amt) end from sos_det " +
