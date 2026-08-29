@@ -101,11 +101,12 @@ public class GLTranRpt1 extends javax.swing.JPanel {
                             getGlobalColumnTag("effectivedate"),
                             getGlobalColumnTag("type"),
                             getGlobalColumnTag("reference"),
+                            getGlobalColumnTag("description"),
                             getGlobalColumnTag("amount")})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if ( col == 9)       
+                        if ( col == 10)       
                         return Double.class;
                         else if (col == 0) return ImageIcon.class;
                         else return String.class;  //other columns accept String values  
@@ -148,7 +149,7 @@ public class GLTranRpt1 extends javax.swing.JPanel {
         Component c = super.getTableCellRendererComponent(table,
                 value, isSelected, hasFocus, row, column);
         
-        String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 9);  // 8 = status column
+        String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 10);  // 8 = status column
         
          if ("error".equals(status)) {
             c.setBackground(Color.red);
@@ -403,7 +404,7 @@ public class GLTranRpt1 extends javax.swing.JPanel {
         ddacctfrom.setSelectedIndex(0);
         ddacctto.setSelectedIndex(ddacctto.getItemCount() - 1); 
         tablereport.setModel(mymodel);
-        tablereport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));
+        tablereport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));
         Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
        
     }
@@ -454,8 +455,8 @@ public class GLTranRpt1 extends javax.swing.JPanel {
         mymodel.setNumRows(0);
         if (roData != null) {
         for (Object[] rowData : roData) {
-            dol = dol + bsParseDouble(roData[i][9].toString());
-            roData[i][9] = bsParseDouble(roData[i][9].toString());           
+            dol = dol + bsParseDouble(roData[i][10].toString());
+            roData[i][10] = bsParseDouble(roData[i][10].toString());           
             mymodel.addRow(rowData);
             i++;
         }
@@ -772,7 +773,7 @@ public class GLTranRpt1 extends javax.swing.JPanel {
     private void tbprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbprintActionPerformed
 
         if (tablereport != null && mymodel.getRowCount() > 0) {
-            OVData.printJTableToJasper("Ledger Transaction Report", tablereport, "genericJTableL9.jasper" );
+            OVData.printJTableToJasper("Ledger Transaction Report", tablereport, "genericJTableL10.jasper" );
         }
     }//GEN-LAST:event_tbprintActionPerformed
 

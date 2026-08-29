@@ -521,6 +521,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
             if (roData[i][6].toString().equals("o")) {
                     open += bsParseDouble(roData[i][7].toString());
             }
+            roData[i][7] = bsParseDouble(roData[i][7].toString());
              mymodel.addRow(rowData);
             i++;
         }

@@ -5821,6 +5821,7 @@ public class fglData {
                     rowArray.put(res.getString("glt_effdate"));
                     rowArray.put(res.getString("glt_type"));
                     rowArray.put(res.getString("glt_ref"));
+                    rowArray.put(res.getString("glt_desc"));
                     rowArray.put(currformatDouble(res.getDouble("glt_base_amt")));
                     jsonarray.put(rowArray); 
                     }
@@ -5844,6 +5845,7 @@ public class fglData {
                     rowArray.put(res.getString("glh_effdate"));
                     rowArray.put(res.getString("glh_type"));
                     rowArray.put(res.getString("glh_ref"));
+                    rowArray.put(res.getString("glh_desc"));
                     rowArray.put(currformatDouble(res.getDouble("glh_base_amt")));
                     jsonarray.put(rowArray);
                     }
