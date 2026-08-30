@@ -29,8 +29,12 @@
 	<parameter name="d8" class="java.lang.String"/>
 	<parameter name="d9" class="java.lang.String"/>
 	<parameter name="d10" class="java.lang.String"/>
-	<parameter name="p10" class="java.lang.String"/>
+	<parameter name="pformat10" class="java.lang.String"/>
 	<parameter name="ptype10" class="java.lang.String"/>
+	<parameter name="pformat8" class="java.lang.String"/>
+	<parameter name="ptype8" class="java.lang.String"/>
+	<parameter name="pformat9" class="java.lang.String"/>
+	<parameter name="ptype9" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -174,18 +178,20 @@
 				<reportElement x="493" y="2" width="69" height="16" uuid="9e378f44-6a38-499c-a7b0-9a4c24926aef"/>
 				<textFieldExpression><![CDATA[$F{COLUMN_7}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0">
+			<textField>
 				<reportElement x="562" y="2" width="69" height="16" uuid="1682bbca-7e20-4acd-a7cf-2c27e209a9e6"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_8}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{ptype8}.equals("double")) ? Double.valueOf($F{COLUMN_8}) : $F{COLUMN_8}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{pformat8}]]></patternExpression>
 			</textField>
-			<textField pattern="###0">
+			<textField>
 				<reportElement x="631" y="2" width="69" height="16" uuid="e10dfab5-65f1-481d-b0e5-01e19545b206"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_9}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{ptype9}.equals("double")) ? Double.valueOf($F{COLUMN_9}) : $F{COLUMN_9}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{pformat9}]]></patternExpression>
 			</textField>
 			<textField>
 				<reportElement x="700" y="2" width="90" height="16" uuid="a97fe585-712f-4b02-8192-824cc4d5642a"/>
 				<textFieldExpression><![CDATA[($P{ptype10}.equals("double")) ? Double.valueOf($F{COLUMN_10}) : $F{COLUMN_10}]]></textFieldExpression>
-				<patternExpression><![CDATA[$P{p10}]]></patternExpression>
+				<patternExpression><![CDATA[$P{pformat10}]]></patternExpression>
 			</textField>
 		</band>
 	</detail>
