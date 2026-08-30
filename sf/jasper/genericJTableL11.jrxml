@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="814" leftMargin="14" rightMargin="14" topMargin="72" bottomMargin="72" uuid="5c23a538-9f5b-41f2-97dc-c7635f83e5fc">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
@@ -29,6 +29,7 @@
 	<parameter name="d8" class="java.lang.String"/>
 	<parameter name="d9" class="java.lang.String"/>
 	<parameter name="d10" class="java.lang.String"/>
+	<parameter name="p10" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -180,9 +181,10 @@
 				<reportElement x="631" y="2" width="69" height="16" uuid="e10dfab5-65f1-481d-b0e5-01e19545b206"/>
 				<textFieldExpression><![CDATA[$F{COLUMN_9}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0">
+			<textField pattern="$P{p10}">
 				<reportElement x="700" y="2" width="90" height="16" uuid="a97fe585-712f-4b02-8192-824cc4d5642a"/>
 				<textFieldExpression><![CDATA[$F{COLUMN_10}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{p10}]]></patternExpression>
 			</textField>
 		</band>
 	</detail>
