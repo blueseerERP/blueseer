@@ -992,7 +992,7 @@ public class OrderItemBrowse extends javax.swing.JPanel {
     }//GEN-LAST:event_tbcsvActionPerformed
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
-        OVData.printJTableToJasper("Order Item Report", tablereport, "genericJTableL8.jasper" );
+        OVData.printJTableToJasper("Order Item Report", tablereport, "genericJTableL8.jasper", null );
     }//GEN-LAST:event_btprintActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed

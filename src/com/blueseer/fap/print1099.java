@@ -1013,7 +1013,7 @@ public class print1099 extends javax.swing.JPanel {
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
         if (tablereport != null && mymodel.getRowCount() > 0) {
-            OVData.printJTableToJasper("1099 Report", tablereport, "genericJTableL8.jasper" );
+            OVData.printJTableToJasper("1099 Report", tablereport, "genericJTableL8.jasper", null );
         }
     }//GEN-LAST:event_btprintActionPerformed
 

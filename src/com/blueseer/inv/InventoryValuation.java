@@ -716,7 +716,7 @@ public class InventoryValuation extends javax.swing.JPanel {
     }//GEN-LAST:event_tbcsvActionPerformed
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
-        OVData.printJTableToJasper("Inventory Valuation Report", tablereport, "genericJTableL6.jasper" );
+        OVData.printJTableToJasper("Inventory Valuation Report", tablereport, "genericJTableL6.jasper", null );
     }//GEN-LAST:event_btprintActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed

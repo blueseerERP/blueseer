@@ -992,7 +992,7 @@ public class QuoteBrowse extends javax.swing.JPanel {
     }//GEN-LAST:event_tbcsvActionPerformed
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
-        OVData.printJTableToJasper("Quote Report", tablereport, "genericJTableL7.jasper" );
+        OVData.printJTableToJasper("Quote Report", tablereport, "genericJTableL7.jasper", null );
     }//GEN-LAST:event_btprintActionPerformed
 
 

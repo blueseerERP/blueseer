@@ -707,7 +707,7 @@ public class ExpenseBrowse extends javax.swing.JPanel {
 
     private void tbprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbprintActionPerformed
         if (tablereport != null && mymodel.getRowCount() > 0) {
-            OVData.printJTableToJasper("Expense Report", tablereport, "genericJTableL10.jasper" );
+            OVData.printJTableToJasper("Expense Report", tablereport, "genericJTableL10.jasper", null );
             /*
             try {
 

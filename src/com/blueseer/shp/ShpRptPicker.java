@@ -91,6 +91,7 @@ public class ShpRptPicker extends javax.swing.JPanel {
     boolean canUpdate = false;
     boolean isAutoPost = false;
     ArrayList<String[]> initDataSets = null;
+    ArrayList<String[]> columntypes = null;
     String defaultSite = "";
     String defaultCurrency = "";
     String defaultCC = "";
@@ -407,6 +408,8 @@ public class ShpRptPicker extends javax.swing.JPanel {
         lbdate1.setVisible(true);
         lbdate2.setText("");
         lbdate2.setVisible(true);
+        
+        columntypes = null;
     }
     
     /* CUSTOM FUNCTIONS BEGIN  */
@@ -471,6 +474,13 @@ public class ShpRptPicker extends javax.swing.JPanel {
                 else return String.class;  //other columns accept String values  
               }  
                 }; 
+             
+        columntypes.add(new String[]{"ptype9","double"});
+        columntypes.add(new String[]{"pformat9","¤###0.00;¤-###0.00"});
+        columntypes.add(new String[]{"ptype10","double"});
+        columntypes.add(new String[]{"pformat10","¤###0.00;¤-###0.00"});
+        columntypes.add(new String[]{"ptype11","double"});
+        columntypes.add(new String[]{"pformat11","¤###0.00;¤-###0.00"});
             
         String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -1441,7 +1451,7 @@ public class ShpRptPicker extends javax.swing.JPanel {
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
         if (ddreport.getSelectedItem() != null && ! ddreport.getSelectedItem().toString().isBlank() && tablereport != null) {
-        OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedItem().toString()) );
+        OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedItem().toString()), columntypes );
         }
     }//GEN-LAST:event_btprintActionPerformed
 

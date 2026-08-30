@@ -686,7 +686,7 @@ public class SalesRepBrowse extends javax.swing.JPanel {
     private void tbprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbprintActionPerformed
 
         if (tablereport != null && mymodel.getRowCount() > 0) {
-            OVData.printJTableToJasper("Sales Rep Report", tablereport, "genericJTableL8.jasper" );
+            OVData.printJTableToJasper("Sales Rep Report", tablereport, "genericJTableL8.jasper", null );
             /*
             try {
 

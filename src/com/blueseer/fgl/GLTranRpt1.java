@@ -773,7 +773,7 @@ public class GLTranRpt1 extends javax.swing.JPanel {
     private void tbprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbprintActionPerformed
 
         if (tablereport != null && mymodel.getRowCount() > 0) {
-            OVData.printJTableToJasper("Ledger Transaction Report", tablereport, "genericJTableL10.jasper" );
+            OVData.printJTableToJasper("Ledger Transaction Report", tablereport, "genericJTableL10.jasper", null );
         }
     }//GEN-LAST:event_tbprintActionPerformed
 

@@ -734,7 +734,7 @@ public class RecvBrowse extends javax.swing.JPanel {
     }//GEN-LAST:event_tablereportMouseClicked
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
-        OVData.printJTableToJasper("Receiver Report", tablereport, "genericJTableL7.jasper" );
+        OVData.printJTableToJasper("Receiver Report", tablereport, "genericJTableL7.jasper", null );
     }//GEN-LAST:event_btprintActionPerformed
 
     private void tbcsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbcsvActionPerformed

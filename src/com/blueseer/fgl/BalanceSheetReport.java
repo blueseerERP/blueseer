@@ -1130,7 +1130,7 @@ public class BalanceSheetReport extends javax.swing.JPanel {
     }//GEN-LAST:event_ddperiodItemStateChanged
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
-        OVData.printJTableToJasper("Account Balances Report", tablereport, "acctbalance.jasper" );
+        OVData.printJTableToJasper("Account Balances Report", tablereport, "acctbalance.jasper", null );
     }//GEN-LAST:event_btprintActionPerformed
 
     private void btLookUpAccountFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpAccountFromActionPerformed

@@ -20284,7 +20284,7 @@ return mystring;
     }    
     
     
-    public static void printJTableToJasper(String reportname, JTable tablereport, String type) {
+    public static void printJTableToJasper(String reportname, JTable tablereport, String type, ArrayList<String[]> columntypes) {
         HashMap hm = new HashMap();
         hm.put("REPORT_TITLE", reportname);
         hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
@@ -20337,10 +20337,10 @@ return mystring;
         
         
         for (int j = 0; j < newmodel.getColumnCount(); j++) {
-           hm.put("d" + j,  newmodel.getColumnName(j).toString());
+           hm.put("d" + j,  newmodel.getColumnName(j).toString());           
         }
         
-        hm.put("p10","¤###0.00;¤-###0.00");
+        
         
         String jasperfile = "";
       //  if (type.startsWith("genericJTable")) {
@@ -20352,6 +20352,15 @@ return mystring;
         if (jasperfile.isEmpty()) {
                 jasperfile = "genericJTableL11.jasper";
         }
+        
+        if (columntypes != null) {
+            for (String[] hmadds : columntypes) {
+                hm.put(hmadds[0], hmadds[1]);
+            }
+        }
+        
+        
+        
         Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
                
         JasperPrint jasperPrint; 
