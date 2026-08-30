@@ -181,7 +181,7 @@
 				<reportElement x="631" y="2" width="69" height="16" uuid="e10dfab5-65f1-481d-b0e5-01e19545b206"/>
 				<textFieldExpression><![CDATA[$F{COLUMN_9}]]></textFieldExpression>
 			</textField>
-			<textField pattern="$P{p10}">
+			<textField>
 				<reportElement x="700" y="2" width="90" height="16" uuid="a97fe585-712f-4b02-8192-824cc4d5642a"/>
 				<textFieldExpression><![CDATA[$F{COLUMN_10}]]></textFieldExpression>
 				<patternExpression><![CDATA[$P{p10}]]></patternExpression>
