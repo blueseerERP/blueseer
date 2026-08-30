@@ -456,16 +456,16 @@ public class ShpRptPicker extends javax.swing.JPanel {
                   getGlobalColumnTag("type"), 
                   getGlobalColumnTag("site"), 
                   getGlobalColumnTag("po"), 
-                  getGlobalColumnTag("order"), 
-                  getGlobalColumnTag("currency"), 
+                  getGlobalColumnTag("order"),  
                   getGlobalColumnTag("amount"), 
-                  getGlobalColumnTag("status")})
+                  getGlobalColumnTag("charges"),
+                  getGlobalColumnTag("taxes")})
               {
               @Override  
               public Class getColumnClass(int col) {  
                 if (col == 0) {       
                     return ImageIcon.class;
-                } else if (col == 10) {
+                } else if (col == 9 || col == 10 || col == 11) {
                     return Double.class;
                 }
                 else return String.class;  //other columns accept String values  

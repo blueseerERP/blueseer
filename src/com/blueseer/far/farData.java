@@ -674,6 +674,33 @@ public class farData {
                     } 
                 }
                
+                if (keys[0].equals("AREntriesByDate")) {
+                res = st.executeQuery("select ar_id, ar_cust, cm_name, ar_type, " +
+                               " ar_ref, ar_nbr, ar_effdate, ar_invdate, ar_duedate, ar_curr, ar_amt, ar_base_amt, ar_open_amt, " +
+                               " case when ar_status = 'c' then 'closed' else 'open' end as 'status', " +
+                               " ar_curr, ar_acct " +
+                               " from ar_mstr inner join cm_mstr on cm_code = ar_cust " +
+                               " where ar_effdate >= " + "'" + keys[1] + "'" +
+                               " and ar_effdate <= " + "'" + keys[2] + "'" + ";");  
+                    while (res.next()) {
+                            i++;
+                            JSONArray rowArray = new JSONArray(); 
+                            rowArray.put(res.getString("ar_cust"));
+                            rowArray.put(res.getString("cm_name"));
+                            rowArray.put(res.getString("ar_type"));
+                            rowArray.put(res.getString("ar_ref"));
+                            rowArray.put(res.getString("ar_nbr"));
+                            rowArray.put(res.getString("ar_effdate"));
+                            rowArray.put(res.getString("ar_duedate"));
+                            rowArray.put(res.getString("ar_curr"));
+                            rowArray.put(currformat(res.getString("ar_amt")));
+                            rowArray.put(currformat(res.getString("ar_open_amt")));
+                            rowArray.put(res.getString("status"));
+                            jsonarray.put(rowArray);
+
+                    } 
+                }
+               
                 if (keys[0].equals("ARAgingByCust")) {
                     ArrayList custs = cusData.getcustmstrlistBetween(keys[1], keys[2]);
                     for (int j = 0; j < custs.size(); j++) {    

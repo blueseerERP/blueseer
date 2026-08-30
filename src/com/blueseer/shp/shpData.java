@@ -1330,15 +1330,21 @@ public class shpData {
                  
                 int i = 0;
                 if (keys[0].equals("shippersByShipDateRange")) {
-                res = st.executeQuery("SELECT sh_id, sh_cust, cm_name, " +
-                        " sh_shipdate, sh_type, sh_site, sh_po, sh_so, sh_curr, sh_status, " +
+                res = st.executeQuery("SELECT " +
+                        " (select case when sum(shs_amt) is null then 0 else sum(shs_amt) end from shs_det " +
+                        " where shs_nbr = shd_id and shs_amttype = 'amount' and shs_type <> 'tax' and shs_type <> 'passive' " +
+                        " and shs_type <> 'shipping Bil' and shs_type <> 'shipping PPD' ) as charges, " +
+                        " (select case when sum(shs_amt) is null then 0 else sum(shs_amt) end from shs_det " +
+                        " where shs_nbr = shd_id and shs_amttype = 'amount' and shs_type = 'tax' ) as taxes, " +
+                        " sh_id, sh_cust, cm_name, " +
+                        " sh_shipdate, sh_type, sh_site, sh_po, sh_so, sh_curr,  " +
                         " sum(shd_qty * shd_netprice) as amt FROM  ship_mstr " +
                         " inner join ship_det " +
                         " on shd_id = sh_id " +
                         " inner join cm_mstr on cm_code = sh_cust " +
                         " where sh_shipdate >= " + "'" + keys[1] + "'" +
                         " and sh_shipdate <= " + "'" + keys[2] + "'" +
-                        " group by sh_id, sh_cust, cm_name, sh_shipdate, sh_type, sh_site, sh_po, sh_so, sh_curr, sh_status " +
+                        " group by sh_id, sh_cust, cm_name, sh_shipdate, sh_type, sh_site, sh_po, sh_so, sh_curr " +
                         " order by sh_id;");               
                     while (res.next()) {
                             i++;
@@ -1352,9 +1358,9 @@ public class shpData {
                             rowArray.put(res.getString("sh_site"));
                             rowArray.put(res.getString("sh_po"));
                             rowArray.put(res.getString("sh_so"));
-                            rowArray.put(res.getString("sh_curr"));
                             rowArray.put(currformat(res.getString("amt")));
-                            rowArray.put(res.getString("sh_status"));
+                            rowArray.put(currformat(res.getString("charges")));
+                            rowArray.put(currformat(res.getString("taxes")));
                             jsonarray.put(rowArray);
 
                     } 

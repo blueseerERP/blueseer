@@ -332,7 +332,7 @@ public class AS2Serv extends HttpServlet {
             as2m = getAS2Mstr(sender, receiver);
             
             
-            if (info == null) {
+            if (as2m == null || as2m.m()[0].equals("1")) {
               writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 sender / receiver unknown with keys: " + sender + "/" + receiver,now,"",defaultsite});  
               //return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 sender ID unknown with keys: " + sender + "/" + receiver);    
             return createMDN("3200", elementals, returnheaders, isDebug, as2m);
@@ -343,14 +343,14 @@ public class AS2Serv extends HttpServlet {
             return createMDN("3200", elementals, returnheaders, isDebug, as2m);
         }
         
-        if (info == null) { 
+        if (as2m == null || as2m.m()[0].equals("1")) { 
               writeAS2LogStop(new String[]{"0","unknown","in","error","unable to find sender / receiver keys: " + sender + "/" + receiver,now,"",info[22]});
               return createMDN("3300", elementals, returnheaders, isDebug, as2m);   
         }
         
         
-        elementals[6] = info[0];  // assigns 6th element the value of as2_id
-        elementals[7] = info[23]; // whether to sign mdn
+        elementals[6] = as2m.as2_id();  // assigns 6th element the value of as2_id
+        elementals[7] = as2m.as2_signmdn(); // whether to sign mdn
         
         
         System.out.println("here--> Request Content Type: " + request.getContentType());    

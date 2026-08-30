@@ -20340,6 +20340,8 @@ return mystring;
            hm.put("d" + j,  newmodel.getColumnName(j).toString());
         }
         
+        hm.put("p10","¤###0.00;¤-###0.00");
+        
         String jasperfile = "";
       //  if (type.startsWith("genericJTable")) {
         if (type.length() > 3) {  // assumes explicit jasper file name is larger than 3 chars.....if 3 chars or less...then must be key based L8, L8C, etc
