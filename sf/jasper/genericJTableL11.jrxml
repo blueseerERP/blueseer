@@ -145,7 +145,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="23" splitType="Stretch">
+		<band height="18" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="70" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
 				<textFieldExpression><![CDATA[$F{COLUMN_0}]]></textFieldExpression>
@@ -185,12 +185,12 @@
 			</textField>
 			<textField>
 				<reportElement x="631" y="2" width="69" height="16" uuid="e10dfab5-65f1-481d-b0e5-01e19545b206"/>
-				<textFieldExpression><![CDATA[($P{ptype9}.equals("double")) ? Double.valueOf($F{COLUMN_9}) : $F{COLUMN_9}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{ptype9} != null && $P{ptype9}.equals("double")) ? Double.valueOf($F{COLUMN_9}) : $F{COLUMN_9}]]></textFieldExpression>
 				<patternExpression><![CDATA[($P{ptype9}.equals("double")) ? $P{pformat9} : ""]]></patternExpression>
 			</textField>
 			<textField>
 				<reportElement x="700" y="2" width="90" height="16" uuid="a97fe585-712f-4b02-8192-824cc4d5642a"/>
-				<textFieldExpression><![CDATA[($P{ptype10}.equals("double")) ? Double.valueOf($F{COLUMN_10}) : $F{COLUMN_10}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{ptype10} != null && $P{ptype10}.equals("double")) ? Double.valueOf($F{COLUMN_10}) : $F{COLUMN_10}]]></textFieldExpression>
 				<patternExpression><![CDATA[($P{ptype10}.equals("double")) ? $P{pformat10} : ""]]></patternExpression>
 			</textField>
 		</band>
