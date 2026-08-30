@@ -30,6 +30,7 @@
 	<parameter name="d9" class="java.lang.String"/>
 	<parameter name="d10" class="java.lang.String"/>
 	<parameter name="p10" class="java.lang.String"/>
+	<parameter name="ptype10" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -183,7 +184,7 @@
 			</textField>
 			<textField>
 				<reportElement x="700" y="2" width="90" height="16" uuid="a97fe585-712f-4b02-8192-824cc4d5642a"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_10}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{ptype10}.equals("double")) ? Double.valueOf($F{COLUMN_10}) : $F{COLUMN_10}]]></textFieldExpression>
 				<patternExpression><![CDATA[$P{p10}]]></patternExpression>
 			</textField>
 		</band>
