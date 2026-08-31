@@ -91,7 +91,7 @@ public class ShpRptPicker extends javax.swing.JPanel {
     boolean canUpdate = false;
     boolean isAutoPost = false;
     ArrayList<String[]> initDataSets = null;
-    ArrayList<String[]> columntypes = null;
+    ArrayList<String[]> columntypes = new ArrayList<>();
     String defaultSite = "";
     String defaultCurrency = "";
     String defaultCC = "";
@@ -409,7 +409,7 @@ public class ShpRptPicker extends javax.swing.JPanel {
         lbdate2.setText("");
         lbdate2.setVisible(true);
         
-        columntypes = null;
+        columntypes.removeAll(columntypes);
     }
     
     /* CUSTOM FUNCTIONS BEGIN  */
@@ -475,12 +475,15 @@ public class ShpRptPicker extends javax.swing.JPanel {
               }  
                 }; 
              
+        // always one less than getColumnClass assignment...because of leftshift due to col==0 image type     
+        columntypes.add(new String[]{"ptype8","double"});
+        columntypes.add(new String[]{"pformat8","¤###0.00;¤-###0.00"});     
         columntypes.add(new String[]{"ptype9","double"});
         columntypes.add(new String[]{"pformat9","¤###0.00;¤-###0.00"});
         columntypes.add(new String[]{"ptype10","double"});
         columntypes.add(new String[]{"pformat10","¤###0.00;¤-###0.00"});
-        columntypes.add(new String[]{"ptype11","double"});
-        columntypes.add(new String[]{"pformat11","¤###0.00;¤-###0.00"});
+    
+        
             
         String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -576,6 +579,10 @@ public class ShpRptPicker extends javax.swing.JPanel {
                 else return String.class;  //other columns accept String values  
               }  
                 }; 
+             
+        // always one less than getColumnClass assignment...because of leftshift due to col==0 image type 
+        columntypes.add(new String[]{"ptype9","double"});
+        columntypes.add(new String[]{"pformat9","¤###0.00;¤-###0.00"});
             
         String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -683,6 +690,9 @@ public class ShpRptPicker extends javax.swing.JPanel {
                 else return String.class;  //other columns accept String values  
               }  
                 }; 
+        // always one less than getColumnClass assignment...because of leftshift due to col==0 image type       
+        columntypes.add(new String[]{"ptype9","double"});
+        columntypes.add(new String[]{"pformat9","¤###0.00;¤-###0.00"});   
             
         String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -785,11 +795,17 @@ public class ShpRptPicker extends javax.swing.JPanel {
              {
               @Override  
               public Class getColumnClass(int col) {  
-                if (col == 0)       
-                    return ImageIcon.class; 
-                else return String.class;  //other columns accept String values  
-              }  
+                    if (col == 0) {      
+                        return ImageIcon.class;
+                    } else if (col == 8) {
+                        return Double.class;                    
+                    }  else return String.class;  //other columns accept String values  
+                }  
                 }; 
+             
+        // always one less than getColumnClass assignment...because of leftshift due to col==0 image type       
+        columntypes.add(new String[]{"ptype7","double"});
+        columntypes.add(new String[]{"pformat7","¤###0.00;¤-###0.00"});   
             
         String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -883,11 +899,16 @@ public class ShpRptPicker extends javax.swing.JPanel {
              {
               @Override  
               public Class getColumnClass(int col) {  
-                if (col == 0)       
-                    return ImageIcon.class; 
-                else return String.class;  //other columns accept String values  
-              }  
+                    if (col == 0) {      
+                        return ImageIcon.class;
+                    } else if (col == 8) {
+                        return Double.class;                    
+                    }  else return String.class;  //other columns accept String values  
+                }    
                 }; 
+        // always one less than getColumnClass assignment...because of leftshift due to col==0 image type       
+        columntypes.add(new String[]{"ptype7","double"});
+        columntypes.add(new String[]{"pformat7","¤###0.00;¤-###0.00"});    
             
         String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -975,11 +996,16 @@ public class ShpRptPicker extends javax.swing.JPanel {
              {
               @Override  
               public Class getColumnClass(int col) {  
-                if (col == 0)       
-                    return ImageIcon.class; 
-                else return String.class;  //other columns accept String values  
-              }  
+                    if (col == 0) {      
+                        return ImageIcon.class;
+                    } else if (col == 8) {
+                        return Double.class;                    
+                    }  else return String.class;  //other columns accept String values  
+                }  
                 }; 
+        // always one less than getColumnClass assignment...because of leftshift due to col==0 image type       
+        columntypes.add(new String[]{"ptype7","double"});
+        columntypes.add(new String[]{"pformat7","¤###0.00;¤-###0.00"});         
             
         String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 

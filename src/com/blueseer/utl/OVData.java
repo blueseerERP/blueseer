@@ -20354,6 +20354,7 @@ return mystring;
         }
         
         if (columntypes != null) {
+            //System.out.println("columntypes count is: " + columntypes.size());
             for (String[] hmadds : columntypes) {
                 hm.put(hmadds[0], hmadds[1]);
             }
