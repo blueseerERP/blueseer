@@ -35,6 +35,10 @@
 	<parameter name="ptype6" class="java.lang.String"/>
 	<parameter name="pformat5" class="java.lang.String"/>
 	<parameter name="ptype5" class="java.lang.String"/>
+	<parameter name="ptype3" class="java.lang.String"/>
+	<parameter name="pformat3" class="java.lang.String"/>
+	<parameter name="ptype2" class="java.lang.String"/>
+	<parameter name="pformat2" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -141,11 +145,13 @@
 			</textField>
 			<textField>
 				<reportElement x="240" y="0" width="110" height="16" uuid="a33e94ca-e3f8-4f4f-9bd9-5152ed973656"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_2}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{ptype2} != null && $P{ptype2}.equals("double")) ? Double.valueOf($F{COLUMN_2}) : $F{COLUMN_2}]]></textFieldExpression>
+				<patternExpression><![CDATA[($P{ptype2}.equals("double")) ? $P{pformat2} : ""]]></patternExpression>
 			</textField>
 			<textField>
 				<reportElement x="350" y="0" width="110" height="16" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_3}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{ptype3} != null && $P{ptype3}.equals("double")) ? Double.valueOf($F{COLUMN_3}) : $F{COLUMN_3}]]></textFieldExpression>
+				<patternExpression><![CDATA[($P{ptype3}.equals("double")) ? $P{pformat3} : ""]]></patternExpression>
 			</textField>
 			<textField>
 				<reportElement x="460" y="0" width="110" height="16" uuid="ca2b58e9-ab02-4e95-95bc-87eb07be7541"/>
