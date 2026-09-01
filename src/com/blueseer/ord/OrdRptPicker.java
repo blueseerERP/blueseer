@@ -116,6 +116,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
     boolean canUpdate = false;
     boolean isAutoPost = false;
     ArrayList<String[]> initDataSets = null;
+    ArrayList<String[]> columntypes = new ArrayList<>();
     String defaultSite = "";
     String defaultCurrency = "";
     String defaultCC = "";
@@ -432,6 +433,8 @@ public class OrdRptPicker extends javax.swing.JPanel {
         lbdate1.setVisible(true);
         lbdate2.setText("");
         lbdate2.setVisible(true);
+         
+        columntypes.removeAll(columntypes);
     }
     
     /* CUSTOM FUNCTIONS BEGIN  */
@@ -492,6 +495,10 @@ public class OrdRptPicker extends javax.swing.JPanel {
                 else return String.class;  //other columns accept String values  
               }  
                 }; 
+             
+            // if col== 0 is image ...always one less than getColumnClass assignment   
+            columntypes.add(new String[]{"ptype7","double"});
+            columntypes.add(new String[]{"pformat7","¤###0.00;¤-###0.00"});  
             
               
         String jsonString = null; 
@@ -537,6 +544,8 @@ public class OrdRptPicker extends javax.swing.JPanel {
                  }
                  tc.setCellRenderer(new OrdRptPicker.renderer1());
              }
+              tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));  
+            
         } // else run report
                
     }
@@ -590,6 +599,10 @@ public class OrdRptPicker extends javax.swing.JPanel {
                 else return String.class;  //other columns accept String values  
               }  
                 }; 
+             
+            // if col== 0 is image ...always one less than getColumnClass assignment   
+            columntypes.add(new String[]{"ptype7","double"});
+            columntypes.add(new String[]{"pformat7","¤###0.00;¤-###0.00"});   
             
         String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -631,6 +644,8 @@ public class OrdRptPicker extends javax.swing.JPanel {
                  }
                  tc.setCellRenderer(new OrdRptPicker.renderer1());
              }
+              tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));  
+            
         } // else run report
                
     }
@@ -694,6 +709,10 @@ public class OrdRptPicker extends javax.swing.JPanel {
                 else return String.class;  //other columns accept String values  
               }  
                 }; 
+             
+            // if col== 0 is image ...always one less than getColumnClass assignment   
+            columntypes.add(new String[]{"ptype7","double"});
+            columntypes.add(new String[]{"pformat7","¤###0.00;¤-###0.00"});   
             
       String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -737,6 +756,8 @@ public class OrdRptPicker extends javax.swing.JPanel {
                  }
                  tc.setCellRenderer(new OrdRptPicker.renderer1());
              }
+             tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));  
+             
         } // else run report
                
     }
@@ -793,6 +814,10 @@ public class OrdRptPicker extends javax.swing.JPanel {
                 else return String.class;  //other columns accept String values  
               }  
                 }; 
+             
+            // if col== 0 is image ...always one less than getColumnClass assignment   
+            columntypes.add(new String[]{"ptype7","double"});
+            columntypes.add(new String[]{"pformat7","¤###0.00;¤-###0.00"});   
             
       String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -832,6 +857,8 @@ public class OrdRptPicker extends javax.swing.JPanel {
                  }
                  tc.setCellRenderer(new OrdRptPicker.renderer1());
              }
+            tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));  
+              
         } // else run report
                
     }
@@ -985,6 +1012,10 @@ public class OrdRptPicker extends javax.swing.JPanel {
                 else return String.class;  //other columns accept String values  
               }  
                 }; 
+             
+            // if col== 0 is image ...always one less than getColumnClass assignment   
+            columntypes.add(new String[]{"ptype7","double"});
+            columntypes.add(new String[]{"pformat7","¤###0.00;¤-###0.00"});   
             
       String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -1024,6 +1055,8 @@ public class OrdRptPicker extends javax.swing.JPanel {
                  }
                  tc.setCellRenderer(new OrdRptPicker.renderer1());
              }
+            tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));  
+              
         } // else run report
                
     }
@@ -1184,6 +1217,12 @@ public class OrdRptPicker extends javax.swing.JPanel {
                 else return String.class;  //other columns accept String values  
               }  
                 }; 
+             
+            // if col== 0 is image ...always one less than getColumnClass assignment   
+            columntypes.add(new String[]{"ptype6","double"});
+            columntypes.add(new String[]{"pformat6","¤###0.00;¤-###0.00"});    
+            columntypes.add(new String[]{"ptype7","double"});
+            columntypes.add(new String[]{"pformat7","¤###0.00;¤-###0.00"});  
             
       String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -1231,6 +1270,9 @@ public class OrdRptPicker extends javax.swing.JPanel {
                  }
                  tc.setCellRenderer(new OrdRptPicker.renderer1());
              }
+            tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));  
+            tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));  
+            
         } // else run report
                
     }
@@ -1678,7 +1720,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
         if (ddreport.getSelectedItem() != null && ! ddreport.getSelectedItem().toString().isBlank() && tablereport != null) {
-        OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedItem().toString()), null );
+        OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedItem().toString()), columntypes );
         }
     }//GEN-LAST:event_btprintActionPerformed
 

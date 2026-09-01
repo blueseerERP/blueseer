@@ -475,7 +475,7 @@ public class ShpRptPicker extends javax.swing.JPanel {
               }  
                 }; 
              
-        // always one less than getColumnClass assignment...because of leftshift due to col==0 image type     
+        // if col== 0 is image ...always one less than getColumnClass assignment   
         columntypes.add(new String[]{"ptype8","double"});
         columntypes.add(new String[]{"pformat8","¤###0.00;¤-###0.00"});     
         columntypes.add(new String[]{"ptype9","double"});
@@ -509,7 +509,9 @@ public class ShpRptPicker extends javax.swing.JPanel {
         if (roData != null) {
             int i = 0;
             for (Object[] rowData : roData) {
+                roData[i][9] = bsParseDouble(roData[i][9].toString());
                 roData[i][10] = bsParseDouble(roData[i][10].toString());
+                roData[i][11] = bsParseDouble(roData[i][11].toString());
                 mymodel.addRow(rowData);
                 i++;
             }
@@ -526,6 +528,10 @@ public class ShpRptPicker extends javax.swing.JPanel {
                  }
                  tc.setCellRenderer(new ShpRptPicker.renderer1());
              }
+            tablereport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));  
+            tablereport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));  
+            tablereport.getColumnModel().getColumn(11).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));  
+        
         } // else run report
                
     }
@@ -574,13 +580,16 @@ public class ShpRptPicker extends javax.swing.JPanel {
               {
               @Override  
               public Class getColumnClass(int col) {  
-                if (col == 0)       
-                    return ImageIcon.class;  
+                if (col == 0) {       
+                    return ImageIcon.class;
+                } else if (col == 10) {
+                    return Double.class;
+                }
                 else return String.class;  //other columns accept String values  
               }  
                 }; 
              
-        // always one less than getColumnClass assignment...because of leftshift due to col==0 image type 
+        // if col==0 is image ...always one less than getColumnClass assignment 
         columntypes.add(new String[]{"ptype9","double"});
         columntypes.add(new String[]{"pformat9","¤###0.00;¤-###0.00"});
             
@@ -625,6 +634,8 @@ public class ShpRptPicker extends javax.swing.JPanel {
                  }
                  tc.setCellRenderer(new ShpRptPicker.renderer1());
              }
+            tablereport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));  
+            
         } // else run report
                
     }
@@ -685,9 +696,12 @@ public class ShpRptPicker extends javax.swing.JPanel {
              {
               @Override  
               public Class getColumnClass(int col) {  
-                if (col == 0)       
-                    return ImageIcon.class; 
-                else return String.class;  //other columns accept String values  
+                if (col == 0) {       
+                    return ImageIcon.class;
+                } else if (col == 10) {
+                    return Double.class;
+                }
+                else return String.class;
               }  
                 }; 
         // always one less than getColumnClass assignment...because of leftshift due to col==0 image type       
@@ -739,6 +753,8 @@ public class ShpRptPicker extends javax.swing.JPanel {
                  }
                  tc.setCellRenderer(new ShpRptPicker.renderer1());
              }
+            tablereport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));  
+              
         } // else run report
                
     }

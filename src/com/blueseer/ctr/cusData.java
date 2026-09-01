@@ -37,6 +37,7 @@ import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -3104,25 +3105,25 @@ public class cusData {
                 }
                 
                 if (keys[0].equals("custTotalSalesByRange")) {
-                    res = st.executeQuery("SELECT cm_code, cm_name,  " +
-                        " sum(shd_qty * shd_netprice) as 'total' " +
-                          "from cm_mstr inner join ship_mstr on sh_cust = cm_code " +
-                        " inner join ship_det on shd_id = sh_id and sh_status = '1' " +
-                        " where cm_code >= " + "'" + keys[1] + "'" +
-                        " and cm_code <= " + "'" + keys[2] + "'" +
-                        " and sh_shipdate >= " + "'" + keys[3] + "'" +
-                        " and sh_shipdate <= " + "'" + keys[4] + "'" +
-                        " group by cm_code, cm_name order by cm_code ;");
-              
+                    res = st.executeQuery("select ar_id, ar_cust, cm_name, ar_type, " +
+                               " ar_ref, ar_nbr, ar_effdate, ar_invdate, ar_duedate, ar_curr, ar_amt, ar_base_amt, ar_open_amt, " +
+                               " case when ar_status = 'c' then 'closed' else 'open' end as 'status', " +
+                               " ar_curr, ar_acct " +
+                               " from ar_mstr inner join cm_mstr on cm_code = ar_cust " +
+                               " where " +
+                               " ar_cust >= " + "'" + keys[1] + "'" +
+                               " and ar_cust <= " + "'" + keys[2] + "'" +        
+                               " and ar_effdate >= " + "'" + keys[3] + "'" +
+                               " and ar_effdate <= " + "'" + keys[4] + "'" + ";");  
                     while (res.next()) {
                             i++;
                             JSONArray rowArray = new JSONArray(); 
                             rowArray.put("select");
-                            rowArray.put(res.getString("cm_code"));
+                            rowArray.put(res.getString("ar_cust"));
                             rowArray.put(res.getString("cm_name"));
                             rowArray.put(keys[3]);
                             rowArray.put(keys[4]);
-                            rowArray.put(BlueSeerUtils.bsformat("", res.getString("total"), "2"));
+                            rowArray.put(currformat(res.getString("ar_amt")));
                             jsonarray.put(rowArray);
 
                     } 

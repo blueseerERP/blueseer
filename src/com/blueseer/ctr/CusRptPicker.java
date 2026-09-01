@@ -37,6 +37,7 @@ import javax.swing.table.DefaultTableModel;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.adm.admData;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.jsonToData;
@@ -90,6 +91,7 @@ public class CusRptPicker extends javax.swing.JPanel {
     boolean canUpdate = false;
     boolean isAutoPost = false;
     ArrayList<String[]> initDataSets = null;
+     ArrayList<String[]> columntypes = new ArrayList<>();
     String defaultSite = "";
     String defaultCurrency = "";
     String defaultCC = "";
@@ -406,6 +408,8 @@ public class CusRptPicker extends javax.swing.JPanel {
         lbdate1.setVisible(true);
         lbdate2.setText("");
         lbdate2.setVisible(true);
+        
+        columntypes.removeAll(columntypes);
     }
     
     /* CUSTOM FUNCTIONS BEGIN  */
@@ -433,10 +437,10 @@ public class CusRptPicker extends javax.swing.JPanel {
             
             // cleanup variables
             if (from.isEmpty()) {
-                  from = bsmf.MainFrame.lownbr;
+                  from = bsmf.MainFrame.lowchar;
             }
             if (to.isEmpty()) {
-                  to = bsmf.MainFrame.hinbr;
+                  to = bsmf.MainFrame.hichar;
             }
             
             // create and fill tablemodel
@@ -518,10 +522,10 @@ public class CusRptPicker extends javax.swing.JPanel {
             
             // cleanup variables
             if (from.isEmpty()) {
-                  from = bsmf.MainFrame.lownbr;
+                  from = bsmf.MainFrame.lowchar;
             }
             if (to.isEmpty()) {
-                  to = bsmf.MainFrame.hinbr;
+                  to = bsmf.MainFrame.hichar;
             }
             
             // create and fill tablemodel
@@ -602,10 +606,10 @@ public class CusRptPicker extends javax.swing.JPanel {
             
             // cleanup variables
             if (from.isEmpty()) {
-                  from = bsmf.MainFrame.lownbr;
+                  from = bsmf.MainFrame.lowchar;
             }
             if (to.isEmpty()) {
-                  to = bsmf.MainFrame.hinbr;
+                  to = bsmf.MainFrame.hichar;
             }
             
             // create and fill tablemodel
@@ -688,10 +692,10 @@ public class CusRptPicker extends javax.swing.JPanel {
             
             // cleanup variables
             if (from.isEmpty()) {
-                  from = bsmf.MainFrame.lownbr;
+                  from = bsmf.MainFrame.lowchar;
             }
             if (to.isEmpty()) {
-                  to = bsmf.MainFrame.hinbr;
+                  to = bsmf.MainFrame.hichar;
             }
             
             // create and fill tablemodel
@@ -780,10 +784,10 @@ public class CusRptPicker extends javax.swing.JPanel {
             String todate = BlueSeerUtils.setDateFormatNull(dcdate2.getDate());
             // cleanup variables
             if (from.isEmpty()) {
-                  from = bsmf.MainFrame.lownbr;
+                  from = bsmf.MainFrame.lowchar;
             }
             if (to.isEmpty()) {
-                  to = bsmf.MainFrame.hinbr;
+                  to = bsmf.MainFrame.hichar;
             }
             if (fromdate == null || fromdate.isEmpty()) {
                   fromdate = bsmf.MainFrame.lowdate;
@@ -813,6 +817,10 @@ public class CusRptPicker extends javax.swing.JPanel {
                 else return String.class;  //other columns accept String values  
               }  
                 }; 
+             
+             // if col== 0 is image ...always one less than getColumnClass assignment   
+        columntypes.add(new String[]{"ptype4","double"});
+        columntypes.add(new String[]{"pformat4","¤###0.00;¤-###0.00"});   
             
       String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -840,8 +848,11 @@ public class CusRptPicker extends javax.swing.JPanel {
         
         Object[][] roData = jsonToData(jsonString);
         if (roData != null) {
+            int i = 0;
             for (Object[] rowData : roData) {
+                roData[i][5] = bsParseDouble(roData[i][5].toString());
                 mymodel.addRow(rowData);
+                i++;
             }
         }    
       
@@ -856,6 +867,8 @@ public class CusRptPicker extends javax.swing.JPanel {
                  }
                  tc.setCellRenderer(new CusRptPicker.renderer1());
              }
+              tablereport.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));  
+            
         } // else run report
     }
     
@@ -875,10 +888,10 @@ public class CusRptPicker extends javax.swing.JPanel {
             
             // cleanup variables
             if (from.isEmpty()) {
-                  from = bsmf.MainFrame.lownbr;
+                  from = bsmf.MainFrame.lowchar;
             }
             if (to.isEmpty()) {
-                  to = bsmf.MainFrame.hinbr;
+                  to = bsmf.MainFrame.hichar;
             }
             
             // create and fill tablemodel
@@ -1394,7 +1407,7 @@ public class CusRptPicker extends javax.swing.JPanel {
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
         if (ddreport.getSelectedItem() != null && ! ddreport.getSelectedItem().toString().isBlank() && tablereport != null) {
-        OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedItem().toString()), null );
+        OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedItem().toString()), columntypes );
         }
     }//GEN-LAST:event_btprintActionPerformed
 

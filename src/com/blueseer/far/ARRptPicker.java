@@ -112,6 +112,7 @@ public class ARRptPicker extends javax.swing.JPanel {
     boolean canUpdate = false;
     boolean isAutoPost = false;
     ArrayList<String[]> initDataSets = null;
+    ArrayList<String[]> columntypes = new ArrayList<>();
     String defaultSite = "";
     String defaultCurrency = "";
     String defaultCC = "";
@@ -428,6 +429,8 @@ public class ARRptPicker extends javax.swing.JPanel {
         lbdate1.setVisible(true);
         lbdate2.setText("");
         lbdate2.setVisible(true);
+        
+        columntypes.removeAll(columntypes);
     }
     
     /* CUSTOM FUNCTIONS BEGIN  */
@@ -478,7 +481,22 @@ public class ARRptPicker extends javax.swing.JPanel {
                    getGlobalColumnTag("currency"), 
                    getGlobalColumnTag("amount"), 
                    getGlobalColumnTag("open"), 
-                   getGlobalColumnTag("status")});
+                   getGlobalColumnTag("status")})
+                       {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 8 || col == 9) {
+                    return Double.class;
+                }
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+               
+                
+        columntypes.add(new String[]{"ptype8","double"});
+        columntypes.add(new String[]{"pformat8","¤###0.00;¤-###0.00"});     
+        columntypes.add(new String[]{"ptype9","double"});
+        columntypes.add(new String[]{"pformat9","¤###0.00;¤-###0.00"});
            
         String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -562,7 +580,28 @@ public class ARRptPicker extends javax.swing.JPanel {
                             getGlobalColumnTag("30daysold"), 
                             getGlobalColumnTag("60daysold"), 
                             getGlobalColumnTag("90daysold"), 
-                            getGlobalColumnTag("90+daysold")});
+                            getGlobalColumnTag("90+daysold")})
+                   {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 2 || col == 3 || col == 4 || col == 5 || col == 6) {
+                    return Double.class;
+                }
+                else return String.class;  //other columns accept String values  
+              }  
+                };
+           
+        columntypes.add(new String[]{"ptype2","double"});
+        columntypes.add(new String[]{"pformat2","¤###0.00;¤-###0.00"});     
+        columntypes.add(new String[]{"ptype3","double"});
+        columntypes.add(new String[]{"pformat3","¤###0.00;¤-###0.00"});
+        columntypes.add(new String[]{"ptype4","double"});
+        columntypes.add(new String[]{"pformat4","¤###0.00;¤-###0.00"});
+        columntypes.add(new String[]{"ptype5","double"});
+        columntypes.add(new String[]{"pformat5","¤###0.00;¤-###0.00"});
+        columntypes.add(new String[]{"ptype6","double"});
+        columntypes.add(new String[]{"pformat6","¤###0.00;¤-###0.00"});
+           
         String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
         ArrayList<String[]> list = new ArrayList<String[]>();
@@ -656,7 +695,27 @@ public class ARRptPicker extends javax.swing.JPanel {
                             getGlobalColumnTag("30daysold"), 
                             getGlobalColumnTag("60daysold"), 
                             getGlobalColumnTag("90daysold"), 
-                            getGlobalColumnTag("90+daysold")});
+                            getGlobalColumnTag("90+daysold")})
+            {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 6 || col == 7 || col == 8 || col == 9 || col == 10) {
+                    return Double.class;
+                }
+                else return String.class;  //other columns accept String values  
+              }  
+                };
+    
+        columntypes.add(new String[]{"ptype6","double"});
+        columntypes.add(new String[]{"pformat6","¤###0.00;¤-###0.00"});     
+        columntypes.add(new String[]{"ptype7","double"});
+        columntypes.add(new String[]{"pformat7","¤###0.00;¤-###0.00"});
+        columntypes.add(new String[]{"ptype8","double"});
+        columntypes.add(new String[]{"pformat8","¤###0.00;¤-###0.00"});
+        columntypes.add(new String[]{"ptype9","double"});
+        columntypes.add(new String[]{"pformat9","¤###0.00;¤-###0.00"});
+        columntypes.add(new String[]{"ptype10","double"});
+        columntypes.add(new String[]{"pformat10","¤###0.00;¤-###0.00"});
            
         String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -761,7 +820,22 @@ public class ARRptPicker extends javax.swing.JPanel {
                             getGlobalColumnTag("type"), 
                             getGlobalColumnTag("reference"), 
                             getGlobalColumnTag("invoiceamt"), 
-                            getGlobalColumnTag("checkamt")});
+                            getGlobalColumnTag("checkamt")})
+                {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 6 || col == 7 ) {
+                    return Double.class;
+                }
+                else return String.class;  //other columns accept String values  
+              }  
+                };
+        
+        
+        columntypes.add(new String[]{"ptype6","double"});
+        columntypes.add(new String[]{"pformat6","¤###0.00;¤-###0.00"});
+        columntypes.add(new String[]{"ptype7","double"});
+        columntypes.add(new String[]{"pformat7","¤###0.00;¤-###0.00"});
            
         String jsonString = null; 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
@@ -1235,7 +1309,7 @@ public class ARRptPicker extends javax.swing.JPanel {
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
         if (ddreport.getSelectedItem() != null && ! ddreport.getSelectedItem().toString().isBlank() && tablereport != null) {
-        OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedItem().toString()), null );
+        OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedItem().toString()), columntypes );
         }
     }//GEN-LAST:event_btprintActionPerformed
 

@@ -3950,9 +3950,18 @@ public class ordData {
             try {  
                  
                 int i = 0;
+                double total = 0;
+                double charge = 0;
+                double tax = 0;
+                
                 if (keys[0].equals("ordersDueDateByRange")) {
-                res = st.executeQuery("SELECT so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name, " +
-                    " sum(sod_ord_qty * sod_netprice) as 'total' " +
+                res = st.executeQuery("SELECT " +
+                    " (select sum(case when (sos_type = 'charge' or sos_type = 'shipping ADD') and sos_amttype = 'amount' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'charge', " +
+                    " (select sum(case when sos_type = 'tax' and sos_amttype = 'percent' then sos_amt end) from sos_det where sos_nbr = so_nbr)as 'taxpercent', " +
+                    " (select sum(case when sos_type = 'tax' and sos_amttype = 'amount' then sos_amt end) from sos_det where sos_nbr = so_nbr) as 'taxcharge', " +
+                    " sum(sod_taxamt) as matltax, " +
+                    " so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name, " +
+                    " sum(sod_ord_qty * sod_netprice) as 'amt' " +
                     " from so_mstr inner join sod_det on so_nbr = sod_nbr " +
                     " inner join cm_mstr on cm_code = so_cust " +
                     " where " +
@@ -3962,6 +3971,15 @@ public class ordData {
                 
                     while (res.next()) {
                             i++;
+                            charge = res.getDouble("charge");
+                            total = res.getDouble("amt") + charge;  // charges added to total before taxing
+                            if (res.getDouble("taxpercent") != 0) {
+                              tax = total * (res.getDouble("taxpercent") / 100.0);
+                            } else {
+                              tax = 0;  
+                            }
+                            tax += (res.getDouble("taxcharge") + res.getDouble("matltax"));
+                            total = total + tax;
                             JSONArray rowArray = new JSONArray(); 
                             rowArray.put("select");
                             rowArray.put(res.getString("so_nbr"));
@@ -3971,15 +3989,20 @@ public class ordData {
                             rowArray.put(res.getString("so_ord_date"));
                             rowArray.put(res.getString("so_due_date"));
                             rowArray.put(res.getString("so_status"));
-                            rowArray.put(currformat(res.getString("total")));
+                            rowArray.put(bsNumber(total));
                             jsonarray.put(rowArray);
 
                     } 
                 }
                 
                 if (keys[0].equals("ordersOrdDateByRange")) {
-                res = st.executeQuery("SELECT so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name, " +
-                    " sum(sod_ord_qty * sod_netprice) as 'total' " +
+                res = st.executeQuery("SELECT " +
+                    " (select sum(case when (sos_type = 'charge' or sos_type = 'shipping ADD') and sos_amttype = 'amount' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'charge', " +
+                    " (select sum(case when sos_type = 'tax' and sos_amttype = 'percent' then sos_amt end) from sos_det where sos_nbr = so_nbr)as 'taxpercent', " +
+                    " (select sum(case when sos_type = 'tax' and sos_amttype = 'amount' then sos_amt end) from sos_det where sos_nbr = so_nbr) as 'taxcharge', " +
+                    " sum(sod_taxamt) as matltax, " +
+                    " so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name, " +
+                    " sum(sod_ord_qty * sod_netprice) as 'amt' " +
                     " from so_mstr inner join sod_det on so_nbr = sod_nbr " +
                     " inner join cm_mstr on cm_code = so_cust " +
                     " where " +
@@ -3989,6 +4012,15 @@ public class ordData {
                 
                     while (res.next()) {
                             i++;
+                            charge = res.getDouble("charge");
+                            total = res.getDouble("amt") + charge;  // charges added to total before taxing
+                            if (res.getDouble("taxpercent") != 0) {
+                              tax = total * (res.getDouble("taxpercent") / 100.0);
+                            } else {
+                              tax = 0;  
+                            }
+                            tax += (res.getDouble("taxcharge") + res.getDouble("matltax"));
+                            total = total + tax;
                             JSONArray rowArray = new JSONArray(); 
                             rowArray.put("select");
                             rowArray.put(res.getString("so_nbr"));
@@ -3998,15 +4030,20 @@ public class ordData {
                             rowArray.put(res.getString("so_ord_date"));
                             rowArray.put(res.getString("so_due_date"));
                             rowArray.put(res.getString("so_status"));
-                            rowArray.put(currformat(res.getString("total")));
+                            rowArray.put(bsNumber(total)); 
                             jsonarray.put(rowArray);
 
                     } 
                 }
                 
                 if (keys[0].equals("ordersCustDateByRange")) {
-                res = st.executeQuery("SELECT so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name, " +
-                    " sum(sod_ord_qty  * sod_netprice) as 'total' " +
+                res = st.executeQuery("SELECT " +
+                    " (select sum(case when (sos_type = 'charge' or sos_type = 'shipping ADD') and sos_amttype = 'amount' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'charge', " +
+                    " (select sum(case when sos_type = 'tax' and sos_amttype = 'percent' then sos_amt end) from sos_det where sos_nbr = so_nbr)as 'taxpercent', " +
+                    " (select sum(case when sos_type = 'tax' and sos_amttype = 'amount' then sos_amt end) from sos_det where sos_nbr = so_nbr) as 'taxcharge', " +
+                    " sum(sod_taxamt) as matltax, " +
+                    " so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name, " +
+                    " sum(sod_ord_qty  * sod_netprice) as 'amt' " +
                     " from so_mstr inner join sod_det on so_nbr = sod_nbr " +
                     " inner join cm_mstr on cm_code = so_cust " +
                     " where " +
@@ -4018,6 +4055,15 @@ public class ordData {
                 
                     while (res.next()) {
                             i++;
+                            charge = res.getDouble("charge");
+                            total = res.getDouble("amt") + charge;  // charges added to total before taxing
+                            if (res.getDouble("taxpercent") != 0) {
+                              tax = total * (res.getDouble("taxpercent") / 100.0);
+                            } else {
+                              tax = 0;  
+                            }
+                            tax += (res.getDouble("taxcharge") + res.getDouble("matltax"));
+                            total = total + tax;
                             JSONArray rowArray = new JSONArray(); 
                             rowArray.put("select");
                             rowArray.put(res.getString("so_nbr"));
@@ -4027,15 +4073,20 @@ public class ordData {
                             rowArray.put(res.getString("so_ord_date"));
                             rowArray.put(res.getString("so_due_date"));
                             rowArray.put(res.getString("so_status"));
-                            rowArray.put(currformat(res.getString("total")));
+                            rowArray.put(bsNumber(total));
                             jsonarray.put(rowArray);
 
                     } 
                 }
                 
                 if (keys[0].equals("ordersOpenByCust")) {
-                res = st.executeQuery("SELECT so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name, " +
-                    " sum(sod_ord_qty  * sod_netprice) as 'total' " +
+                res = st.executeQuery("SELECT " +
+                    " (select sum(case when (sos_type = 'charge' or sos_type = 'shipping ADD') and sos_amttype = 'amount' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'charge', " +
+                    " (select sum(case when sos_type = 'tax' and sos_amttype = 'percent' then sos_amt end) from sos_det where sos_nbr = so_nbr)as 'taxpercent', " +
+                    " (select sum(case when sos_type = 'tax' and sos_amttype = 'amount' then sos_amt end) from sos_det where sos_nbr = so_nbr) as 'taxcharge', " +
+                    " sum(sod_taxamt) as matltax, " +
+                    " so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name, " +
+                    " sum(sod_ord_qty  * sod_netprice) as 'amt' " +
                     " from so_mstr inner join sod_det on so_nbr = sod_nbr " +
                     " inner join cm_mstr on cm_code = so_cust " +
                     " where " +
@@ -4046,6 +4097,15 @@ public class ordData {
                 
                     while (res.next()) {
                             i++;
+                            charge = res.getDouble("charge");
+                            total = res.getDouble("amt") + charge;  // charges added to total before taxing
+                            if (res.getDouble("taxpercent") != 0) {
+                              tax = total * (res.getDouble("taxpercent") / 100.0);
+                            } else {
+                              tax = 0;  
+                            }
+                            tax += (res.getDouble("taxcharge") + res.getDouble("matltax"));
+                            total = total + tax;
                             JSONArray rowArray = new JSONArray(); 
                             rowArray.put("select");
                             rowArray.put(res.getString("so_nbr"));
@@ -4055,7 +4115,7 @@ public class ordData {
                             rowArray.put(res.getString("so_ord_date"));
                             rowArray.put(res.getString("so_due_date"));
                             rowArray.put(res.getString("so_status"));
-                            rowArray.put(currformat(res.getString("total")));
+                            rowArray.put(bsNumber(total));
                             jsonarray.put(rowArray);
 
                     } 
@@ -4089,8 +4149,13 @@ public class ordData {
                 }
                 
                 if (keys[0].equals("ordersOnHoldByCust")) {
-                res = st.executeQuery("SELECT so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name, " +
-                    " sum(sod_ord_qty  * sod_netprice) as 'total' " +
+                res = st.executeQuery("SELECT " +
+                    " (select sum(case when (sos_type = 'charge' or sos_type = 'shipping ADD') and sos_amttype = 'amount' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'charge', " +
+                    " (select sum(case when sos_type = 'tax' and sos_amttype = 'percent' then sos_amt end) from sos_det where sos_nbr = so_nbr)as 'taxpercent', " +
+                    " (select sum(case when sos_type = 'tax' and sos_amttype = 'amount' then sos_amt end) from sos_det where sos_nbr = so_nbr) as 'taxcharge', " +
+                    " sum(sod_taxamt) as matltax, " +
+                    " so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name, " +
+                    " sum(sod_ord_qty  * sod_netprice) as 'amt' " +
                     " from so_mstr inner join sod_det on so_nbr = sod_nbr " +
                     " inner join cm_mstr on cm_code = so_cust " +
                     " where " +
@@ -4101,6 +4166,15 @@ public class ordData {
                 
                     while (res.next()) {
                             i++;
+                            charge = res.getDouble("charge");
+                            total = res.getDouble("amt") + charge;  // charges added to total before taxing
+                            if (res.getDouble("taxpercent") != 0) {
+                              tax = total * (res.getDouble("taxpercent") / 100.0);
+                            } else {
+                              tax = 0;  
+                            }
+                            tax += (res.getDouble("taxcharge") + res.getDouble("matltax"));
+                            total = total + tax;
                             JSONArray rowArray = new JSONArray(); 
                             rowArray.put("select");
                             rowArray.put(res.getString("so_nbr"));
@@ -4110,7 +4184,7 @@ public class ordData {
                             rowArray.put(res.getString("so_ord_date"));
                             rowArray.put(res.getString("so_due_date"));
                             rowArray.put(res.getString("so_status"));
-                            rowArray.put(currformat(res.getString("total")));
+                            rowArray.put(bsNumber(total));
                             jsonarray.put(rowArray);
 
                     } 
@@ -4145,11 +4219,11 @@ public class ordData {
                 
                 if (keys[0].equals("ordersTaxByCustDate")) {
                 res = st.executeQuery("SELECT so_nbr, so_cust, so_po, so_ord_date, so_status, cm_code, cm_name,  " +
-                        " sum(sod_ord_qty) as totqty, sum(sod_ord_qty * sod_netprice) as totdol, " +
-                        " (select sum(case when sos_type = 'discount' and sos_amttype = 'percent' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'discountpercent', " +
+                        " sum(sod_ord_qty) as totqty, sum(sod_ord_qty * sod_netprice) as amt, " +
                         " (select sum(case when sos_type <> 'tax' and sos_type <> 'passive' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'charge'," + 
                         " (select sum(case when sos_type = 'tax' and sos_amttype = 'percent' then sos_amt end) from sos_det where sos_nbr = so_nbr)as 'taxpercent', " +
-                        " (select sum(case when sos_type = 'tax' and sos_amttype = 'amount' then sos_amt end) from sos_det where sos_nbr = so_nbr) as 'taxcharge' " +
+                        " (select sum(case when sos_type = 'tax' and sos_amttype = 'amount' then sos_amt end) from sos_det where sos_nbr = so_nbr) as 'taxcharge', " +
+                        " sum(sod_taxamt) as matltax " +
                         " FROM  so_mstr left outer join sod_det on sod_nbr = so_nbr " +
                         " inner join cm_mstr on cm_code = so_cust " +
                         " where so_ord_date >= " + "'" + keys[3]  + "'" + 
@@ -4159,36 +4233,17 @@ public class ordData {
                         " AND so_type = 'DISCRETE' " +
                          " group by so_nbr, so_cust, so_po, so_ord_date, so_status order by so_nbr desc ;");   
                
-                    double total = 0;
-                    double tax = 0;
-                    double disc = 0;
-                    double charge = 0;
                     while (res.next()) {
-                        
-                        total = 0;
-                        tax = 0;
-                        disc = 0;
-                        charge = 0;
-                    
-                        if (res.getDouble("discountpercent") != 0) {
-                          disc = res.getDouble("totdol") * (res.getDouble("discountpercent") / 100.0);
-                        } else {
-                          disc = 0;  
-                        }
-                        charge = res.getDouble("charge");
-                        total = res.getDouble("totdol") + charge;  // charges added to total before taxing
-
-                        // now do tax
-                        if (res.getDouble("taxpercent") != 0) {
-                          tax = total * (res.getDouble("taxpercent") / 100.0);
-                        } else {
-                          tax = 0;  
-                        }
-                        tax += res.getDouble("taxcharge");
-
-                        total = total + tax;
-                        
                             i++;
+                            charge = res.getDouble("charge");
+                            total = res.getDouble("amt") + charge;  // charges added to total before taxing
+                            if (res.getDouble("taxpercent") != 0) {
+                              tax = total * (res.getDouble("taxpercent") / 100.0);
+                            } else {
+                              tax = 0;  
+                            }
+                            tax += (res.getDouble("taxcharge") + res.getDouble("matltax"));
+                            total = total + tax;
                             JSONArray rowArray = new JSONArray(); 
                             rowArray.put("select");
                             rowArray.put(res.getString("so_nbr"));

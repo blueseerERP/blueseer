@@ -4293,8 +4293,8 @@ public class DTData {
                         JSONArray rowArray = new JSONArray(); 
                         rowArray.put("select");
                         rowArray.put(res.getString("jasp_group"));
-                        rowArray.put(res.getString("jasp_desc"));
                         rowArray.put(res.getString("jasp_sequence"));
+                        rowArray.put(res.getString("jasp_desc"));
                         rowArray.put(res.getString("jasp_format"));
                         jsonarray.put(rowArray);
                     }

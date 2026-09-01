@@ -1329,13 +1329,15 @@ public class shpData {
             try {  
                  
                 int i = 0;
+                double total = 0;
+                double charge = 0;
+                double tax = 0;
                 if (keys[0].equals("shippersByShipDateRange")) {
                 res = st.executeQuery("SELECT " +
-                        " (select case when sum(shs_amt) is null then 0 else sum(shs_amt) end from shs_det " +
-                        " where shs_nbr = shd_id and shs_amttype = 'amount' and shs_type <> 'tax' and shs_type <> 'passive' " +
-                        " and shs_type <> 'shipping Bil' and shs_type <> 'shipping PPD' ) as charges, " +
-                        " (select case when sum(shs_amt) is null then 0 else sum(shs_amt) end from shs_det " +
-                        " where shs_nbr = shd_id and shs_amttype = 'amount' and shs_type = 'tax' ) as taxes, " +
+                        " (select sum(case when (shs_type = 'charge' or shs_type = 'shipping ADD') and shs_amttype = 'amount' then shs_amt else '0' end) from shs_det where shs_nbr = sh_id) as 'charge', " +
+                        " (select sum(case when shs_type = 'tax' and shs_amttype = 'percent' then shs_amt end) from shs_det where shs_nbr = sh_id)as 'taxpercent', " +
+                        " (select sum(case when shs_type = 'tax' and shs_amttype = 'amount' then shs_amt end) from shs_det where shs_nbr = sh_id) as 'taxcharge', " +
+                        " sum(shd_taxamt) as matltax, " +
                         " sh_id, sh_cust, cm_name, " +
                         " sh_shipdate, sh_type, sh_site, sh_po, sh_so, sh_curr,  " +
                         " sum(shd_qty * shd_netprice) as amt FROM  ship_mstr " +
@@ -1348,6 +1350,15 @@ public class shpData {
                         " order by sh_id;");               
                     while (res.next()) {
                             i++;
+                            charge = res.getDouble("charge");
+                            total = res.getDouble("amt") + charge;  // charges added to total before taxing
+                            if (res.getDouble("taxpercent") != 0) {
+                              tax = total * (res.getDouble("taxpercent") / 100.0);
+                            } else {
+                              tax = 0;  
+                            }
+                            tax += (res.getDouble("taxcharge") + res.getDouble("matltax"));
+                           // total = total + tax;
                             JSONArray rowArray = new JSONArray(); 
                             rowArray.put("select");
                             rowArray.put(res.getString("sh_id"));
@@ -1358,9 +1369,9 @@ public class shpData {
                             rowArray.put(res.getString("sh_site"));
                             rowArray.put(res.getString("sh_po"));
                             rowArray.put(res.getString("sh_so"));
-                            rowArray.put(currformat(res.getString("amt")));
-                            rowArray.put(currformat(res.getString("charges")));
-                            rowArray.put(currformat(res.getString("taxes")));
+                            rowArray.put(bsNumber(res.getString("amt")));
+                            rowArray.put(bsNumber(charge));
+                            rowArray.put(bsNumber(tax));
                             jsonarray.put(rowArray);
 
                     } 
@@ -1368,6 +1379,10 @@ public class shpData {
                 
                 if (keys[0].equals("shippersByShipNbrRange")) {
                 res = st.executeQuery("SELECT sh_id, sh_cust, cm_name, " +
+                        " (select sum(case when (shs_type = 'charge' or shs_type = 'shipping ADD') and shs_amttype = 'amount' then shs_amt else '0' end) from shs_det where shs_nbr = sh_id) as 'charge', " +
+                        " (select sum(case when shs_type = 'tax' and shs_amttype = 'percent' then shs_amt end) from shs_det where shs_nbr = sh_id)as 'taxpercent', " +
+                        " (select sum(case when shs_type = 'tax' and shs_amttype = 'amount' then shs_amt end) from shs_det where shs_nbr = sh_id) as 'taxcharge', " +
+                        " sum(shd_taxamt) as matltax, " +
                         " sh_shipdate, sh_type, sh_site, sh_po, sh_so, sh_curr, sh_status, " +
                         " sum(shd_qty * shd_netprice) as amt FROM  ship_mstr " +
                         " inner join ship_det " +
@@ -1379,6 +1394,15 @@ public class shpData {
                          " order by sh_id;");              
                     while (res.next()) {
                             i++;
+                            charge = res.getDouble("charge");
+                            total = res.getDouble("amt") + charge;  // charges added to total before taxing
+                            if (res.getDouble("taxpercent") != 0) {
+                              tax = total * (res.getDouble("taxpercent") / 100.0);
+                            } else {
+                              tax = 0;  
+                            }
+                            tax += (res.getDouble("taxcharge") + res.getDouble("matltax"));
+                            total = total + tax;
                             JSONArray rowArray = new JSONArray(); 
                             rowArray.put("select");
                             rowArray.put(res.getString("sh_id"));
@@ -1390,7 +1414,7 @@ public class shpData {
                             rowArray.put(res.getString("sh_po"));
                             rowArray.put(res.getString("sh_so"));
                             rowArray.put(res.getString("sh_curr"));
-                            rowArray.put(currformat(res.getString("amt")));
+                            rowArray.put(bsNumber(total));
                             rowArray.put(res.getString("sh_status"));
                             jsonarray.put(rowArray);
 
@@ -1398,8 +1422,12 @@ public class shpData {
                 }
                 
                 if (keys[0].equals("shippersByCustDateRange")) {
-                res = st.executeQuery("SELECT sh_id, sh_cust, cm_name, " +
-                        " sh_shipdate, sh_type, sh_site, sh_po, sh_so, sh_curr, sh_status, " +
+                res = st.executeQuery("SELECT  " +
+                        " (select sum(case when (shs_type = 'charge' or shs_type = 'shipping ADD') and shs_amttype = 'amount' then shs_amt else '0' end) from shs_det where shs_nbr = sh_id) as 'charge', " +
+                        " (select sum(case when shs_type = 'tax' and shs_amttype = 'percent' then shs_amt end) from shs_det where shs_nbr = sh_id)as 'taxpercent', " +
+                        " (select sum(case when shs_type = 'tax' and shs_amttype = 'amount' then shs_amt end) from shs_det where shs_nbr = sh_id) as 'taxcharge', " +
+                        " sum(shd_taxamt) as matltax, " +
+                        " sh_id, sh_cust, cm_name, sh_shipdate, sh_type, sh_site, sh_po, sh_so, sh_curr, sh_status, " +
                         " sum(shd_qty * shd_netprice) as amt FROM  ship_mstr " +
                         " inner join ship_det " +
                         " on shd_id = sh_id " +
@@ -1412,6 +1440,15 @@ public class shpData {
                         " order by sh_id;");             
                     while (res.next()) {
                             i++;
+                            charge = res.getDouble("charge");
+                            total = res.getDouble("amt") + charge;  // charges added to total before taxing
+                            if (res.getDouble("taxpercent") != 0) {
+                              tax = total * (res.getDouble("taxpercent") / 100.0);
+                            } else {
+                              tax = 0;  
+                            }
+                            tax += (res.getDouble("taxcharge") + res.getDouble("matltax"));
+                            total = total + tax;
                             JSONArray rowArray = new JSONArray(); 
                             rowArray.put("select");
                             rowArray.put(res.getString("sh_id"));
@@ -1423,7 +1460,7 @@ public class shpData {
                             rowArray.put(res.getString("sh_po"));
                             rowArray.put(res.getString("sh_so"));
                             rowArray.put(res.getString("sh_curr"));
-                            rowArray.put(currformat(res.getString("amt")));
+                            rowArray.put(bsNumber(total));
                             rowArray.put(res.getString("sh_status"));
                             jsonarray.put(rowArray);
 
