@@ -213,7 +213,7 @@ import org.json.JSONObject;
 public class OVData { 
     
    public static String major = "8.0"; 
-   public static String minor = "10";
+   public static String minor = "11";
     
    public static String[] states = {"AB","AL","AK","AZ","AR","BC","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","MB","ME","MD","MA","MI","MN","MS","MO","MT","NE","NL","NV","NH","NJ","NL","NM","NY","NC","ND","NS","OH","OK","ON","OR","PA","PE","QC","RI","SC","SD","SE","TN","TX","UT","VT","VA","WA","WV","WI","WY" };
    public static String[] countries = {"Afghanistan","Albania","Algeria","Andorra","Angola","Antigua & Deps","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Central African Rep","Chad","Chile","China","Colombia","Comoros","Congo","Congo {Democratic Rep}","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","East Timor","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland {Republic}","Israel","Italy","Ivory Coast","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Korea North","Korea South","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar, {Burma}","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palau","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russian Federation","Rwanda","St Kitts & Nevis","St Lucia","Saint Vincent & the Grenadines","Samoa","San Marino","Sao Tome & Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","Spain","Sri Lanka","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom", "USA","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe" }; 
@@ -16908,11 +16908,18 @@ return mystring;
                     
                     taxamt = matltax;
                     // lets retrieve any summary charges from orders associated with this shipment.
-                    res = st.executeQuery("select * from shs_det where shs_nbr = " + "'" + shipper + "'" + ";");
-                           /* " and (shs_type = 'charge' or shs_type = 'shipping ADD') " +       */         
-                            
+                    res = st.executeQuery("select * from shs_det where shs_nbr = " + "'" + shipper + "'" +
+                           " and shs_type <> 'tax' " +   ";");                              
                     while (res.next()) {
                     amt += res.getDouble("shs_amt");
+                    }
+                    res.close();
+                    
+                    // lets retrieve any taxes from the shs_det table.
+                    res = st.executeQuery("select * from shs_det where shs_nbr = " + "'" + shipper + "'" +
+                           " and shs_type = 'tax' " +   ";");                              
+                    while (res.next()) {
+                    taxamt += res.getDouble("shs_amt");
                     }
                     res.close();
                     
@@ -16933,7 +16940,7 @@ return mystring;
                     // line matl tax versus order level tax....material Tax will be at line level..
                     //..summary tax will ONLY be at summary level...it will not be baked into line level
                     // ...summary level tax cannot be reported at line level
-                    taxamt += shpData.getTaxAmtApplicableByShipper(shipper, amt); 
+            // taxamt += shpData.getTaxAmtApplicableByShipper(shipper, amt); 
                    //  duedate = getDueDateFromTerms(effdate, terms);
                     String[] tr =  getTermsResults(effdate, terms); // duedate, discdate, discpct, discdays
                     if (tr.length == 4) {

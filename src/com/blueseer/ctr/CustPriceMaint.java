@@ -416,6 +416,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
     }
     
     public cpr_mstr createDeleteRecord() { 
+        
         String[] z = pricelist.getSelectedValue().toString().split(":",-1); //item, uom, curr, volqty
         String expiredate = null;
           if (dcexpire.getDate() != null) {
@@ -433,7 +434,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         bsParseDouble((z.length == 4) ? z[3] : "0"), 
         expiredate
                 );
-      
+        
         return x;
     }
     
@@ -451,7 +452,11 @@ public class CustPriceMaint extends javax.swing.JPanel {
     
     public String[] deleteRecord(String[] key) {
         String[] m = new String[2];
-         m = deleteCprMstr(createDeleteRecord()); 
+         if (key[0].equals("discount")) {
+             m = deleteCprMstr(createDiscountRecord());
+         } else {
+             m = deleteCprMstr(createRecord());
+         }
          initvars(null);
          return m;
     }
