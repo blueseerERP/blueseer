@@ -4293,15 +4293,16 @@ public class ordData {
             try{
                 
                 // lets select 'charges' first...as it will be applied to all rows returned by sod_det search
-                res = st.executeQuery("select " +
-                      " case when sos_amttype = 'percent' and sos_type <> 'tax' then (myamt * (sos_amt / 100.0)) " +
-                      " when sos_amttype = 'percent' and sos_type = 'tax' then (myamt * (sos_amt / 100.0)) " +
+                res = st.executeQuery("select sos_type, " +
+                      " case when sos_amttype = 'percent' and sos_type <> 'tax' then (-1 * myamt * (sos_amt / 100.0)) " +
+                      " when sos_amttype = 'percent' and sos_type = 'tax' then (netamt * (sos_amt / 100.0)) " +
                     //  " else sos_amt end as 'amt' " +
                       " end as 'amt' " +  
-                      " from sos_det, (select sod_nbr, sum(sod_ord_qty * sod_listprice) as 'myamt' from sod_det group by sod_nbr) sub " +
+                      " from sos_det, (select sod_nbr, sum(sod_ord_qty * sod_listprice) as 'myamt', sum(sod_ord_qty * sod_netprice) as 'netamt' from sod_det group by sod_nbr) sub " +
                       " where sub.sod_nbr = sos_nbr and sos_nbr = " + "'" + order + "'");
                 while (res.next()) {
-                    charges = res.getDouble("amt");
+                      charges += res.getDouble("amt");
+                     // System.out.println("1 charges: " + charges);
                 }
                 
                 
@@ -4311,6 +4312,7 @@ public class ordData {
                 " and sos_type <> 'shipping BIL' and sos_type <> 'shipping PPD' ");
                 while (res.next()) {
                     charges += res.getDouble("amt");
+                   // System.out.println("2 charges: " + charges);
                 }
                 
                 
@@ -4395,10 +4397,11 @@ public class ordData {
                   
               // get SAC    
               res = st.executeQuery("select sos_desc, " +
-                      " case when sos_amttype = 'percent' and sos_type <> 'tax' then (myamt * (sos_amt / 100.0)) " +
-                      " when sos_amttype = 'percent' and sos_type = 'tax' then (myamt * (sos_amt / 100.0)) " +
+                      " case when sos_amttype = 'percent' and sos_type = 'charge' then (myamt * (sos_amt / 100.0)) " +
+                      " when sos_amttype = 'percent' and sos_type = 'discount' then (-1 * myamt * (sos_amt / 100.0)) " +
+                      " when sos_amttype = 'percent' and sos_type = 'tax' then (netamt * (sos_amt / 100.0)) " +
                       " else sos_amt end as 'amt' " +
-                      " from sos_det, (select sod_nbr, sum(sod_ord_qty * sod_listprice) as 'myamt' from sod_det group by sod_nbr) sub " +
+                      " from sos_det, (select sod_nbr, sum(sod_ord_qty * sod_listprice) as 'myamt', sum(sod_ord_qty * sod_netprice) as 'netamt' from sod_det group by sod_nbr) sub " +
                       " where sub.sod_nbr = sos_nbr and sos_nbr = " + "'" + order + "'");
               while (res.next()) {
                   JSONArray rowArray = new JSONArray(); 

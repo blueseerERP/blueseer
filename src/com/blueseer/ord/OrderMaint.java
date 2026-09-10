@@ -2280,7 +2280,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
              listprice.setText("0");
              netprice.setText("0");
            } else {  
-            net = list + ((disc / 100) * list); 
+            net = list - ((disc / 100) * list); 
             netprice.setText(bsNumber(net));
            }
         }
@@ -2448,7 +2448,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
              grosslistprice = (bsParseDouble(orddet.getValueAt(j, 7).toString()));
             for (int k = 0; k < sactable.getRowCount(); k++) {
                if (sactable.getValueAt(k,2).toString().equals("percent")) {
-                    grosslistprice = (grosslistprice + (grosslistprice * (bsParseDouble(sactable.getValueAt(k,3).toString()) / 100)));
+                    grosslistprice = (grosslistprice - (grosslistprice * (bsParseDouble(sactable.getValueAt(k,3).toString()) / 100)));
                }
             } 
             newdisc = (grosslistprice / bsParseDouble(orddet.getValueAt(j, 7).toString()));
@@ -2481,7 +2481,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
                  if (cbcascade.isSelected()) {
                      newprice = listprice * newdisc;  // calculated cascading discount is absolute increase/decrease...must be multiplied
                  } else {
-                     newprice = listprice + (listprice * (newdisc / 100));  // minus a negative disc increases newprice...aka charge
+                     newprice = listprice - (listprice * (newdisc / 100));  // minus a negative disc increases newprice...aka charge
                  }
              }
              orddet.setValueAt(bsNumber(newprice), j, 9);

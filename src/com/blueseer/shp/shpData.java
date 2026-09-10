@@ -2157,7 +2157,7 @@ public class shpData {
                 res = st.executeQuery("select " +
                         " (select case when sum(shs_amt) is null then 0 else sum(shs_amt) end from shs_det " +
                         " where shs_nbr = shd_id and shs_amttype = 'amount' and shs_type <> 'tax' and shs_type <> 'passive' " +
-                        " and shs_type <> 'shipping Bil' and shs_type <> 'shipping PPD' ) as charges, " +
+                        " and shs_type <> 'shipping Bil' and shs_type <> 'shipping PPD') as charges, " +
                         " (select case when sum(shs_amt) is null then 0 else sum(shs_amt) end from shs_det " +
                         " where shs_nbr = shd_id and shs_amttype = 'amount' and shs_type = 'tax' ) as taxes, " +
                         " shd_id, it_desc, sh_cust, sh_cust, sh_rmks, shd_po, " +
@@ -4339,8 +4339,9 @@ public class shpData {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        ArrayList<String> orders = new ArrayList<String>();
        ArrayList<String[]> sac = new ArrayList<String[]>();
-       Double matltax = 0.00;
-       Double totamt = 0.00;
+       double matltax = 0.00;
+       double totamt = 0.00;
+       double netamt = 0.00;
        
        String fieldlabel = "";
        fieldlabel = getCodeValueByCodeKey("fieldlabel", "materialtax");
@@ -4375,10 +4376,11 @@ public class shpData {
              }
 
             // get material tax for each item (if any) associated with this shipper
-            res = st.executeQuery("select shd_taxamt, shd_qty, shd_listprice from ship_det where shd_id = " + "'" + shipper + "'" + ";");
+            res = st.executeQuery("select shd_taxamt, shd_qty, shd_listprice, shd_netprice from ship_det where shd_id = " + "'" + shipper + "'" + ";");
              while (res.next()) {
                  matltax += res.getDouble("shd_taxamt");
                  totamt += res.getDouble("shd_qty") * res.getDouble("shd_listprice");
+                 netamt += res.getDouble("shd_qty") * res.getDouble("shd_netprice");
              }
 
 
@@ -4399,10 +4401,19 @@ public class shpData {
                  myamt = bsParseDouble(s[4]);
                  
                  // adjust if percent based
-                 if (s[3].equals("percent")) {
-                    myamttype = "amount";
-                    myamt = (bsParseDouble(s[4]) / 100) * totamt; 
-                 }    
+                 if (s[3].equals("percent") && ! s[2].equals("tax")) {
+                   myamttype = "amount";
+                   myamt = (bsParseDouble(s[4]) / 100) * totamt;
+                 }   
+                 if (s[3].equals("percent") && s[2].equals("tax")) {
+                   myamttype = "amount";
+                   myamt = (bsParseDouble(s[4]) / 100) * netamt;  // tax against netamt which includes discounted net price
+                 }  
+                 
+                 if (s[2].equals("discount")) {
+                     myamt = -1 * myamt;
+                 }
+                 
                  st.executeUpdate(" insert into shs_det (shs_nbr, shs_so, shs_desc, shs_type, shs_amttype, shs_amt ) " +
                                  " values ( "  + "'" + shipper + "'" + "," +
                                  "'" + s[0] + "'" + "," +
@@ -4454,8 +4465,9 @@ public class shpData {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        ArrayList<String> orders = new ArrayList<String>();
        ArrayList<String[]> sac = new ArrayList<String[]>();
-       Double matltax = 0.00;
-       Double totamt = 0.00;
+       double matltax = 0.00;
+       double totamt = 0.00;
+       double netamt = 0.00;
        
        String fieldlabel = "";
        fieldlabel = getCodeValueByCodeKey("fieldlabel", "materialtax");
@@ -4484,10 +4496,11 @@ public class shpData {
              }
 
             // get material tax for each item (if any) associated with this shipper
-            res = st.executeQuery("select shd_taxamt, shd_qty, shd_listprice from ship_det where shd_id = " + "'" + shipper + "'" + ";");
+            res = st.executeQuery("select shd_taxamt, shd_qty, shd_listprice, shd_netprice from ship_det where shd_id = " + "'" + shipper + "'" + ";");
              while (res.next()) {
                  matltax += res.getDouble("shd_taxamt");
                  totamt += res.getDouble("shd_qty") * res.getDouble("shd_listprice");
+                 netamt += res.getDouble("shd_qty") * res.getDouble("shd_netprice");
              }
 
 
@@ -4512,10 +4525,18 @@ public class shpData {
                  }
 
                  // adjust if percent based...shs_det should have absolute value of discounts...not percentages
-                 if (s[3].equals("percent")) {
+                 if (s[3].equals("percent") && ! s[2].equals("tax")) {
                    myamttype = "amount";
                    myamt = (bsParseDouble(s[4]) / 100) * totamt;
-                 }    
+                 }   
+                 if (s[3].equals("percent") && s[2].equals("tax")) {
+                   myamttype = "amount";
+                   myamt = (bsParseDouble(s[4]) / 100) * netamt;  // tax against netamt which includes discounted net price
+                 } 
+                 
+                 if (s[2].equals("discount")) {
+                     myamt = -1 * myamt;
+                 }
                  
                  st.executeUpdate(" insert into shs_det (shs_nbr, shs_so, shs_desc, shs_type, shs_amttype, shs_amt ) " +
                                  " values ( "  + "'" + shipper + "'" + "," +
