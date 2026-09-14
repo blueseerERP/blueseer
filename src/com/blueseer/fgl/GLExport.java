@@ -31,7 +31,9 @@ import com.blueseer.utl.*;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.fgl.fglData.getGLAcctListRangeWCurrTypeDesc;
+import static com.blueseer.fgl.fglData.getGLCSVARPayments;
 import static com.blueseer.fgl.fglData.getGLCSVSales;
+import static com.blueseer.fgl.fglData.getGLIIFARPayments;
 import static com.blueseer.fgl.fglData.getGLIIFSales;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.convertDate;
@@ -340,7 +342,7 @@ public class GLExport extends javax.swing.JPanel {
         jLabel1.setText("Document Type");
         jLabel1.setName("lblid"); // NOI18N
 
-        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "accounts", "sales" }));
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "accounts", "sales", "ar-payments" }));
         ddtype.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtypeActionPerformed(evt);
@@ -486,6 +488,41 @@ public class GLExport extends javax.swing.JPanel {
                  }          
             }      
         } // ddtype = sales
+        
+        
+        if (ddtype.getSelectedItem().equals("ar-payments")) {
+            if (ddformat.getSelectedItem().toString().equals("IIF")) {
+                 s.append("!TRNS,TRNSID,TRNSTYPE,DATE,ACCNT,CLASS,AMOUNT,DOCNUM,MEMO,NAME,\n");
+                 s.append("!SPL,SPLID,TRNSTYPE,DATE,ACCNT,CLASS,AMOUNT,DOCNUM,MEMO,NAME,\n");
+                 s.append("!ENDTRNS,").append("\n");
+                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");   
+                 DateFormat dfdateiif = new SimpleDateFormat("MM/dd/yy");  
+                 ArrayList<String> list = getGLIIFARPayments(dfdate.format(dcfrom.getDate()), dfdate.format(dcto.getDate()));
+                 int i = 0;
+                 for (String x : list) {
+                     String[] recs = x.split(",",-1);
+                     if (i == 0) {                     
+                         // AR ACCOUNT FIRST 
+                         s.append("TRNS,,GENERAL JOURNAL,").append(convertDate("MM/dd/yy",dfdate.format(dcto.getDate()))).append(",").append(recs[0]).append(",").append("Class,").append(recs[1]).append(",,BlueSeer,BlueSeer,").append("\n");                     
+                     } else {
+                         s.append("SPL,,GENERAL JOURNAL,").append(convertDate("MM/dd/yy",recs[1])).append(",").append(recs[0]).append(",").append("Class,").append(recs[2]).append(",").append(recs[3]).append(",").append("BlueSeer,BlueSeer,").append("\n"); 
+                     } 
+                     i++;
+                 }
+                 s.append("ENDTRNS,").append("\n");             
+            }   
+            if (ddformat.getSelectedItem().toString().equals("CSV")) {                
+                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");  
+                 ArrayList<String> list = getGLCSVARPayments(dfdate.format(dcfrom.getDate()), dfdate.format(dcto.getDate()));
+                 int i = 0;
+                 for (String x : list) {
+                     String[] recs = x.split(",",-1);
+                      s.append(recs[0]).append(",").append(recs[1]).append(",").append(recs[2]).append(",").append(recs[3]).append(",").append(recs[4]).append("\n"); 
+                      
+                 }          
+            }      
+        } // ddtype = ar-payments
+        
         
         if (ddtype.getSelectedItem().equals("accounts")) {
             if (ddformat.getSelectedItem().toString().equals("IIF")) {

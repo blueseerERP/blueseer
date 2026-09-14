@@ -110,7 +110,7 @@ public class WorkFlowLog extends javax.swing.JPanel {
                         };
     
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"ID", "Action", "TimeStamp", "Message", "Status"});
+                        new String[]{"ID", "Action", "Message", "Status"});
     
    
     
@@ -449,8 +449,7 @@ public class WorkFlowLog extends javax.swing.JPanel {
          tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
          tabledetail.getColumnModel().getColumn(0).setMaxWidth(100);
          tabledetail.getColumnModel().getColumn(1).setMaxWidth(100);
-         tabledetail.getColumnModel().getColumn(2).setMaxWidth(100);
-         tabledetail.getColumnModel().getColumn(4).setMaxWidth(200);
+         tabledetail.getColumnModel().getColumn(3).setMaxWidth(100);
        
         
         btdetail.setEnabled(false);

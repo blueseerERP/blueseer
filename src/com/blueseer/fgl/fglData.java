@@ -10144,6 +10144,7 @@ public class fglData {
             res = st.executeQuery("SELECT sum(glh_base_amt) as sum, arc_default_acct from gl_hist " +
                     " inner join ar_ctrl " +
                     " where " +
+                    " glh_type = 'ISS-SALES' AND " +
                     " glh_effdate >= " + "'" + fromdate + "'" + " AND " +
                     " glh_effdate <= " + "'" + todate + "'" + " AND " +
                     " glh_acct = arc_default_acct ;" );
@@ -10161,6 +10162,64 @@ public class fglData {
 
             while (res.next()) {
                list.add(res.getString("arc_sales_acct") + "," + 
+                       res.getString("glh_effdate") + "," +
+                       currformatDouble(res.getDouble("glh_base_amt")) + "," +
+                       res.getString("glh_ref") + "," +                       
+                       res.getString("glh_cc"));
+            }            
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+         return list;
+     }
+
+    public static ArrayList<String> getGLIIFARPayments(String fromdate, String todate) {
+         double aramt = 0.00;
+         ArrayList<String> list = new ArrayList<>();
+         
+         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+         try {
+
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+            res = st.executeQuery("SELECT sum(glh_base_amt) as sum, arc_default_acct from gl_hist " +
+                    " inner join ar_ctrl " +
+                    " where " +
+                    " glh_type = 'AR-Payment' AND " +
+                    " glh_effdate >= " + "'" + fromdate + "'" + " AND " +
+                    " glh_effdate <= " + "'" + todate + "'" + " AND " +
+                    " glh_acct = arc_default_acct ;" );
+
+            while (res.next()) {
+               list.add(res.getString("arc_default_acct") + "," + currformatDouble(res.getDouble("sum")));
+            }
+            
+            res = st.executeQuery("SELECT bk_acct, glh_effdate, glh_base_amt, glh_ref, glh_cc from gl_hist " +
+                    " inner join ar_ctrl " +
+                    " inner join bk_mstr on bk_id = arc_bank " +
+                    " where " +
+                    " glh_type = 'AR-Payment' AND " +
+                    " glh_effdate >= " + "'" + fromdate + "'" + " AND " +
+                    " glh_effdate <= " + "'" + todate + "'" + " AND " +
+                    " glh_acct = bk_acct ;" );
+
+            while (res.next()) {
+               list.add(res.getString("bk_acct") + "," + 
                        res.getString("glh_effdate") + "," +
                        currformatDouble(res.getDouble("glh_base_amt")) + "," +
                        res.getString("glh_ref") + "," +                       
@@ -10200,12 +10259,60 @@ public class fglData {
             res = st.executeQuery("SELECT arc_sales_acct, glh_effdate, glh_base_amt, glh_ref, glh_cc from gl_hist " +
                     " inner join ar_ctrl " +
                     " where " +
+                    " glh_type = 'ISS-SALES' AND " +
                     " glh_effdate >= " + "'" + fromdate + "'" + " AND " +
                     " glh_effdate <= " + "'" + todate + "'" + " AND " +
                     " glh_acct = arc_sales_acct ;" );
 
             while (res.next()) {
                list.add(res.getString("arc_sales_acct") + "," + 
+                       res.getString("glh_effdate") + "," +
+                       currformatDouble(res.getDouble("glh_base_amt")) + "," +
+                       res.getString("glh_ref") + "," +                       
+                       res.getString("glh_cc"));
+            }            
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+         return list;
+     }
+
+    public static ArrayList<String> getGLCSVARPayments(String fromdate, String todate) {
+         double aramt = 0.00;
+         ArrayList<String> list = new ArrayList<>();
+         
+         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+         try {
+
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {            
+            
+            res = st.executeQuery("SELECT bk_acct, glh_effdate, glh_base_amt, glh_ref, glh_cc from gl_hist " +
+                    " inner join ar_ctrl " +
+                    " inner join bk_mstr on bk_id = arc_bank " +
+                    " where " +
+                    " glh_type = 'AR-Payment' AND " +
+                    " glh_effdate >= " + "'" + fromdate + "'" + " AND " +
+                    " glh_effdate <= " + "'" + todate + "'" + " AND " +
+                    " glh_acct = bk_acct ;" );
+
+            while (res.next()) {
+               list.add(res.getString("bk_acct") + "," + 
                        res.getString("glh_effdate") + "," +
                        currformatDouble(res.getDouble("glh_base_amt")) + "," +
                        res.getString("glh_ref") + "," +                       
