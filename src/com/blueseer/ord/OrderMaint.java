@@ -4764,7 +4764,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
            ArrayList<String> badlines = getBadLines(tbkey.getText());
            ArrayList<sod_det> _sodlist = createDetRecord();
            String[] m = updateOrderTransaction(tbkey.getText(), badlines, _sodlist, createRecord(), null, createTaxDetRecord(), null);
-           if (m[0].equals("0")) {
+           if (m[0].equals("0") && sodlist != null) {
             ArrayList<admData.change_log> c2 = logChangeArrays(tbkey.getText(), this.getClass().getSimpleName(),sodlist,_sodlist);
             if (! c2.isEmpty()) {
                 addChangeLog(c2);

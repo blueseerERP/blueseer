@@ -1785,8 +1785,16 @@ public class shpData {
                 shipperfrom = (shipperfrom.isBlank()) ? bsmf.MainFrame.lowchar : shipperfrom; 
                 shipperto = (shipperto.isBlank()) ? bsmf.MainFrame.hichar : shipperto;
                 
+                double amt = 0.00;
+                
                 if (po.isBlank()) {
-                    res = st.executeQuery("select sh_id, sh_status, sh_cust, cm_name, sh_shipdate, sh_po, sum(shd_qty) as 'qty', sum(shd_qty * shd_netprice) as 'price' from ship_mstr " +
+                    res = st.executeQuery("select " +
+                        " (select case when sum(shs_amt) is null then 0 else sum(shs_amt) end from shs_det " +
+                        " where shs_nbr = shd_id and shs_amttype = 'amount' and shs_type <> 'tax' and shs_type <> 'passive' " +
+                        " and shs_type <> 'shipping Bil' and shs_type <> 'shipping PPD') as charges, " +
+                        " (select case when sum(shs_amt) is null then 0 else sum(shs_amt) end from shs_det " +
+                        " where shs_nbr = shd_id and shs_amttype = 'amount' and shs_type = 'tax' ) as taxes, " +
+                        " sh_id, sh_status, sh_cust, cm_name, sh_shipdate, sh_po, sum(shd_qty) as 'qty', sum(shd_qty * shd_listprice) as 'grossprice' from ship_mstr " +
                         " inner join ship_det on shd_id = sh_id " +
                         " inner join cm_mstr on cm_code = sh_cust " +
                         " where " +
@@ -1798,7 +1806,13 @@ public class shpData {
                         " sh_cust <= " + "'" + custto + "'"  +
                         " group by sh_id, sh_status, sh_cust, cm_name, sh_shipdate, sh_po;");
                   } else {
-                    res = st.executeQuery("select sh_id, sh_status, sh_cust, cm_name, sh_shipdate, sh_po, sum(shd_qty) as 'qty', sum(shd_qty * shd_netprice) as 'price' from ship_mstr " +
+                    res = st.executeQuery("select " +
+                        " (select case when sum(shs_amt) is null then 0 else sum(shs_amt) end from shs_det " +
+                        " where shs_nbr = shd_id and shs_amttype = 'amount' and shs_type <> 'tax' and shs_type <> 'passive' " +
+                        " and shs_type <> 'shipping Bil' and shs_type <> 'shipping PPD') as charges, " +
+                        " (select case when sum(shs_amt) is null then 0 else sum(shs_amt) end from shs_det " +
+                        " where shs_nbr = shd_id and shs_amttype = 'amount' and shs_type = 'tax' ) as taxes, " +    
+                        " sh_id, sh_status, sh_cust, cm_name, sh_shipdate, sh_po, sum(shd_qty) as 'qty', sum(shd_qty * shd_listprice) as 'grossprice' from ship_mstr " +
                         " inner join ship_det on shd_id = sh_id " +
                         " inner join cm_mstr on cm_code = sh_cust " +
                         " where " +
@@ -1814,6 +1828,7 @@ public class shpData {
                 
                     
                     while (res.next()) {
+                        amt = res.getDouble("grossprice") + res.getDouble("charges") + res.getDouble("taxes");
                         JSONArray rowArray = new JSONArray(); 
                         rowArray.put("select");
                         rowArray.put("detail");
@@ -1824,7 +1839,7 @@ public class shpData {
                         rowArray.put(res.getString("sh_po"));
                         rowArray.put(res.getString("sh_status"));
                         rowArray.put(res.getDouble("qty"));
-                        rowArray.put(res.getDouble("price"));
+                        rowArray.put(amt);
                         jsonarray.put(rowArray);
                     }
            }

@@ -46,6 +46,7 @@ import static bsmf.MainFrame.tags;
 import static com.blueseer.shp.shpData.getShipperBrowseDetail;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
+import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -470,7 +471,7 @@ public class ShipperBrowse extends javax.swing.JPanel {
                  if (! cbunconfirmed.isSelected() && rowData[7].equals("0")) { continue; }
                  totsales = totsales + bsParseDouble(rowData[9].toString()); 
                  totqty = totqty + bsParseDouble(rowData[8].toString());
-                 rowData[9] = bsParseDouble(rowData[9].toString());
+                 rowData[9] = bsParseDouble(currformat(rowData[9].toString()));
                  modeltable.addRow(rowData); 
                  i++;
                 } 

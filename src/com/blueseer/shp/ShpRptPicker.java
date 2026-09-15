@@ -38,6 +38,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.adm.admData;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.jsonToData;
@@ -509,9 +510,9 @@ public class ShpRptPicker extends javax.swing.JPanel {
         if (roData != null) {
             int i = 0;
             for (Object[] rowData : roData) {
-                roData[i][9] = bsParseDouble(roData[i][9].toString());
-                roData[i][10] = bsParseDouble(roData[i][10].toString());
-                roData[i][11] = bsParseDouble(roData[i][11].toString());
+                roData[i][9] = bsParseDouble(currformat(roData[i][9].toString()));
+                roData[i][10] = bsParseDouble(currformat(roData[i][10].toString()));
+                roData[i][11] = bsParseDouble(currformat(roData[i][11].toString()));
                 mymodel.addRow(rowData);
                 i++;
             }
@@ -617,7 +618,7 @@ public class ShpRptPicker extends javax.swing.JPanel {
         if (roData != null) {
             int i = 0;
             for (Object[] rowData : roData) {
-                roData[i][10] = bsParseDouble(roData[i][10].toString());
+                roData[i][10] = bsParseDouble(currformat(roData[i][10].toString()));
                 mymodel.addRow(rowData);
                 i++;
             }
@@ -736,7 +737,7 @@ public class ShpRptPicker extends javax.swing.JPanel {
         if (roData != null) {
             int i = 0;
             for (Object[] rowData : roData) {
-                roData[i][10] = bsParseDouble(roData[i][10].toString());
+                roData[i][10] = bsParseDouble(currformat(roData[i][10].toString()));
                 mymodel.addRow(rowData);
                 i++;
             }
@@ -852,7 +853,7 @@ public class ShpRptPicker extends javax.swing.JPanel {
             int i = 0;
             for (Object[] rowData : roData) {
                 roData[i][7] = bsParseDouble(roData[i][7].toString());
-                roData[i][8] = bsParseDouble(roData[i][8].toString());
+                roData[i][8] = bsParseDouble(currformat(roData[i][8].toString()));
                 mymodel.addRow(rowData);
                 i++;
             }
