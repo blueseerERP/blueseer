@@ -823,6 +823,9 @@ public class EDILoadMaint extends javax.swing.JPanel {
     public void done_processSingleFile(String[] message) {
        lbcount.setText("0");
         tafile.setText("");
+        if (message == null) {
+            return;
+        }
         if (message[0].equals("0")) {
          tafile.append("success: " + message[1]);
         } else {
