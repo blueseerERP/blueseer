@@ -40,6 +40,7 @@ import static com.blueseer.edi.apiUtils.createMDN;
 import static com.blueseer.edi.apiUtils.hashdigest;
 import com.blueseer.edi.apiUtils.mdn;
 import static com.blueseer.edi.apiUtils.verifySignature;
+import static com.blueseer.edi.apiUtils.verifySignatureExp;
 import static com.blueseer.edi.apiUtils.verifySignatureView;
 import com.blueseer.edi.ediData.as2_mstr;
 import static com.blueseer.edi.ediData.getAS2InfoByIDs;
@@ -550,7 +551,7 @@ public class AS2Serv extends HttpServlet {
             
             if (Signature != null) {
               logdet.add(new String[]{parentkey, "info", "signature check " + sender + "/" + receiver,now,"" });  
-              validSignature = verifySignature(FileWHeadersBytes, Signature, isDebug); 
+              validSignature = verifySignatureExp(FileWHeadersBytes, Signature, isDebug); 
               logdet.add(new String[]{parentkey, "info", "signature verification:  " + String.valueOf(validSignature),now,"" });
               logdet.add(new String[]{parentkey, "info", "signature required:  " + info[13] ,now,"" });
             }

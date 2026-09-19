@@ -284,6 +284,7 @@ import org.bouncycastle.operator.OutputEncryptor;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 import org.bouncycastle.util.Store;
+import org.bouncycastle.util.StoreException;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Hex;
 import org.bouncycastle.util.io.pem.PemObject;
@@ -2073,6 +2074,56 @@ public class apiUtils {
         return x;
 }
     
+    public static boolean verifySignatureExp(final byte[] plaintext, final byte[] signedData, boolean isDebug)  {
+        boolean x = false;
+        if (plaintext == null || signedData == null) {
+            return x;
+        }
+        
+        try {
+            CMSSignedData s = new CMSSignedData(new CMSProcessableByteArray(plaintext), signedData);
+            Store certstore = s.getCertificates();
+            SignerInformationStore signers = s.getSignerInfos();
+            Collection<SignerInformation> c = signers.getSigners();
+            Iterator<SignerInformation> it = c.iterator();
+            int verifiedCount = 0;
+            while (it.hasNext()) {
+                SignerInformation signer = it.next();
+
+                // Find the certificate belonging to this specific signer ID (SID)
+                Collection<X509CertificateHolder> certCollection = certstore.getMatches(signer.getSID());
+                
+                if (certCollection.isEmpty()) {
+                    System.err.println("No matching certificate found for Signer ID: " + signer.getSID());
+                    continue;
+                }
+
+                // Get the signer's certificate holder
+                X509CertificateHolder certHolder = certCollection.iterator().next();
+
+                // 6. Build a verifier object and challenge the cryptographic signature
+                boolean isVerified = signer.verify(new JcaSimpleSignerInfoVerifierBuilder()
+                        .setProvider("BC")
+                        .build(certHolder));
+
+                if (isVerified) {
+                    verifiedCount++;
+                    System.out.println("SUCCESS:  Signature verified successfully for Signer: " + certHolder.getSubject());
+                } else {
+                    System.err.println("WARNING: Signature verification FAILED for Signer: " + certHolder.getSubject());
+                }
+            }
+                        
+            return verifiedCount > 0;
+           
+            
+        } catch ( CertificateException | CMSException | OperatorCreationException | StoreException ex) {
+            bslog(ex);
+        }
+        return x;
+}
+    
+    
     public static String[] verifySignatureView(byte[] data, String contentType, CMSSignedData cs, String as2m) throws MessagingException, IOException  {
         boolean x = false;
         String[] r = new String[]{"false","","","","","",""};
@@ -2321,7 +2372,7 @@ public class apiUtils {
         }
         if (FileWHeadersBytes != null && Signature != null) {  
            // System.out.println("verifyMDNSignature ...attempting to verify");
-        b = verifySignature(FileWHeadersBytes, Signature, false);
+        b = verifySignatureExp(FileWHeadersBytes, Signature, false);
         }
         
         return b;
