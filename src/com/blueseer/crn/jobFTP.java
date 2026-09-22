@@ -101,6 +101,13 @@ public class jobFTP implements Job {
                     System.out.println("Invalid or blank FTP ID: " + ftpid + " length: " + ftpid.length());
                 }
                 
+                
+                now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));  
+                System.out.println("jobFTP completing system method: " + ftpid + " end time: " + now);
+        
+        dataMap = null;
+        now = null;
+        ftpid = null;                
 			
 		
 	}

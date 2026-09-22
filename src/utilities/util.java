@@ -25,20 +25,32 @@ SOFTWARE.
  */
 package utilities;
 
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.decryptConfig;
 import static bsmf.MainFrame.encryptConfig;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.edi.apiUtils.verifySignature;
 import static com.blueseer.utl.OVData.updateSet;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.security.Security;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
+import org.apache.commons.io.IOUtils;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  *
@@ -83,7 +95,10 @@ public class util {
                         break;
                     case "-set" :
                         set(args[i+1], args[i+2]);
-                        break;    
+                        break;  
+                    case "-vsig" :
+                        verifyAS2Sig(args[i+1], args[i+2]);
+                        break;      
                     default:
                         System.out.println("Bad Qualifier");
                         System.exit(1);
@@ -139,6 +154,50 @@ public class util {
     
     public static void set(String x, String y) {
         updateSet(x,y);
+    }
+    
+    public static void verifyAS2Sig(String source, String pksid) {
+        Path filepath = FileSystems.getDefault().getPath(source);
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
+        try {
+            byte[] data =  Files.readAllBytes(filepath);
+            byte[] Signature = null;
+            byte[] FileWHeadersBytes = null;
+            boolean isvalid = false;
+            MimeMultipart mp = new MimeMultipart(new ByteArrayDataSource(data, "application/pkcs7-signature; name=smime.p7s"));
+            for (int i = 0; i < mp.getCount(); i++) {
+                MimeBodyPart mbp = (MimeBodyPart) mp.getBodyPart(i);                     
+                    if (mbp == null) {
+                        continue;
+                    }
+                System.out.println("sub part: " + i + " " + mbp.getContentType());
+                if (! mbp.getContentType().toLowerCase().startsWith("application/pkcs7-signature")) { // must be non sig file
+                    ByteArrayOutputStream aos = new ByteArrayOutputStream();
+                      mp.getBodyPart(0).writeTo(aos);
+                      aos.close(); 
+                      FileWHeadersBytes = aos.toByteArray();
+                }    
+                    
+                if (mbp.getFileName() != null && mbp.getFileName().equals("smime.p7s")) { // must be sig
+                        Signature = IOUtils.toByteArray((InputStream) mbp.getContent());
+                }    
+            }
+            
+            if (Signature != null && FileWHeadersBytes != null) {
+                isvalid = verifySignature(FileWHeadersBytes, Signature, true, pksid); 
+            }
+            
+            System.out.println("signature verified: " + isvalid);
+            
+            
+        } catch (IOException ex) {
+            bslog(ex);
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
     }
     
 }

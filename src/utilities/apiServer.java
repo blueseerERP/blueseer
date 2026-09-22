@@ -69,6 +69,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Security;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -76,6 +77,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.AsyncRequestLogWriter;
 import org.eclipse.jetty.server.CustomRequestLog;
@@ -135,7 +137,9 @@ public class apiServer {
         bsmf.MainFrame.setConfig(configfile);
         tags = ResourceBundle.getBundle("resources.bs", Locale.getDefault());
         
-        
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
         
 	ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/bsapi"); 

@@ -210,6 +210,7 @@ import org.bouncycastle.cms.CMSSignedDataGenerator;
 import org.bouncycastle.cms.CMSTypedData;
 import org.bouncycastle.cms.KeyTransRecipientInformation;
 import org.bouncycastle.cms.RecipientInformation;
+import org.bouncycastle.cms.SignerId;
 import org.bouncycastle.cms.SignerInfoGenerator;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
@@ -1190,7 +1191,9 @@ public class apiUtils {
     
     
     public static String generateSSHCert(String certype) throws NoSuchAlgorithmException, NoSuchProviderException, IOException {
-        Security.addProvider(new BouncyCastleProvider());
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
         String newstring = "";
         KeyPairGenerator generator;
          generator = KeyPairGenerator.getInstance("ED25519","BC");
@@ -1234,7 +1237,9 @@ public class apiUtils {
         pks_mstr pks = admData.getPksMstr(new String[]{user});
         try {
             // File type
+            if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
             Security.addProvider(new BouncyCastleProvider());
+            }
             
             if (pks.pks_type().equals("publickey") ) {
                 Path certfilepath = FileSystems.getDefault().getPath(pks.pks_file());
@@ -1297,7 +1302,9 @@ public class apiUtils {
                      return ""; // return null
                 }
                // System.out.println("here->" + certfilepath.toString());
-                Security.addProvider(new BouncyCastleProvider());
+                if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+                    Security.addProvider(new BouncyCastleProvider());
+                }
                 CertificateFactory certFactory = CertificateFactory.getInstance("X.509", "BC");
                 try (FileInputStream fiscert = new FileInputStream(certfilepath.toFile())) {
                     cert = (X509Certificate) certFactory.generateCertificate(fiscert);
@@ -1381,7 +1388,9 @@ public class apiUtils {
     
     public static boolean createKeyStoreWithNewKeyPair(String alias, String userpass, String passphrase, String filename, String sigalgo, int strength, int years) {
         
-        Security.addProvider(new BouncyCastleProvider());
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
         // --- generate a key pair (you did this already it seems)
         KeyPairGenerator rsaGen;
         try {
@@ -1474,7 +1483,9 @@ public class apiUtils {
     
     public static boolean createNewKeyPair(String standard, String alias, String userpass, String passphrase, String filename, String algo, String sigalgo, String strength, String years) {
         
-        Security.addProvider(new BouncyCastleProvider());
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
         // --- generate a key pair (you did this already it seems)
         KeyPairGenerator rsaGen;
         try {
@@ -1628,7 +1639,9 @@ public class apiUtils {
         if (data == null) {
             throw new GeneralSecurityException("calculateMIC: Data is null");
         }
-        Security.addProvider(new BouncyCastleProvider());
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
         MessageDigest messageDigest = MessageDigest.getInstance(digestAlgOID, "BC");
         DigestInputStream digestInputStream = new DigestInputStream(new ByteArrayInputStream(data), messageDigest);
         for (byte buf[] = new byte[4096]; digestInputStream.read(buf) >= 0;) {
@@ -1717,7 +1730,9 @@ public class apiUtils {
       
       pks_mstr pks = getPksMstr(new String[]{id});
       pass = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray()).toCharArray();
-      Security.addProvider(new BouncyCastleProvider());
+      if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+      }
       
       try {
       if (keyFilePath != null) {
@@ -1774,7 +1789,9 @@ public class apiUtils {
       
       pks_mstr pks = getPksMstr(new String[]{id});
       pass = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray()).toCharArray();
-      Security.addProvider(new BouncyCastleProvider());
+      if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
       
       try {
       if (keyFilePath != null) {
@@ -1830,7 +1847,9 @@ public class apiUtils {
       
       pks_mstr pks = getPksMstr(new String[]{id});
       pass = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray()).toCharArray();
-      Security.addProvider(new BouncyCastleProvider());
+      if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+      }
       
       try {
       if (keyFilePath != null) {
@@ -1882,7 +1901,9 @@ public class apiUtils {
       
       pks_mstr pks = getPksMstr(new String[]{id});
       pass = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray()).toCharArray();
-      Security.addProvider(new BouncyCastleProvider());
+      if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+      }
       
       try {
       if (keyFilePath != null) {
@@ -1936,7 +1957,9 @@ public class apiUtils {
            keyIn = new FileInputStream(keyFilePath.toFile());
         }
         InputStream in = new ByteArrayInputStream(encryptedData);
-        Security.addProvider(new BouncyCastleProvider());
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
         in = org.bouncycastle.openpgp.PGPUtil.getDecoderStream(in);
         PGPObjectFactory pgpF = new PGPObjectFactory(in,new BcKeyFingerprintCalculator());
         PGPEncryptedDataList enc;
@@ -2015,66 +2038,7 @@ public class apiUtils {
         
     }
     
-    public static boolean verifySignature(final byte[] plaintext, final byte[] signedData, boolean isDebug)  {
-        boolean x = false;
-        if (plaintext == null || signedData == null) {
-            return x;
-        }
-        
-        try {
-            CMSSignedData s = new CMSSignedData(new CMSProcessableByteArray(plaintext), signedData);
-            Store certstore = s.getCertificates();
-            SignerInformationStore signers = s.getSignerInfos();
-            Collection<SignerInformation> c = signers.getSigners();
-            SignerInformation signer = c.iterator().next();
-            
-            if (signer == null) {
-                System.out.println("Error in verifySignature...signer is null");
-                return x;
-            }
-            
-            
-                Collection<X509CertificateHolder> certCollection = certstore.getMatches(signer.getSID());
-                Iterator<X509CertificateHolder> certIt = certCollection.iterator(); 
-                if (! certIt.hasNext()) {
-                    System.out.println("ERROR:  inside verifySignature: certCollection.iterator() has no next ");
-                    return x;
-                }
-                X509CertificateHolder certHolder = certIt.next();
-
-                try {
-                    x = signer.verify(new JcaSimpleSignerInfoVerifierBuilder().build(certHolder));
-                    
-                    // This Debug statement must be ran 'after' verify....an exception is thrown otherwise
-                     if (isDebug) {
-                    String signatureAlgName = signer.getDigestAlgorithmID().getAlgorithm().getId() + "with" + signer.getEncryptionAlgOID();
-                    System.out.println("Composite signature algorithm (based on OIDs): " + signatureAlgName);
-                    AttributeTable attributes = signer.getSignedAttributes();
-                        if (attributes != null) {
-                            Attribute attribute = attributes.get(CMSAttributes.messageDigest);
-                            DEROctetString digest = (DEROctetString) attribute.getAttrValues().getObjectAt(0);
-                            // if these values are different, the exception is thrown
-                            System.out.println("digest hex string:");
-                            System.out.println(Hex.toHexString(digest.getOctets()));
-                            System.out.println("signer hex string:");
-                            System.out.println(Hex.toHexString(signer.getContentDigest()));
-                            System.out.println("data size: " + plaintext.length);
-                        } else {
-                            System.out.println("WARNING:  signer.getSignedAttributes() returned null attributes");
-                        }
-                    }
-                    
-                } catch (CMSException ex) {
-                    bslog(ex);
-                }
-            
-        } catch ( CMSException | OperatorCreationException | CertificateException ex) {
-            bslog(ex);
-        }
-        return x;
-}
-    
-    public static boolean verifySignatureExp(final byte[] plaintext, final byte[] signedData, boolean isDebug)  {
+    public static boolean verifySignature(final byte[] plaintext, final byte[] signedData, boolean isDebug, String pksid)  {
         boolean x = false;
         if (plaintext == null || signedData == null) {
             return x;
@@ -2087,19 +2051,49 @@ public class apiUtils {
             Collection<SignerInformation> c = signers.getSigners();
             Iterator<SignerInformation> it = c.iterator();
             int verifiedCount = 0;
+            
             while (it.hasNext()) {
                 SignerInformation signer = it.next();
-
-                // Find the certificate belonging to this specific signer ID (SID)
-                Collection<X509CertificateHolder> certCollection = certstore.getMatches(signer.getSID());
+                SignerId sid = signer.getSID();
+                X509CertificateHolder certHolder = null;
+                if (sid.getIssuer() != null && sid.getSerialNumber() != null) {
+                    System.out.println("SID getSerialNumber(hex): " + sid.getSerialNumber().toString(16) + "/ Issuer: " + sid.getIssuer());
+                }
                 
-                if (certCollection.isEmpty()) {
-                    System.err.println("No matching certificate found for Signer ID: " + signer.getSID());
-                    continue;
+                // Fetch ALL certificates embedded in the store
+                Collection<X509CertificateHolder> allCerts = certstore.getMatches(null);
+            
+                if (allCerts.isEmpty()) { // check for partners that do not send cert in Signature...retrieve from PKS record instead
+                   System.out.println("No Cert found in signature...trying PKS lookup using: " + pksid);
+                   X509Certificate cert = getPublicKeyAsCert(pksid);
+                   certHolder = new JcaX509CertificateHolder(cert);
+                   System.out.println("Found cert using PKS: " + certHolder.getSubject() + " / serialnumber: " + certHolder.getSerialNumber() + " / Hex: " + certHolder.getSerialNumber().toString(16));
+                } else {
+                    for (X509CertificateHolder holder : allCerts) {
+                        System.out.println("HOLDER getSerialNumber: " + holder.getSerialNumber() + " /Hex: " + holder.getSerialNumber().toString(16) + " /Issuer: " + holder.getIssuer());
+                        System.out.println("HOLDER getSubject: " + holder.getSubject());
+
+                        // Fallback option 1: Check if the SID strictly matches the certificate
+                        if (sid.match(holder)) {
+                            certHolder = holder;
+                            break;
+                        }
+
+                        // Fallback option 2: Explicit Issuer and Serial Number matching
+                        if (sid.getIssuer() != null && sid.getSerialNumber() != null) {
+                            if (sid.getIssuer().equals(holder.getIssuer()) && 
+                                sid.getSerialNumber().equals(holder.getSerialNumber())) {
+                                certHolder = holder;
+                                break;
+                            }
+                        }
+                    }
                 }
 
-                // Get the signer's certificate holder
-                X509CertificateHolder certHolder = certCollection.iterator().next();
+                if (certHolder == null) {
+                    System.out.println("No matching certificate found for Signer ID: " + sid + " serialnumber(hex): " + sid.getSerialNumber().toString(16));
+                    continue;
+                }
 
                 // 6. Build a verifier object and challenge the cryptographic signature
                 boolean isVerified = signer.verify(new JcaSimpleSignerInfoVerifierBuilder()
@@ -2109,9 +2103,7 @@ public class apiUtils {
                 if (isVerified) {
                     verifiedCount++;
                     System.out.println("SUCCESS:  Signature verified successfully for Signer: " + certHolder.getSubject());
-                } else {
-                    System.err.println("WARNING: Signature verification FAILED for Signer: " + certHolder.getSubject());
-                }
+                } 
             }
                         
             return verifiedCount > 0;
@@ -2334,7 +2326,7 @@ public class apiUtils {
 
 }
         
-    public static boolean verifyMDNSignature(byte[] data, String contentType) throws MessagingException, IOException {
+    public static boolean verifyMDNSignature(byte[] data, String contentType, String pksid) throws MessagingException, IOException {
         boolean b = false;
         byte[] FileWHeadersBytes = null;
         byte[] Signature = null;
@@ -2372,7 +2364,7 @@ public class apiUtils {
         }
         if (FileWHeadersBytes != null && Signature != null) {  
            // System.out.println("verifyMDNSignature ...attempting to verify");
-        b = verifySignatureExp(FileWHeadersBytes, Signature, false);
+        b = verifySignature(FileWHeadersBytes, Signature, false, pksid);
         }
         
         return b;
@@ -2879,7 +2871,9 @@ public class apiUtils {
              return certificate; // return null
         }
        // System.out.println("here->" + certfilepath.toString());
-        Security.addProvider(new BouncyCastleProvider());
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
         CertificateFactory certFactory = CertificateFactory.getInstance("X.509", "BC");
         try (FileInputStream fis = new FileInputStream(certfilepath.toFile())) {
             certificate = (X509Certificate) certFactory.generateCertificate(fis);
@@ -2942,7 +2936,9 @@ public class apiUtils {
         StringBuilder r = new StringBuilder();
         String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
         ArrayList<String[]> logdet = new ArrayList<String[]>(); 
-        Security.addProvider(new BouncyCastleProvider());
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
         
        
         // gather pertinent info for this AS2 ID / Partner
@@ -3296,7 +3292,7 @@ public class apiUtils {
 
                     // verify signature if applicable
                     // mbpr should be mimemulitpart containing two sub parts....the mdn and the signature
-                    boolean isValidMDNSignature = verifyMDNSignature(indata, "multipart/signed; protocol=\"application/pkcs7-signature\"; micalg=sha-1;");
+                    boolean isValidMDNSignature = verifyMDNSignature(indata, "multipart/signed; protocol=\"application/pkcs7-signature\"; micalg=sha-1;", as2m.as2_signcert());
 
                     /*
                     Session session = Session.getDefaultInstance(new java.util.Properties()); // Or obtain a proper session
