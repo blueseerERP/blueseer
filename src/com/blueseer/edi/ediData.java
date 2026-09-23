@@ -2337,6 +2337,7 @@ public class ediData {
             bscon = DriverManager.getConnection(url + db, user, pass);
             bscon.setAutoCommit(false);
             _addEDIDoc(edd, bscon, ps, res);  
+            _deleteEDIDocDet(edd.edd_id(), bscon);
             for (edi_docdet z : edid) {
                 _addEDIDocDet(z, bscon, ps, res);
             }
@@ -2407,16 +2408,11 @@ public class ediData {
     
     private static int _addEDIDocDet(edi_docdet x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
-        String sqlSelect = "select * from edi_docdet where edid_id = ?;";
+        
         String sqlInsert = "insert into edi_docdet (edid_id, edid_role, edid_rectype, edid_valuetype, edid_row, edid_col, " +
                 " edid_length, edid_regex, edid_value, edid_tag, edid_xpath, edid_enabled  )  " 
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?); "; 
-             
-          ps = con.prepareStatement(sqlSelect); 
-          ps.setString(1, x.edid_id);
-          res = ps.executeQuery();
-          ps = con.prepareStatement(sqlInsert);  
-            if (! res.isBeforeFirst()) {
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?); ";  
+          ps = con.prepareStatement(sqlInsert); 
             ps.setString(1, x.edid_id);
             ps.setString(2, x.edid_role);
             ps.setString(3, x.edid_rectype);
@@ -2430,8 +2426,16 @@ public class ediData {
             ps.setString(11, x.edid_xpath);
             ps.setString(12, x.edid_enabled);
             rows = ps.executeUpdate();
-            } 
             return rows;
+    }
+    
+    private static void _deleteEDIDocDet(String x, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from edi_docdet where edid_id = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.executeUpdate();
+        ps.close();
     }
     
     public static String[] updateEDIDocTransaction(String x, ArrayList<edi_docdet> edid, edi_doc edd) {
@@ -2456,7 +2460,7 @@ public class ediData {
         try { 
             bscon = DriverManager.getConnection(url + db, user, pass);
             bscon.setAutoCommit(false);
-             _deleteEDIDocDetLines(x, bscon);  // discard all lines
+             _deleteEDIDocDet(x, bscon);  // discard all lines
             for (edi_docdet z : edid) {
                 _addEDIDocDet(z, bscon, ps, res); 
             }
@@ -2519,14 +2523,7 @@ public class ediData {
             return rows;
     }
     
-    private static void _deleteEDIDocDetLines(String x, Connection con) throws SQLException { 
-        PreparedStatement ps = null; 
-        String sql = "delete from edi_docdet where edid_id = ?; ";
-        ps = con.prepareStatement(sql);
-        ps.setString(1, x);
-        ps.executeUpdate();
-        ps.close();
-    }
+   
     
     public static String[] deleteEDIDoc(String x) { 
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
