@@ -307,6 +307,10 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
            tbpriority.setText("");
            cbenableddet.setSelected(false);
            
+        tbkey.setForeground(Color.black);
+        tbkey.setBackground(Color.white);
+        
+        
         ddtag.removeAllItems();
         ddtag.addItem("");
         ddtag.addItem("senderid");
@@ -651,6 +655,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
         ddstruct = new javax.swing.JComboBox<>();
         btlookupele = new javax.swing.JButton();
         btlookupseg = new javax.swing.JButton();
+        btcopy1 = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         btcopy = new javax.swing.JButton();
@@ -919,6 +924,14 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
             }
         });
 
+        btcopy1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/addfile.png"))); // NOI18N
+        btcopy1.setToolTipText("Copy");
+        btcopy1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcopy1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -938,7 +951,9 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(13, 13, 13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btcopy1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnew)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btclear))
@@ -971,7 +986,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tblandmark, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbpriority, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -985,7 +1000,8 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
                         .addComponent(btnew)
                         .addComponent(btclear)
                         .addComponent(cbenabledhdr))
-                    .addComponent(btlookup))
+                    .addComponent(btlookup)
+                    .addComponent(btcopy1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -1231,12 +1247,27 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
         lookUpFrameASCIIseg();
     }//GEN-LAST:event_btlookupsegActionPerformed
 
+    private void btcopy1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcopy1ActionPerformed
+        if (! isLoad) {
+            tbkey.setText("");
+            tbkey.setBackground(Color.yellow);
+            tbkey.requestFocus();
+            btadd.setEnabled(true);
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            btdelete.setEnabled(false);
+            btupdate.setEnabled(false);
+            btcopy.setEnabled(false);
+        }
+    }//GEN-LAST:event_btcopy1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddelement;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btcopy;
+    private javax.swing.JButton btcopy1;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleteelement;
     private javax.swing.JButton btlookup;

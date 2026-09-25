@@ -2336,7 +2336,11 @@ public class ediData {
         try { 
             bscon = DriverManager.getConnection(url + db, user, pass);
             bscon.setAutoCommit(false);
-            _addEDIDoc(edd, bscon, ps, res);  
+            int rtn = _addEDIDoc(edd, bscon, ps, res); 
+            if (rtn == 0) {
+                m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};
+                return m;
+            }
             _deleteEDIDocDet(edd.edd_id(), bscon);
             for (edi_docdet z : edid) {
                 _addEDIDocDet(z, bscon, ps, res);
