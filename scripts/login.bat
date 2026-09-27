@@ -52,9 +52,9 @@ call :patchInstall
 
 cd %~dp0
 IF "%1"=="-debug" (
-jre26\bin\java -D"java.util.logging.config.file=bslogging.properties" -cp "custom\*;dist\*" bsmf.MainFrame %ARGS%
+jre26\bin\java --enable-native-access=ALL-UNNAMED -D"java.util.logging.config.file=bslogging.properties" -cp "custom\*;dist\*" bsmf.MainFrame %ARGS%
 ) else (
-start jre26\bin\javaw -D"java.util.logging.config.file=bslogging.properties" -cp "custom\*;dist\*" bsmf.MainFrame %ARGS%
+start jre26\bin\javaw --enable-native-access=ALL-UNNAMED -D"java.util.logging.config.file=bslogging.properties" -cp "custom\*;dist\*" bsmf.MainFrame %ARGS%
 )
 
 goto :eof
