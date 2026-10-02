@@ -1315,9 +1315,9 @@ public class CashTran extends javax.swing.JPanel {
         luTable.addMouseListener(luml);
       
         
-        callDialog(getClassLabelTag("lblname", this.getClass().getSimpleName()), 
-                getClassLabelTag("lblcode", this.getClass().getSimpleName()),
-                getClassLabelTag("lblzip", this.getClass().getSimpleName())); 
+        callDialog(getGlobalColumnTag("name"), 
+                getGlobalColumnTag("code"),
+                getGlobalColumnTag("zip")); 
         
         
     }

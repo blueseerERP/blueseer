@@ -376,7 +376,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
            } else if (this.type.equals("update") && message[0].equals("0")) {
              initvars(key);    
            } else if (this.type.equals("run")) {
-             initvars(null); 
+             initvars(key); 
            } else if (this.type.equals("init")) {
              done_Initialization();  
            } else {
@@ -1476,9 +1476,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
         luTable.addMouseListener(luml);
       
         
-        callDialog(getClassLabelTag("lblname", this.getClass().getSimpleName()), 
-                getClassLabelTag("lblcode", this.getClass().getSimpleName()),
-                getClassLabelTag("lblzip", this.getClass().getSimpleName())); 
+        callDialog(getGlobalColumnTag("name"), 
+                getGlobalColumnTag("code"),
+                getGlobalColumnTag("zip"));
         
         
     }

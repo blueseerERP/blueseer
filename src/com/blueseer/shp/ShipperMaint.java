@@ -1204,9 +1204,9 @@ public class ShipperMaint extends javax.swing.JPanel implements IBlueSeerT {
         luTable.addMouseListener(luml);
       
         
-        callDialog(getClassLabelTag("lblname", this.getClass().getSimpleName()), 
-                getClassLabelTag("lblcode", this.getClass().getSimpleName()),
-                getClassLabelTag("lblzip", this.getClass().getSimpleName())); 
+        callDialog(getGlobalColumnTag("name"), 
+                getGlobalColumnTag("code"),
+                getGlobalColumnTag("zip"));
         
         
     }
