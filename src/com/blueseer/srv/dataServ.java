@@ -151,8 +151,8 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                     }    
                 } else if (id.equals("getPublicKeyAsPEM")) { 
                   String key = request.getHeader("key");
-                    try {  
-                        response.getWriter().println(getPublicKeyAsPEM(key));
+                    try {                        
+                        response.getWriter().print(getPublicKeyAsPEM(key));
                     } catch (Exception ex) {
                         response.getWriter().println("Exception (getPublicKeyAsPEM): " + ex.getMessage());
                     }   

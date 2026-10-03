@@ -2809,6 +2809,171 @@ public class BlueSeerUtils {
        return sb.toString();
     }
 
+    public static String sendServerPostNoStrip(ArrayList<String[]> hlist, String postData, byte[] b, String dataClass) throws MalformedURLException, IOException {
+       
+        StringBuilder sb = new StringBuilder();
+        String urlString = "";
+        if (! bsmf.MainFrame.rhost.isBlank()) {
+            urlString = bsmf.MainFrame.protocol + "://" + bsmf.MainFrame.rhost + ":" + bsmf.MainFrame.serverport + "/bsapi/" + dataClass; 
+        } else {
+            urlString = bsmf.MainFrame.protocol + "://"  + bsmf.MainFrame.ip + ":" + bsmf.MainFrame.serverport + "/bsapi/" + dataClass; 
+        }
+        
+        String user = bsmf.MainFrame.userid;
+        String pass = "";
+        
+        URL url = new URL(urlString);
+        
+        byte[] postDataBytes;
+        if (b != null) {
+            postDataBytes = b;
+        } else {
+            postDataBytes = postData.getBytes("UTF-8");
+        }
+        
+        if (bsmf.MainFrame.protocol.equals("http")) {
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setConnectTimeout(10000);
+            conn.setReadTimeout(300000);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "text/plain");
+            conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+
+            // Custom Headers
+            
+            conn.setRequestProperty("sessionid",bsmf.MainFrame.sessionid);
+            for (String[] h : hlist) {
+                if (h[0].equals("user")) { // must be original login call...only call that passes userid...it's auto set below otherwise
+                    user = h[1];              
+                }
+                if (h[0].equals("pass")) { // must be original login call...only call that passes passwd
+                    pass = h[1];
+                    continue; // do not add pass to headers...will be added to Auth below                    
+                }
+             conn.setRequestProperty(h[0],h[1]);
+            }
+            if (conn.getRequestProperty("user") == null || conn.getRequestProperty("user").isBlank()) {
+               conn.setRequestProperty("user",bsmf.MainFrame.userid); 
+               user = bsmf.MainFrame.userid;
+               
+            }
+
+            // auth   
+            if (! user.isBlank()) {
+            String userCredentials = user + ":" + pass;
+            String basicAuth = "Basic " + Base64.toBase64String(userCredentials.getBytes());
+            conn.setRequestProperty("Authorization", basicAuth);
+            } 
+
+            conn.getOutputStream().write(postDataBytes);
+
+
+            if (conn.getResponseCode() != 200) {
+                        sb.append(conn.getResponseCode()).append(":").append(conn.getResponseMessage());  // return error resp code,messg
+                        String output;
+                        StringBuilder sberror = new StringBuilder();
+                        sberror.append(conn.getResponseCode()).append(": ").append(conn.getResponseMessage());
+                        BufferedReader br = new BufferedReader(new InputStreamReader((conn.getErrorStream())));
+                        while ((output = br.readLine()) != null) {
+                            sberror.append(output).append("\n");
+                        }
+                        br.close(); 
+                        bslog(sberror.toString());
+                        
+                        //throw new RuntimeException("Failed : HTTP error code : "
+                        //		+ conn.getResponseCode());
+
+            } else {
+                BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+                String output = "";
+
+
+                while ((output = br.readLine()) != null) {
+                    sb.append(output).append("\n");
+                }
+                br.close(); 
+            }
+
+            if (conn != null) {
+              conn.disconnect();
+            }
+        
+        } else {  // else https
+            HttpsURLConnection connssl = (HttpsURLConnection) url.openConnection();
+            connssl.setHostnameVerifier(allHostsValid);
+            connssl.setDoOutput(true);
+            connssl.setConnectTimeout(10000);
+            connssl.setReadTimeout(300000);
+            connssl.setRequestMethod("POST");
+            connssl.setRequestProperty("Content-Type", "text/plain");
+            connssl.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+
+            // Custom Headers
+                       
+            
+            connssl.setRequestProperty("sessionid",bsmf.MainFrame.sessionid);
+            for (String[] h : hlist) {
+                if (h[0].equals("user")) { // must be original login call...only call that passes userid...it's auto set below otherwise
+                    user = h[1];              
+                }
+                if (h[0].equals("pass")) { // must be original login call...only call that passes passwd
+                    pass = h[1];
+                    continue; // do not add pass to headers...will be added to Auth below                    
+                }
+             connssl.setRequestProperty(h[0],h[1]);
+            }
+            if (connssl.getRequestProperty("user") == null || connssl.getRequestProperty("user").isBlank()) {
+               connssl.setRequestProperty("user",bsmf.MainFrame.userid); 
+               user = bsmf.MainFrame.userid;
+               
+            }
+            
+            // auth   
+            if (! user.isBlank()) {
+            String userCredentials = new String(user + ":" + pass);
+            String basicAuth = "Basic " + Base64.toBase64String(userCredentials.getBytes());
+            connssl.setRequestProperty("Authorization", basicAuth);
+            } 
+
+            connssl.getOutputStream().write(postDataBytes);
+
+
+            if (connssl.getResponseCode() != 200) {
+                        sb.append(connssl.getResponseCode()).append(":").append(connssl.getResponseMessage());  // return error resp code,messg
+                        String output;
+                        StringBuilder sberror = new StringBuilder();
+                        sberror.append(connssl.getResponseCode()).append(": ").append(connssl.getResponseMessage());
+                        BufferedReader br = new BufferedReader(new InputStreamReader((connssl.getErrorStream())));
+                        while ((output = br.readLine()) != null) {
+                            sberror.append(output).append("\n");
+                        }
+                        br.close(); 
+                        bslog(sberror.toString());
+
+            } else {
+                BufferedReader br = new BufferedReader(new InputStreamReader((connssl.getInputStream())));
+                String output = "";
+
+
+                while ((output = br.readLine()) != null) {
+                    sb.append(output).append("\n");
+                }
+                br.close(); 
+            }
+
+            if (connssl != null) {
+              connssl.disconnect();
+            }
+            
+            
+        }
+            
+        
+        
+       return sb.toString();
+    }
+
     static HostnameVerifier allHostsValid = new HostnameVerifier() {
       public boolean verify(String hostname, SSLSession session) {
           return true;

@@ -64,6 +64,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPostNoStrip;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.DTData;
 import java.awt.Color;
@@ -816,7 +817,7 @@ public class PKSMaint extends javax.swing.JPanel {
        // String[] info = getCertInfo(key);
        String[] info = s.split("\\|");
         
-        if (info != null) {
+        if (info != null && info.length > 5) {
         ta.setText("  " + "\n\n");
         ta.append("Subject:\t\t" + info[0] + "  \n");
         ta.append("Issuer:\t\t" + info[1] + "  \n");
@@ -1314,13 +1315,13 @@ public class PKSMaint extends javax.swing.JPanel {
                    ArrayList<String[]> arr = new ArrayList<String[]>();
                     arr.add(new String[]{"id","getPublicKeyAsPEM"});
                     arr.add(new String[]{"key", tbkey.getText()});
-                    try {  
-                        taoutput.append(sendServerPost(arr, "", null, "dataServ"));
+                    try {                         
+                        taoutput.append(sendServerPostNoStrip(arr, "", null, "dataServ"));                        
                     } catch (IOException ex) {
                         bslog(ex);
                     }
-                } else {
-                    taoutput.append(getPublicKeyAsPEM(tbkey.getText()));
+                } else {     
+                   taoutput.append(getPublicKeyAsPEM(tbkey.getText()));
                 }
                 
             }

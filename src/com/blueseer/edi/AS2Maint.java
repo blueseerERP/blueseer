@@ -51,6 +51,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPostNoStrip;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.IBlueSeerT;
@@ -161,7 +162,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                     arrx.add(new String[]{"key", tbkey.getText()});
                     arrx.add(new String[]{"debug", String.valueOf(cbdebug.isSelected())});
                     try {
-                        rData = sendServerPost(arrx, "", null, "dataServ");
+                        rData = sendServerPostNoStrip(arrx, "", null, "dataServ");
                     } catch (IOException ex) {
                         rData = "Failed to run: " + ex.getMessage();
                     }

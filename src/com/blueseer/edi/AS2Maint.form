@@ -760,7 +760,7 @@
                                   <Component id="ddsigncert" alignment="0" max="32767" attributes="0"/>
                                   <Component id="ddenccert" alignment="0" max="32767" attributes="0"/>
                                   <Component id="ddsignalgo" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="ddencalgo" alignment="0" pref="130" max="32767" attributes="0"/>
+                                  <Component id="ddencalgo" alignment="0" pref="0" max="32767" attributes="0"/>
                                   <Component id="ddmicalgo" alignment="1" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
