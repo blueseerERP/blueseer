@@ -8158,11 +8158,17 @@ public class ediData {
         as2_mstr as2 = getAS2Mstr(new String[]{s});
         
             if (as2.as2_outwkf().equals(wkf.wkf_id) && as2.as2_enabled().equals("1")) {  // if as2 ID is assigned this executing workflow id then fire
-                try {
-                    messg.append(as2.as2_id).append(", ");
-                    apiUtils.postAS2(as2.as2_id, false);
-                    //File folder = new File(as2.as2_outdir());
-                    //File[] listOfFiles = folder.listFiles();
+                try {                    
+                    File folder = new File(as2.as2_outdir());
+                    File[] listOfFiles = folder.listFiles();
+                    messg.append(as2.as2_id).append(" file count=").append(listOfFiles.length);
+                    if (listOfFiles.length == 0) {
+                        messg.append(" -skipping empty dir; ");
+                        continue;
+                    } else {
+                        apiUtils.postAS2(as2.as2_id, false);
+                    }                    
+                    
                 } catch (IOException ex) {
                     bslog(ex);
                 } catch (CertificateException ex) {
@@ -8182,7 +8188,9 @@ public class ediData {
                 } catch (Exception ex) {
                     bslog(ex);
                 }
+                messg.append(", ");
             }
+            
         }
         return new String[]{"0", messg.toString()};  // overall...workflow suceeds even if individual internal actions do not...will be logged regardless
     }

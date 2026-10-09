@@ -145,7 +145,7 @@ public class apiServer {
         context.setContextPath("/bsapi"); 
         String webdir = "src/web/WEB-INF/";
         context.setResourceBase(webdir);
-        
+        context.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         int i = 0;
         int port = 8088;
         for (String s : args) {
@@ -199,6 +199,7 @@ public class apiServer {
         context.addServlet(CustomerServ.class, "/Customer/*");
         context.addServlet(CustomerServ.class, "/CustomerList/*");
         context.addServlet(TestServlet.class, "/test/*");
+        context.addServlet(wellKnownServlet.class, "/.well-known/certificate");
         context.addServlet(dataServ.class, "/dataServ/*");
         context.addServlet(dataServFIN.class, "/dataServFIN/*"); 
         context.addServlet(dataServORD.class, "/dataServORD/*"); 
@@ -363,6 +364,29 @@ public class apiServer {
     }
 }
     
+    
+    public static class wellKnownServlet extends HttpServlet
+{
+    //public wellKnownServlet(){}
+    
+    private final Path pubkeypath = Paths.get("conf/publickey.pem");
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        if (! Files.exists(pubkeypath)) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "public certificate is unavailable");
+            return;
+        }
+        
+        response.setContentType("application/x-x509-ca-cert");
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Cache-Control", "public, max-age=86400");
+        Files.copy(pubkeypath, response.getOutputStream());
+        
+    }
+}
     
      
 }
