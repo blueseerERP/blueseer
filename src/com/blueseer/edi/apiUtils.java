@@ -3292,7 +3292,7 @@ public class apiUtils {
 
                     // verify signature if applicable
                     // mbpr should be mimemulitpart containing two sub parts....the mdn and the signature
-                    boolean isValidMDNSignature = verifyMDNSignature(indata, "multipart/signed; protocol=\"application/pkcs7-signature\"; micalg=sha-1;", as2m.as2_signcert());
+                    boolean isValidMDNSignature = verifyMDNSignature(indata, mdncontenttype, as2m.as2_signcert());
 
                     /*
                     Session session = Session.getDefaultInstance(new java.util.Properties()); // Or obtain a proper session
@@ -3313,7 +3313,9 @@ public class apiUtils {
 
                     Pattern p = Pattern.compile("Disposition:.*(error|failed).*");
                     Matcher m = p.matcher(datastring);
-                    if (m.find()) {
+                    if (! isValidMDNSignature) {
+                        logdet.add(new String[]{parentkey, "error", "MDN invalid signature: " + filename});
+                    } else if (m.find()) {
                         logdet.add(new String[]{parentkey, "error", "MDN error: " + filename});
                     } else {
                        logdet.add(new String[]{parentkey, "info", "MDN processed: " + filename}); 
@@ -3331,7 +3333,9 @@ public class apiUtils {
                     output.close();
                     Pattern p = Pattern.compile("Disposition:.*(error|failed).*");
                     Matcher m = p.matcher(result);
-                    if (m.find()) {
+                    if (as2m.as2_forcesigned().equals("1")) {
+                        logdet.add(new String[]{parentkey, "error", "MDN signature required but missing: " + filename});
+                    } else if (m.find()) {
                         logdet.add(new String[]{parentkey, "error", "unsigned MDN error: " + filename}); 
                     } else {
                        logdet.add(new String[]{parentkey, "info", "unsigned MDN processed: " + filename}); 
