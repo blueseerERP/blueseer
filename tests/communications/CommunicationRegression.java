@@ -37,8 +37,17 @@ import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 /** Runs the actual communication methods against disposable local fixtures. */
 public class CommunicationRegression {
     private static int failures;
+    private static int checks;
     private static KeyPair signingKey;
     private static X509Certificate certificate;
+    private static KeyPair otherKey;
+    private static X509Certificate otherCertificate;
+    private static X509Certificate collidingCertificate;
+
+    private enum SignatureFixture {
+        PARTNER, NO_CERTIFICATES, EXTRA_CERTIFICATE, UNRELATED_CERTIFICATE_ONLY,
+        OTHER_SIGNER, OTHER_SIGNER_NO_CERTIFICATES, COLLIDING_SIGNER
+    }
 
     public static void main(String[] args) throws Exception {
         Path repo = Path.of(args[0]);
@@ -76,6 +85,15 @@ public class CommunicationRegression {
             http.start();
             sql("INSERT INTO as2_mstr (as2_id, as2_protocol, as2_url, as2_port, as2_outdir, as2_enccert, as2_signcert, as2_contenttype, as2_micalgo) VALUES ('partner', 'http', '127.0.0.1', '" + http.getAddress().getPort() + "', 'out', 'cert', 'cert', 'application/edi-x12', 'SHA-1')");
             as2Case(http, "valid signed MDN", true, false, false, false, false, true);
+            as2Case(http, "partner signature without embedded certificates", SignatureFixture.NO_CERTIFICATES, true);
+            as2Case(http, "partner signature with extra certificate", SignatureFixture.EXTRA_CERTIFICATE, true);
+            as2Case(http, "partner signature with only unrelated embedded certificate", SignatureFixture.UNRELATED_CERTIFICATE_ONLY, true);
+            as2Case(http, "unconfigured signer rejected", SignatureFixture.OTHER_SIGNER, false);
+            as2Case(http, "unconfigured signer without embedded certificates rejected", SignatureFixture.OTHER_SIGNER_NO_CERTIFICATES, false);
+            as2Case(http, "unconfigured key with matching issuer and serial rejected", SignatureFixture.COLLIDING_SIGNER, false);
+            sql("UPDATE as2_mstr SET as2_signcert='missing'");
+            as2Case(http, "missing configured certificate rejected", SignatureFixture.PARTNER, false);
+            sql("UPDATE as2_mstr SET as2_signcert='cert'");
             as2Case(http, "tampered signed MDN", true, true, false, false, false, false);
             as2Case(http, "signed error MDN", true, false, true, false, false, false);
             as2Case(http, "optional unsigned MDN", false, false, false, false, false, true);
@@ -95,7 +113,7 @@ public class CommunicationRegression {
         ftpCase("changed host rejected by default", args[4], null, false);
         ftpCase("explicit host checking opt-out", null, "no", true);
         if (failures != 0) throw new AssertionError(failures + " regression checks failed");
-        System.out.println("All 10 communication regression checks passed");
+        System.out.println("All " + checks + " communication regression checks passed");
     }
 
     private static void generateCertificate() throws Exception {
@@ -107,6 +125,16 @@ public class CommunicationRegression {
             new JcaX509v3CertificateBuilder(name, BigInteger.ONE, new Date(0),
                 new Date(System.currentTimeMillis() + 86400000L), name, signingKey.getPublic())
                 .build(new JcaContentSignerBuilder("SHA256withRSA").setProvider("BC").build(signingKey.getPrivate())));
+        otherKey = generator.generateKeyPair();
+        X500Name otherName = new X500Name("CN=Unconfigured regression signer");
+        otherCertificate = new JcaX509CertificateConverter().setProvider("BC").getCertificate(
+            new JcaX509v3CertificateBuilder(otherName, BigInteger.TWO, new Date(0),
+                new Date(System.currentTimeMillis() + 86400000L), otherName, otherKey.getPublic())
+                .build(new JcaContentSignerBuilder("SHA256withRSA").setProvider("BC").build(otherKey.getPrivate())));
+        collidingCertificate = new JcaX509CertificateConverter().setProvider("BC").getCertificate(
+            new JcaX509v3CertificateBuilder(name, BigInteger.ONE, new Date(0),
+                new Date(System.currentTimeMillis() + 86400000L), name, otherKey.getPublic())
+                .build(new JcaContentSignerBuilder("SHA256withRSA").setProvider("BC").build(otherKey.getPrivate())));
         Files.write(Path.of("certificate.der"), certificate.getEncoded());
         java.security.KeyStore store = java.security.KeyStore.getInstance("PKCS12");
         store.load(null, null);
@@ -116,6 +144,15 @@ public class CommunicationRegression {
 
     private static void as2Case(HttpServer http, String label, boolean signed, boolean tampered,
             boolean error, boolean required, boolean debug, boolean success) throws Exception {
+        as2Case(http, label, signed, tampered, error, required, debug, success, SignatureFixture.PARTNER);
+    }
+
+    private static void as2Case(HttpServer http, String label, SignatureFixture fixture, boolean success) throws Exception {
+        as2Case(http, label, true, false, false, false, false, success, fixture);
+    }
+
+    private static void as2Case(HttpServer http, String label, boolean signed, boolean tampered,
+            boolean error, boolean required, boolean debug, boolean success, SignatureFixture fixture) throws Exception {
         sql("UPDATE as2_mstr SET as2_forcesigned='" + (required ? "1" : "0") + "'");
         http.createContext("/", exchange -> {
             try {
@@ -134,11 +171,26 @@ public class CommunicationRegression {
                 reportPart.setHeader("Content-Type", report.getContentType());
                 MimeMultipart response = report;
                 if (signed) {
+                    boolean otherSigner = fixture == SignatureFixture.OTHER_SIGNER
+                        || fixture == SignatureFixture.OTHER_SIGNER_NO_CERTIFICATES
+                        || fixture == SignatureFixture.COLLIDING_SIGNER;
+                    KeyPair key = otherSigner ? otherKey : signingKey;
+                    X509Certificate cert = fixture == SignatureFixture.COLLIDING_SIGNER
+                        ? collidingCertificate : otherSigner ? otherCertificate : certificate;
                     SMIMESignedGenerator signer = new SMIMESignedGenerator();
                     signer.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(
                         new JcaDigestCalculatorProviderBuilder().setProvider("BC").build()).build(
-                        new JcaContentSignerBuilder("SHA256withRSA").setProvider("BC").build(signingKey.getPrivate()), certificate));
-                    signer.addCertificates(new CollectionStore<>(java.util.List.of(new JcaX509CertificateHolder(certificate))));
+                        new JcaContentSignerBuilder("SHA256withRSA").setProvider("BC").build(key.getPrivate()), cert));
+                    ArrayList<JcaX509CertificateHolder> embedded = new ArrayList<>();
+                    if (fixture != SignatureFixture.NO_CERTIFICATES
+                            && fixture != SignatureFixture.OTHER_SIGNER_NO_CERTIFICATES
+                            && fixture != SignatureFixture.UNRELATED_CERTIFICATE_ONLY) {
+                        embedded.add(new JcaX509CertificateHolder(cert));
+                    }
+                    if (fixture == SignatureFixture.EXTRA_CERTIFICATE || fixture == SignatureFixture.UNRELATED_CERTIFICATE_ONLY) {
+                        embedded.add(new JcaX509CertificateHolder(otherCertificate));
+                    }
+                    signer.addCertificates(new CollectionStore<>(embedded));
                     response = signer.generate(reportPart);
                 }
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -185,6 +237,7 @@ public class CommunicationRegression {
     }
 
     private static void check(String label, boolean passed, String observed) {
+        checks++;
         System.out.println((passed ? "PASS: " : "FAIL: ") + label + " -- " + observed);
         if (!passed) failures++;
     }

@@ -2327,49 +2327,34 @@ public class apiUtils {
 }
         
     public static boolean verifyMDNSignature(byte[] data, String contentType, String pksid) throws MessagingException, IOException {
-        boolean b = false;
-        byte[] FileWHeadersBytes = null;
-        byte[] Signature = null;
-        MimeMultipart mp = new MimeMultipart(new ByteArrayDataSource(data, contentType));
-        if (mp.getCount() < 2 ) { // ...must not be a signature...signed MDN required
-            // need logging verbiage here
-            return false; 
+        if (data == null || pksid == null || pksid.isBlank()) {
+            return false;
         }
-        for (int j = 0; j < mp.getCount(); j++) {
-           MimeBodyPart mbp = (MimeBodyPart) mp.getBodyPart(j); 
-           
-           if (mbp.getInputStream() != null && ! mbp.getContentType().contains("signature")) { // must be non sig file
-            //  System.out.println("verifyMDNSignature is NOT signature bodypart: " + j);
-              System.out.println("verifyMDNSignature mpb number: " + j);
-              System.out.println(new String (mbp.getInputStream().readAllBytes()));
-              ByteArrayOutputStream aos = new ByteArrayOutputStream();
-              mp.getBodyPart(0).writeTo(aos);
-              aos.close(); 
-              FileWHeadersBytes = aos.toByteArray();
-             // FileWHeadersBytes = IOUtils.toByteArray(mbp.getInputStream());
-           }
-           /*
-           if (mbp.getInputStream() != null && mbp.getContentType().contains("signature")) { // must be sig
-              
-            //  System.out.println("verifyMDNSignature is signature bodypart: " + j);
-              System.out.println("verifyMDNSignature mpb number: " + j);
-              System.out.println(new String (Base64.encode(mbp.getInputStream().readAllBytes())));
-             // Signature = IOUtils.toByteArray((InputStream) mbp.getContent());
-              Signature = mbp.getInputStream().readAllBytes();
-           }
-           */
-           if (mbp.getInputStream() != null && mbp.getContentType().contains("pkcs7-signature")) { // must be sig
-            Signature = IOUtils.toByteArray((InputStream) mbp.getContent());
-           }
+        // The partner configuration is the trust source, regardless of embedded certificates.
+        X509Certificate certificate = getPublicKeyAsCert(pksid);
+        if (certificate == null) {
+            return false;
         }
-        if (FileWHeadersBytes != null && Signature != null) {  
-           // System.out.println("verifyMDNSignature ...attempting to verify");
-        b = verifySignature(FileWHeadersBytes, Signature, false, pksid);
+        MimeMultipart multipart = new MimeMultipart(new ByteArrayDataSource(data, contentType));
+        if (multipart.getCount() != 2) {
+            return false;
         }
-        
-        return b;
+        try {
+            SMIMESigned signed = new SMIMESigned(multipart);
+            X509CertificateHolder expectedSigner = new JcaX509CertificateHolder(certificate);
+            for (SignerInformation signer : signed.getSignerInfos().getSigners()) {
+                if (signer.getSID().match(expectedSigner)
+                        && signer.verify(new JcaSimpleSignerInfoVerifierBuilder()
+                            .setProvider("BC").build(certificate))) {
+                    return true;
+                }
+            }
+        } catch (CertificateException | CMSException | OperatorCreationException ex) {
+            bslog(ex);
+        }
+        return false;
     }
-    
+
     public static boolean verifyMDNSignatureNew(MimeMessage message, X509Certificate pubcert) throws Exception {
         // Cast the message content to SMIMESigned if it's signed
         DigestCalculatorProvider digestCalculatorProvider = 
