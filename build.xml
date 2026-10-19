@@ -44,7 +44,7 @@
      <target name="compile" depends="clean, makedir">
          <javac executable="${javac}" fork="yes" srcdir="${src.dir}"
 destdir="${build.dir}" classpathref="build.classpath"
-includeantruntime="false" debug="true">
+includeantruntime="false" debug="true" release="21">
          </javac>
      </target>
 

@@ -1,4 +1,4 @@
-Run with JDK 26 or newer and Python 3 with `paramiko` installed:
+Run with JDK 21 or newer and Python 3 with `paramiko` installed:
 
 ```sh
 python3 -m venv /tmp/blueseer-comm-env
@@ -6,7 +6,7 @@ python3 -m venv /tmp/blueseer-comm-env
 JAVA_HOME=/path/to/jdk /tmp/blueseer-comm-env/bin/python tests/communications/run.py
 ```
 
-The runner compiles the application using `lib/*`, then calls `runFTPClient()`
+The runner compiles the application for Java 21 using `lib/*`, then calls `runFTPClient()`
 and `postAS2()` against loopback SSH/SFTP and HTTP servers. It creates a temporary
 SQLite database from the repository schema and generates disposable SSH keys,
 certificates, MDNs and outbound files. It does not use the application database
@@ -18,7 +18,12 @@ ARM64). All fixtures and build outputs are removed when the runner exits.
 
 Checks cover SSH key authentication, trusted/unknown/changed host keys, explicit
 host-checking opt-out, valid/tampered/error signed MDNs, optional unsigned MDNs,
-required-but-missing signatures, and debug-mode file retention.
+required-but-missing signatures, and debug-mode file retention. Signed MDN checks
+also cover omitted signing certificates, extra embedded certificates, an unrelated
+embedded certificate without the signing certificate, unconfigured signers with
+and without embedded certificates, a different key with the configured certificate's
+issuer and serial, and a missing configured partner certificate. Successful partner
+MDNs delete the outbound file; rejected MDNs preserve it.
 
 For before/after testing, the host-key cases provide a disposable identity file
 named `yes` after the private-key-path case. This isolates host verification from

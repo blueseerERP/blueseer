@@ -59,7 +59,7 @@ def main():
         sources = work / "sources.txt"
         sources.write_text("\n".join('"' + str(p) + '"' for p in REPO.glob("src/**/*.java"))
                            + '\n"' + str(REPO / "tests/communications/CommunicationRegression.java") + '"\n')
-        subprocess.run([JAVAC, "-J-Xmx2g", "-cp", str(REPO / "lib/*"), "-d", str(classes), "@" + str(sources)], check=True)
+        subprocess.run([JAVAC, "-J-Xmx2g", "--release", "21", "-cp", str(REPO / "lib/*"), "-d", str(classes), "@" + str(sources)], check=True)
         host = paramiko.RSAKey.generate(2048)
         client = paramiko.RSAKey.generate(2048)
         identity = work / "identity.pem"
