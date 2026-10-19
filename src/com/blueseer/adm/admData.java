@@ -4695,7 +4695,7 @@ public class admData {
             
             String privateKeyPath = "";
             if (ftpa.containsKey("privateKeyPath")) {
-                privateKeyPath = ftpa.get("usePrivateKey");
+                privateKeyPath = ftpa.get("privateKeyPath");
             }
             
             String knownHostsPath = "";
@@ -4706,7 +4706,7 @@ public class admData {
             if (ftpa.containsKey("StrictHostKeyChecking")) {
                    config.put("StrictHostKeyChecking", ftpa.get("StrictHostKeyChecking"));
             } else {
-                   config.put("StrictHostKeyChecking", "no"); 
+                   config.put("StrictHostKeyChecking", "yes");
             }
             
             if (ftpa.containsKey("PreferredAuthentications")) {
