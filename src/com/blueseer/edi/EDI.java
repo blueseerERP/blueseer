@@ -1003,6 +1003,7 @@ public class EDI {
         System.out.println("processFile: entering function with file :" + infile);
         }
         
+        /*
         // always need a site ...will eventually be overwrote with edi_mstr lookup
         if (site.isBlank()) {
             site = OVData.getDefaultSite();
@@ -1019,10 +1020,10 @@ public class EDI {
             outfile = path.getFileName().toString();
         }
         
-       
+       */
         
         
-        String[] m = new String[]{"0",""};
+      //  String[] m = new String[]{"0",""};
         
         File file = new File(infile);
         // need to research removing ^M characters here with possible solution...replaceAll("\\r$", "");
@@ -1031,6 +1032,10 @@ public class EDI {
          int max = cbuf.length;
          f.read(cbuf); 
          f.close();
+         
+        String[] m = parseEDI(cbuf, map, infile, outfile, isOverride, isDebug, reprocess, comkey, idxnbr, site);
+         
+        /* 
          
          if (GlobalDebug)
         System.out.println("File Character length: " + cbuf.length);
@@ -1041,7 +1046,7 @@ public class EDI {
           comkey = OVData.getNextNbr("edilog");
          }
          
-         /* lets check file type to see if its x12 or edifact or csv or xml */
+         // lets check file type to see if its x12 or edifact or csv or xml 
          // returns filetype, doctype
          String[] editype = getEDIType(cbuf, infile);  // identify file type index 0 = filetype, index 1 = doctype
          String batchfile = "";
@@ -1272,8 +1277,287 @@ public class EDI {
        // if hanoi is not empty...must have some multi-doc envelopes to create
        packageEnvelopes();
        
+       */
+       
        return m;  
     }
+       
+    public static String[] parseEDI(char[] cbuf, String map, String infilename, String outfilename, String isOverride, boolean isDebug, boolean reprocess, int comkey, int idxnbr, String site) throws FileNotFoundException, IOException, ClassNotFoundException {
+        
+        // always need a site ...will eventually be overwrote with edi_mstr lookup
+        if (site.isBlank()) {
+            site = OVData.getDefaultSite();
+            if (GlobalDebug) {
+            System.out.println("Site parameter blank...using default :" + site);
+            }
+        }
+        // infile path
+        Path indir = null;
+        Path infilepath = null;
+        if (! infilename.toLowerCase().equals("api")) {
+            infilepath = Paths.get(infilename);
+            if (infilepath.getParent() != null) {
+                indir = infilepath.getParent();
+            }
+        }
+        
+        // lets check to see if outfile contains a directory path...as if called from EDIbs with -of qualf
+        Path outdirpath = null;
+        Path path = Paths.get(outfilename);
+        if (path.getParent() != null) {
+            outdirpath = path.getParent();
+            outfilename = path.getFileName().toString();
+        }
+        
+       
+        
+        
+        String[] m = new String[]{"0",""};
+               
+         
+         if (GlobalDebug)
+        System.out.println("File Character length: " + cbuf.length);
+        
+         // get comkey that associates all subsequent docs in this file to this log entry
+         
+         if (isOverride.isEmpty() && comkey == 0) {
+          comkey = OVData.getNextNbr("edilog");
+         }
+         
+         /* lets check file type to see if its x12 or edifact or csv or xml */
+         // returns filetype, doctype
+         String[] editype = getEDIType(cbuf, infilename);  // identify file type index 0 = filetype, index 1 = doctype
+         String batchfile = "";
+         String[] c = initEDIControl();
+                    c[0] = ""; // senderid
+                    c[1] = editype[1];
+                    c[21] = ""; // receiverid
+                    c[2] = map;
+                    c[3] = infilename;
+                    c[4] = ""; //isactrlnbr
+                    c[8] = outfilename;
+                    c[9] = "10";
+                    c[10] = "42";
+                    c[11] = "0";
+                    c[12] = isOverride;
+                    c[13] = "";
+                    c[16] = "0";  // initial idxnbr
+                    c[22] = String.valueOf(comkey);
+                    
+                    if (outdirpath != null && Files.exists(outdirpath)) {
+                        c[27] = cleanDirString(outdirpath.toString()); // set outdir if called from EDIbs with -of
+                    }
+                    
+                    c[26] = indir.toString(); // indir 
+                    c[28] = editype[0];
+                    c[30] = String.valueOf(isDebug);
+                    c[39] = site;
+                    
+         // create batch file of incoming file
+         
+         // create batch file
+              if (! reprocess) {
+              int filenumber = OVData.getNextNbr("edifile");
+              batchfile = "R" + String.format("%07d", filenumber); 
+              c[24] = batchfile;
+              Files.copy(infilepath, new File(cleanDirString(EDData.getEDIBatchDir()) + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+              } else {
+                  batchfile = infilename;
+              }
+          
+          // start initial log entry for incoming file here 
+          if (! reprocess) {
+            EDData.writeEDIFileLog(c);      
+          }
+          
+          
+          
+         if (editype[0] == null || editype[0].isEmpty()) {
+           m = new String[]{"1","unknown file type: " + infilename};
+           EDData.writeEDILog(c, "error", "Unknown File Type: " + infilename + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
+           sendEDITranslationErrorMail(c, "Unknown File Type: " + infilename + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]);
+           return m; 
+         } else if (editype[1] == null || editype[1].isEmpty()) {
+            m = new String[]{"1","unknown doc type: " + infilename};
+           EDData.writeEDILog(c, "error", "Unknown Doc Type: " + infilename + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
+           sendEDITranslationErrorMail(c, "Unknown Doc Type: " + infilename + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]);
+           return m; 
+         } else if (editype[1].equals("??")) {
+            m = new String[]{"1","unknown doc type: " + infilename};
+           EDData.writeEDILog(c, "error", "Unknown Doc Type: " + infilename + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
+           sendEDITranslationErrorMail(c, "Unknown Doc Type: " + infilename + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]);
+           return m;   
+         } else {
+           EDData.writeEDILog(c, "info", "File Type Info: " + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]);
+         }
+             
+        
+       
+        // if file type is FF
+        if (editype[0].equals("FF")) {
+            String landmark = EDData.getEDIFFLandmark(editype[1]);
+            ArrayList<String[]> ffdata = EDData.getEDIFFDataRules(editype[1]);
+            
+            StringBuilder segment = new StringBuilder();
+            char segdelim = (char) Integer.valueOf("10").intValue(); 
+           // for (int i = 0; i < cbuf.length; i++) {
+           ArrayList<String> doc = new ArrayList<String>();
+           for (int i = 0; i < cbuf.length; i++) {
+                if (cbuf[i] == segdelim) {
+                    doc.add(segment.toString());
+                    segment.delete(0, segment.length());
+                } else {
+                    if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
+                        segment.append(cbuf[i]);
+                    } 
+                }
+            }
+           // loop through file and count each Doc landmarks of FF type in case of concatenation
+           Map<Integer, ArrayList<String>> docRegister = new HashMap<Integer, ArrayList<String>>();
+           Map<Integer, Integer[]> docPosition = new HashMap<Integer, Integer[]>();
+          
+           ArrayList<String> singledoc = new ArrayList<String>();
+           int doccount = 0;
+           int linecount = 0;
+           int startline = 0;
+           for (String x : doc) {
+               linecount++;
+               if (x.startsWith(landmark) && linecount == 1) {
+                   singledoc.add(x);  
+                   doccount++;
+                   startline = linecount;
+                   if (GlobalDebug)
+                   System.out.println("processFF: linecount = " + linecount + "/ landmark=" + landmark );
+               }
+               if (x.startsWith(landmark) && linecount > 1) {
+                   docRegister.put(doccount, singledoc);
+                   docPosition.put(doccount, new Integer[]{0,cbuf.length,startline,linecount - 1});
+                   singledoc.clear();
+                   singledoc.add(x);
+                   doccount++;
+                   if (GlobalDebug)
+                   System.out.println("processFF: linecount = " + linecount + "/ landmark=" + landmark );
+             
+               }
+               if (! x.startsWith(landmark)) {
+                   singledoc.add(x);
+               }
+               
+           }
+           docRegister.put(doccount, singledoc);
+           docPosition.put(doccount, new Integer[]{0,cbuf.length,startline,linecount - 1});       
+           
+           processFF(docRegister, docPosition, c, ffdata, idxnbr);
+           
+        }
+        
+        // if file type is x12 
+        if (editype[0].equals("X12")) {
+            // create batch file and assign to control replacing infile name 
+         // now lets see how many ISAs and STs within those ISAs and write character positions of each
+         
+         Map<Integer, Object[]> ISAmap = createIMAP(cbuf, c, "", "", "", "");
+      
+             if (isOverride.isEmpty()) {
+             processX12(ISAmap, cbuf, batchfile, idxnbr);
+             } else {
+              processX12(ISAmap, cbuf, infilename, idxnbr);   
+             }
+             
+         }  // if x12
+        
+        // if file type is EDIFACT 
+        if (editype[0].equals("UNE")) {
+            // create batch file and assign to control replacing infile name 
+         // now lets see how many ISAs and STs within those ISAs and write character positions of each
+         
+         Map<Integer, Object[]> UNBmap = createMAPUNE(cbuf, c, "", "", "", "");
+      
+             if (isOverride.isEmpty()) {
+             processUNE(UNBmap, cbuf, batchfile, idxnbr);
+             } else {
+              processUNE(UNBmap, cbuf, infilename, idxnbr);   
+             }
+             
+         }  // if EDIFACT
+        
+        
+        // if type is CSV
+        if (editype[0].equals("CSV")) {
+            ArrayList<String[]> ffdata = EDData.getEDIFFDataRules(editype[1]);
+            
+            StringBuilder segment = new StringBuilder();
+            char segdelim = (char) Integer.valueOf("10").intValue(); 
+           // for (int i = 0; i < cbuf.length; i++) {
+           ArrayList<String> doc = new ArrayList<String>();
+           for (int i = 0; i < cbuf.length; i++) {
+                if (cbuf[i] == segdelim) {
+                    doc.add(segment.toString());
+                    segment.delete(0, segment.length());
+                } else {
+                    if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
+                        segment.append(cbuf[i]);
+                    } 
+                }
+            }
+           // loop through file and count each Doc landmarks of FF type in case of concatenation
+           Map<Integer, ArrayList<String>> docRegister = new HashMap<Integer, ArrayList<String>>();
+           Map<Integer, Integer[]> docPosition = new HashMap<Integer, Integer[]>();
+          
+           ArrayList<String> singledoc = new ArrayList<String>();
+           int doccount = 0;
+           int linecount = 0;
+           int startline = 0;
+           for (String x : doc) {
+               linecount++;
+               singledoc.add(x);
+           }
+           docRegister.put(doccount, singledoc);
+           docPosition.put(doccount, new Integer[]{0,cbuf.length,startline,linecount - 1});       
+           
+           processCSV(docRegister, docPosition, c, ffdata, idxnbr);
+           
+        }
+        
+         // if type is JSON
+        if (editype[0].equals("JSON")) {
+            
+            StringBuilder jsonstring = new StringBuilder();
+            for (int i = 0; i < cbuf.length; i++) {
+                jsonstring.append(cbuf[i]);
+            }
+            
+            if (isOverride.isEmpty()) {
+             processJSON(jsonstring.toString(), c, batchfile, idxnbr);
+             } else {
+              processJSON(jsonstring.toString(), c, infilename, idxnbr);   
+             }
+        }
+        
+        
+         // if type is XML
+        if (editype[0].equals("XML")) {
+            
+            StringBuilder xmlstring = new StringBuilder();
+            for (int i = 0; i < cbuf.length; i++) {
+                xmlstring.append(cbuf[i]);
+            }
+            
+            if (isOverride.isEmpty()) {
+                processXML(xmlstring.toString(), c, batchfile, idxnbr);
+            } else {
+                processXML(xmlstring.toString(), c, infilename, idxnbr);   
+            } 
+        }
+        
+       EDData.updateEDIFileLogStatus(c[22], c[0], editype[0], editype[1]);   
+       
+       // if hanoi is not empty...must have some multi-doc envelopes to create
+       packageEnvelopes();
+       
+       return m;  
+    }
+    
     
     public static Map<Integer, Object[]> createMAPUNE(char[] cbuf, String[] c, String infile, String outfile, String map, String isOverride) {
          Map<Integer, Object[]> UNBmap = new HashMap<Integer, Object[]>();
@@ -1550,7 +1834,6 @@ public class EDI {
         
     String[] type = new String[]{"",""};
     // type = filetype, doctype
-    String[] filenamesplit = null;
         
     if (cbuf == null || cbuf.length < 15) {
             return type;
