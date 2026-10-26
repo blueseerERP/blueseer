@@ -12417,7 +12417,7 @@ public class DTData {
                 bslog(ex);
             }
         } else {
-            jsonString = getRoutingsAllData();
+            jsonString = getLocationsAllData();
         }
         Object[][] data = jsonToData(jsonString);
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
