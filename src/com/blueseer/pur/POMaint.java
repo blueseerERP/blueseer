@@ -420,6 +420,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerV {
         tbitem.setText("");
         tbdesc.setText("");
         userid.setText(bsmf.MainFrame.userid);
+        userid.setEditable(false);
+        userid.setBackground(bsmf.MainFrame.nonEditableColor);
         duedate.setDate(now);
         orddate.setDate(now);
         
@@ -1981,6 +1983,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerV {
         jScrollPane1.setViewportView(remarks);
 
         btmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/mail.png"))); // NOI18N
+        btmail.setToolTipText("mail");
         btmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btmailActionPerformed(evt);
@@ -1988,6 +1991,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerV {
         });
 
         btcontacts.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/contacts.png"))); // NOI18N
+        btcontacts.setToolTipText("contacts");
         btcontacts.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcontactsActionPerformed(evt);
@@ -1995,6 +1999,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerV {
         });
 
         btcopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/addfile.png"))); // NOI18N
+        btcopy.setToolTipText("Copy");
         btcopy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcopyActionPerformed(evt);

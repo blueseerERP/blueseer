@@ -42,8 +42,6 @@ import static com.blueseer.ctr.cusData.getCustMstr;
 import static com.blueseer.ctr.cusData.updateCMCDet;
 import static com.blueseer.ctr.cusData.updateCMSDet;
 import static com.blueseer.ctr.cusData.updateCustMstr;
-import com.blueseer.fgl.fglData;
-import com.blueseer.lbl.lblData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
