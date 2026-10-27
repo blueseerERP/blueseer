@@ -7374,8 +7374,9 @@ public class invData {
                     mylist.add(res.getDouble("itc_total"));
                     }
                    
-                   if (mylist.isEmpty()) { // if no record found above...default to zero in all 11 elements
-                       for (int z = 0; z < 11; z++) {
+                   // if no record found above...default to zero in all 11 elements
+                   if (mylist.isEmpty()) { 
+                       for (int z = 0; z < 11; z++) { 
                            mylist.add(0.00);
                        }
                    }
