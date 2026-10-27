@@ -372,9 +372,10 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
        imagelabel.setIcon(null);
        
        
-        tbkey.setText("");
-        tbkey.setEditable(true);
-        tbkey.setForeground(Color.black);
+       tbkey.setText("");
+       tbkey.setEditable(true);
+       tbkey.setForeground(Color.black);
+       tbkey.setBackground(Color.white);
        revlevel.setText("");
        custrevlevel.setText("");
        tbminordqty.setText("");
@@ -508,6 +509,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
         btnew.setEnabled(false);
+        btcopy.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
         if (! x.isEmpty()) {
@@ -941,14 +943,21 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void getstandardcost(String item) {
     ArrayList<Double> costs = invData.getItemCostElements(item, "standard", ddsite.getSelectedItem().toString());
-     if (costs != null) {
-     tbmtlstd.setText(currformatDouble(costs.get(0) + costs.get(5)));
-     tblbrstd.setText(currformatDouble(costs.get(1) + costs.get(6)));
-     tbbdnstd.setText(currformatDouble(costs.get(2) + costs.get(7)));
-     tbovhstd.setText(currformatDouble(costs.get(3) + costs.get(8)));
-     tboutstd.setText(currformatDouble(costs.get(4) + costs.get(9)));
-     tbtotcoststd.setText(currformatDouble(costs.get(10)));
-     }
+        if (costs != null && costs.size() > 9) {
+           tbmtlstd.setText(currformatDouble(costs.get(0) + costs.get(5)));
+           tblbrstd.setText(currformatDouble(costs.get(1) + costs.get(6)));
+           tbbdnstd.setText(currformatDouble(costs.get(2) + costs.get(7)));
+           tbovhstd.setText(currformatDouble(costs.get(3) + costs.get(8)));
+           tboutstd.setText(currformatDouble(costs.get(4) + costs.get(9)));
+           tbtotcoststd.setText(currformatDouble(costs.get(10)));
+        } else {
+            tbmtlstd.setText("0");
+            tblbrstd.setText("0");
+            tbbdnstd.setText("0");
+            tbovhstd.setText("0");
+            tboutstd.setText("0");
+            tbtotcoststd.setText("0");
+        }
      }
         
     
@@ -1011,6 +1020,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel12 = new javax.swing.JLabel();
         ddservicetype = new javax.swing.JComboBox<>();
         jLabel14 = new javax.swing.JLabel();
+        btcopy = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         cbmrp = new javax.swing.JCheckBox();
         tbsafestock = new javax.swing.JTextField();
@@ -1202,6 +1212,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btlookup.setToolTipText("Search");
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btlookupActionPerformed(evt);
@@ -1214,6 +1225,14 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel12.setName("lblexpiredate"); // NOI18N
 
         jLabel14.setText("Service");
+
+        btcopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/addfile.png"))); // NOI18N
+        btcopy.setToolTipText("Copy");
+        btcopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcopyActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -1230,6 +1249,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btcopy)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1286,7 +1307,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(jLabel22)
                         .addComponent(btnew)
                         .addComponent(btclear))
-                    .addComponent(btlookup))
+                    .addComponent(btlookup)
+                    .addComponent(btcopy))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2676,6 +2698,21 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }//GEN-LAST:event_tableattachmentMouseClicked
 
+    private void btcopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcopyActionPerformed
+        if (! isLoad) {
+            tbkey.setText("");
+            tbkey.setBackground(Color.yellow);
+            //bsmf.MainFrame.show("choose new parent key and adjust ISA/GS IDs accordingly");
+            tbkey.requestFocus();
+            btadd.setEnabled(true);
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            btdelete.setEnabled(false);
+            btupdate.setEnabled(false);
+            btcopy.setEnabled(false);
+        }
+    }//GEN-LAST:event_btcopyActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel CostBOMPanel;
@@ -2685,6 +2722,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btaddattachment;
     private javax.swing.JButton btaddimage;
     private javax.swing.JButton btclear;
+    private javax.swing.JButton btcopy;
     private javax.swing.JButton btcurrent;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleteattachment;

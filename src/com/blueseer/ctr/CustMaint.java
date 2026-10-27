@@ -403,6 +403,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbkey.setText("");
         tbkey.setEditable(true);
         tbkey.setForeground(Color.black);
+        tbkey.setBackground(Color.white);
         
         /* cant add shipcode until billcode has been committed */
         btshipadd.setEnabled(false);
@@ -1473,6 +1474,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btlookup.setToolTipText("Search");
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btlookupActionPerformed(evt);

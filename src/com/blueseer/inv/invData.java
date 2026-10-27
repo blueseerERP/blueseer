@@ -7344,7 +7344,7 @@ public class invData {
                 return null;
             }
         }    
-        ArrayList<Double> mylist = new ArrayList<Double>();
+        ArrayList<Double> mylist = new ArrayList<>();
              try{
                 Connection con = null;
         if (ds != null) {
@@ -7372,8 +7372,13 @@ public class invData {
                     mylist.add(res.getDouble("itc_ovh_top"));
                     mylist.add(res.getDouble("itc_out_top"));
                     mylist.add(res.getDouble("itc_total"));
-
                     }
+                   
+                   if (mylist.isEmpty()) { // if no record found above...default to zero in all 11 elements
+                       for (int z = 0; z < 11; z++) {
+                           mylist.add(0.00);
+                       }
+                   }
 
                }
                 catch (SQLException s){

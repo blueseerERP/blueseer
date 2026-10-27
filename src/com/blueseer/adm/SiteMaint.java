@@ -274,6 +274,9 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerCtl {
        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "states,countries");
        }
         tbkey.setText("");
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.black);
+        tbkey.setBackground(Color.white);
         tbdesc.setText("");
         tbline1.setText("");
         tbline2.setText("");
@@ -331,6 +334,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerCtl {
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
+        btcopy.setEnabled(false);
         btnew.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
@@ -720,6 +724,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerCtl {
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
+        btcopy = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -793,6 +798,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerCtl {
         jLabel15.setName("lblcountry"); // NOI18N
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btlookup.setToolTipText("Search");
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btlookupActionPerformed(evt);
@@ -806,6 +812,14 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerCtl {
         jLabel18.setText("Contact");
 
         jLabel19.setText("Email");
+
+        btcopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/addfile.png"))); // NOI18N
+        btcopy.setToolTipText("Copy");
+        btcopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcopyActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -842,7 +856,9 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerCtl {
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(13, 13, 13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btcopy)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btclear))
@@ -867,7 +883,8 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerCtl {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
                         .addComponent(btclear))
-                    .addComponent(btlookup))
+                    .addComponent(btlookup)
+                    .addComponent(btcopy))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1110,10 +1127,26 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerCtl {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btcopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcopyActionPerformed
+        if (! isLoad) {
+            tbkey.setText("");
+            tbkey.setBackground(Color.yellow);
+            //bsmf.MainFrame.show("choose new parent key and adjust ISA/GS IDs accordingly");
+            tbkey.requestFocus();
+            btadd.setEnabled(true);
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            btdelete.setEnabled(false);
+            btupdate.setEnabled(false);
+            btcopy.setEnabled(false);
+        }
+    }//GEN-LAST:event_btcopyActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btclear;
+    private javax.swing.JButton btcopy;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
