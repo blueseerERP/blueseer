@@ -43,7 +43,7 @@
         </Property>
         <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[912, 600]"/>
+          <Dimension value="[912, 650]"/>
         </Property>
       </Properties>
 
@@ -305,7 +305,7 @@
                           <Component id="tbremarks" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel41" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="178" max="32767" attributes="0"/>
+                      <EmptySpace pref="232" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -652,7 +652,7 @@
           <Dimension value="[958, 477]"/>
         </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[958, 600]"/>
+          <Dimension value="[958, 650]"/>
         </Property>
       </Properties>
 
@@ -693,8 +693,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane7" min="-2" pref="138" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane2" min="-2" pref="100" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jScrollPane2" min="-2" pref="88" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="totlines" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -725,7 +725,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel5" min="-2" pref="756" max="-2" attributes="0"/>
-                      <EmptySpace pref="61" max="32767" attributes="0"/>
+                      <EmptySpace pref="69" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="btupdateitem" max="32767" attributes="0"/>
                           <Component id="btdelitem" alignment="0" max="32767" attributes="0"/>
@@ -745,10 +745,11 @@
                               <Component id="btdelitem" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btupdateitem" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jPanel5" alignment="0" min="-2" pref="252" max="-2" attributes="0"/>
+                          <Component id="jPanel5" alignment="0" pref="266" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -815,7 +816,7 @@
                               </Group>
                               <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace min="30" pref="30" max="-2" attributes="0"/>
+                          <EmptySpace min="14" pref="14" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1147,7 +1148,7 @@
                                   <Component id="ddloc" max="32767" attributes="0"/>
                                   <Component id="ddbom" alignment="0" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="7" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1331,7 +1332,7 @@
         </Property>
         <Property name="name" type="java.lang.String" value="panelAttachment" noResource="true"/>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[974, 560]"/>
+          <Dimension value="[974, 650]"/>
         </Property>
       </Properties>
 
@@ -1365,7 +1366,7 @@
                       </Group>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="jScrollPane3" pref="502" max="32767" attributes="0"/>
+                  <Component id="jScrollPane3" pref="586" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

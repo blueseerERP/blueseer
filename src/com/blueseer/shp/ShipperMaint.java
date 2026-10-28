@@ -1726,7 +1726,7 @@ public class ShipperMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         panelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Shipper Maintenance"));
         panelMain.setName("panelmain"); // NOI18N
-        panelMain.setPreferredSize(new java.awt.Dimension(912, 600));
+        panelMain.setPreferredSize(new java.awt.Dimension(912, 650));
 
         jLabel24.setText("Shipper#");
         jLabel24.setName("lblid"); // NOI18N
@@ -1889,7 +1889,7 @@ public class ShipperMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(HeaderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbremarks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel41))
-                .addContainerGap(178, Short.MAX_VALUE))
+                .addContainerGap(232, Short.MAX_VALUE))
         );
 
         jLabel36.setText("ShipTo:");
@@ -2129,7 +2129,7 @@ public class ShipperMaint extends javax.swing.JPanel implements IBlueSeerT {
         add(panelMain);
 
         panelDetail.setMinimumSize(new java.awt.Dimension(958, 477));
-        panelDetail.setPreferredSize(new java.awt.Dimension(958, 600));
+        panelDetail.setPreferredSize(new java.awt.Dimension(958, 650));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Detail"));
         jPanel2.setName("paneldetail"); // NOI18N
@@ -2370,7 +2370,7 @@ public class ShipperMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(ddwh, 0, 76, Short.MAX_VALUE)
                     .addComponent(ddloc, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ddbom, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(7, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2421,7 +2421,7 @@ public class ShipperMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(30, 30, 30))
+                .addGap(14, 14, 14))
         );
 
         btupdateitem.setText("Update Line");
@@ -2439,7 +2439,7 @@ public class ShipperMaint extends javax.swing.JPanel implements IBlueSeerT {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 756, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btupdateitem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btdelitem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -2455,9 +2455,10 @@ public class ShipperMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdelitem)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btupdateitem))
-                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btupdateitem)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jScrollPane7.setBorder(javax.swing.BorderFactory.createTitledBorder("Line Detail"));
@@ -2536,8 +2537,8 @@ public class ShipperMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(totlines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
@@ -2552,7 +2553,7 @@ public class ShipperMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         panelAttachment.setBorder(javax.swing.BorderFactory.createTitledBorder("Attachment Panel"));
         panelAttachment.setName("panelAttachment"); // NOI18N
-        panelAttachment.setPreferredSize(new java.awt.Dimension(974, 560));
+        panelAttachment.setPreferredSize(new java.awt.Dimension(974, 650));
 
         btaddattachment.setText("Add Attachment");
         btaddattachment.setName("btaddattachment"); // NOI18N
@@ -2613,7 +2614,7 @@ public class ShipperMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(btaddattachment)
                         .addComponent(btdeleteattachment)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE))
         );
 
         add(panelAttachment);
