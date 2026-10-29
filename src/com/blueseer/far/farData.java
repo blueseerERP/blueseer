@@ -54,6 +54,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import org.json.JSONArray;
@@ -1416,6 +1418,16 @@ public class farData {
         
         res.close();
         st.close();
+           
+    }
+    
+    public static void _updateCustLastOrderDate(String cust, Connection bscon) throws SQLException {
+           
+        try (Statement st = bscon.createStatement()) {
+            String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            st.executeUpdate("update cm_mstr set cm_lastselldate =  " + "'" + today + "'" +
+                    " where cm_code = " + "'" + cust + "'");
+        }
            
     }
     

@@ -43,6 +43,7 @@ import com.blueseer.ctr.cusData.cms_det;
 import static com.blueseer.ctr.cusData.getCustInfo;
 import com.blueseer.edi.EDI.edi855;
 import static com.blueseer.edi.ediData.getEDIMetaValueAsKVStringPair;
+import static com.blueseer.far.farData._updateCustLastOrderDate;
 import com.blueseer.fgl.fglData;
 import static com.blueseer.shp.ShipOrderLine.orderSet;
 import com.blueseer.shp.shpData;
@@ -370,6 +371,7 @@ public class ordData {
                     _addOrderSummaryDet(z, bscon, ps, res);
                 }
             }
+            _updateCustLastOrderDate(so.so_cust(), bscon);
             bscon.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
         } catch (SQLException s) {

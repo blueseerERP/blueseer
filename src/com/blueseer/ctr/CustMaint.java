@@ -27,6 +27,8 @@ package com.blueseer.ctr;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
+import com.blueseer.adm.admData;
+import static com.blueseer.adm.admData.addChangeLog;
 import static com.blueseer.ctr.cusData.addCMCDet;
 import static com.blueseer.ctr.cusData.addCMSDet;
 import static com.blueseer.ctr.cusData.addCustomerTransaction;
@@ -44,12 +46,14 @@ import static com.blueseer.ctr.cusData.updateCMSDet;
 import static com.blueseer.ctr.cusData.updateCustMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.logChange;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -105,7 +109,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
      
      
      
-     public static cm_mstr k = null;
+     public static cm_mstr cm = null;
     
     // global datatablemodel declarations 
     javax.swing.table.DefaultTableModel contactmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -626,7 +630,15 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public String[] updateRecord(String[] x) {
-        String[] m = updateCustMstr(createRecord());
+        cm_mstr _cm = createRecord();
+        String[] m = updateCustMstr(_cm);
+            // change log check
+            if (m[0].equals("0")) {
+              ArrayList<admData.change_log> c = logChange(tbkey.getText(), 0, this.getClass().getSimpleName(),cm,_cm);
+              if (! c.isEmpty()) {
+                  addChangeLog(c);
+              }   
+            }
         return m;   
      }
      
@@ -645,9 +657,9 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public String[] getRecord(String[] x) {
         cm_mstr z = getCustMstr(x);
-        k = z;
+        cm = z;
         getAttachments(x[0]);
-        return k.m();
+        return cm.m();
     }
      
     public cm_mstr createRecord() { 
@@ -1015,57 +1027,57 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
 
     public String[] updateForm() {
-      tbkey.setText(k.cm_code());
-      ddsite.setSelectedItem(k.cm_site());
-        tbname.setText(k.cm_name());
-        tbline1.setText(k.cm_line1());
-        tbline2.setText(k.cm_line2());
-        tbline3.setText(k.cm_line3());
-        tbcity.setText(k.cm_city());
-        tbmunicipality.setText(k.cm_municipality());
-        tbcounty.setText(k.cm_county());
-        ddstate.setSelectedItem(k.cm_state());
-        ddcountry.setSelectedItem(k.cm_country());
-        tbzip.setText(k.cm_zip());
-        tbdateadded.setText(k.cm_dateadd());
-        tbdatemod.setText(k.cm_datemod());
-        tbgroup.setText(k.cm_group());
-        tbmarket.setText(k.cm_market());
-        tbcreditlimit.setText(k.cm_creditlimit());
-        cbonhold.setSelected(BlueSeerUtils.ConvertStringToBool(k.cm_onhold()));
-        cbtaxexempt.setSelected(BlueSeerUtils.ConvertStringToBool(k.cm_tax_exempt()));
-        ddcarrier.setSelectedItem(k.cm_carrier());
-        ddbank.setSelectedItem(k.cm_bank());
-        ddcurr.setSelectedItem(k.cm_curr());
-        ddlabel.setSelectedItem(k.cm_label());
-        tbinvformat.setText(k.cm_iv_jasper());
-        tbshpformat.setText(k.cm_ps_jasper());
-        ddfreightterms.setSelectedItem(k.cm_freight_type());
-        ddterms.setSelectedItem(k.cm_terms());
-        tbpricecode.setText(k.cm_price_code());
-        tbdisccode.setText(k.cm_disc_code());
-        ddtax.setSelectedItem(k.cm_tax_code());
-        tbsalesrep.setText(k.cm_salesperson());
-        ddaccount.setSelectedItem(k.cm_ar_acct());
-        ddcc.setSelectedItem(k.cm_ar_cc());
-        tbremarks.setText(k.cm_remarks());
-        tbmainphone.setText(k.cm_phone());
-        tbmainemail.setText(k.cm_email());
-        cb855.setSelected(BlueSeerUtils.ConvertStringToBool(k.cm_is855export()));
-        cb856.setSelected(BlueSeerUtils.ConvertStringToBool(k.cm_is856export()));
-        cb810.setSelected(BlueSeerUtils.ConvertStringToBool(k.cm_is810export()));
-        cbcascade.setSelected(BlueSeerUtils.ConvertStringToBool(k.cm_cascade()));
-        tbtaxid.setText(k.cm_misc1());
-        tbhighbalance.setText(k.cm_highbal());
-        tbavgdays.setText(k.cm_avgdays());
-        tblastpaydate.setText(k.cm_lastpaydate());
-        tblastselldate.setText(k.cm_lastselldate()); 
+      tbkey.setText(cm.cm_code());
+      ddsite.setSelectedItem(cm.cm_site());
+        tbname.setText(cm.cm_name());
+        tbline1.setText(cm.cm_line1());
+        tbline2.setText(cm.cm_line2());
+        tbline3.setText(cm.cm_line3());
+        tbcity.setText(cm.cm_city());
+        tbmunicipality.setText(cm.cm_municipality());
+        tbcounty.setText(cm.cm_county());
+        ddstate.setSelectedItem(cm.cm_state());
+        ddcountry.setSelectedItem(cm.cm_country());
+        tbzip.setText(cm.cm_zip());
+        tbdateadded.setText(cm.cm_dateadd());
+        tbdatemod.setText(cm.cm_datemod());
+        tbgroup.setText(cm.cm_group());
+        tbmarket.setText(cm.cm_market());
+        tbcreditlimit.setText(cm.cm_creditlimit());
+        cbonhold.setSelected(BlueSeerUtils.ConvertStringToBool(cm.cm_onhold()));
+        cbtaxexempt.setSelected(BlueSeerUtils.ConvertStringToBool(cm.cm_tax_exempt()));
+        ddcarrier.setSelectedItem(cm.cm_carrier());
+        ddbank.setSelectedItem(cm.cm_bank());
+        ddcurr.setSelectedItem(cm.cm_curr());
+        ddlabel.setSelectedItem(cm.cm_label());
+        tbinvformat.setText(cm.cm_iv_jasper());
+        tbshpformat.setText(cm.cm_ps_jasper());
+        ddfreightterms.setSelectedItem(cm.cm_freight_type());
+        ddterms.setSelectedItem(cm.cm_terms());
+        tbpricecode.setText(cm.cm_price_code());
+        tbdisccode.setText(cm.cm_disc_code());
+        ddtax.setSelectedItem(cm.cm_tax_code());
+        tbsalesrep.setText(cm.cm_salesperson());
+        ddaccount.setSelectedItem(cm.cm_ar_acct());
+        ddcc.setSelectedItem(cm.cm_ar_cc());
+        tbremarks.setText(cm.cm_remarks());
+        tbmainphone.setText(cm.cm_phone());
+        tbmainemail.setText(cm.cm_email());
+        cb855.setSelected(BlueSeerUtils.ConvertStringToBool(cm.cm_is855export()));
+        cb856.setSelected(BlueSeerUtils.ConvertStringToBool(cm.cm_is856export()));
+        cb810.setSelected(BlueSeerUtils.ConvertStringToBool(cm.cm_is810export()));
+        cbcascade.setSelected(BlueSeerUtils.ConvertStringToBool(cm.cm_cascade()));
+        tbtaxid.setText(cm.cm_misc1());
+        tbhighbalance.setText(cm.cm_highbal());
+        tbavgdays.setText(cm.cm_avgdays());
+        tblastpaydate.setText(cm.cm_lastpaydate());
+        tblastselldate.setText(cm.cm_lastselldate()); 
         contactmodel.setRowCount(0);
         clearShipTo();
         clearContacts();
-        refreshContactTable(k.cm_code());
-        setAction(k.m());
-        return k.m();  
+        refreshContactTable(cm.cm_code());
+        setAction(cm.m());
+        return cm.m();  
     }
     
     public void getAttachments(String id) {
@@ -1269,6 +1281,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbcounty = new javax.swing.JTextField();
         jLabel58 = new javax.swing.JLabel();
         btcopy = new javax.swing.JButton();
+        btchangelog = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         tbdatemod = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
@@ -1494,23 +1507,17 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        btchangelog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        btchangelog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btchangelogActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(jLabel1)
-                .addGap(4, 4, 4)
-                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btcopy)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addComponent(btclear))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -1552,7 +1559,24 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(tbcounty, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(tbmunicipality, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(tbzip, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))))
+                        .addComponent(tbzip, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(jLabel1)
+                .addGap(4, 4, 4)
+                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btcopy)
+                .addGap(3, 3, 3)
+                .addComponent(btchangelog)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnew, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btclear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1573,7 +1597,8 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addGap(16, 16, 16)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btcopy)
-                            .addComponent(btlookup))))
+                            .addComponent(btlookup)
+                            .addComponent(btchangelog))))
                 .addGap(16, 16, 16)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -1783,7 +1808,6 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel10)
-                            .addComponent(jLabel13)
                             .addComponent(jLabel16)
                             .addComponent(jLabel19)
                             .addComponent(jLabel26)
@@ -1796,7 +1820,8 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel46)
                             .addComponent(jLabel47)
                             .addComponent(jLabel52)
-                            .addComponent(jLabel55))
+                            .addComponent(jLabel55)
+                            .addComponent(jLabel13))
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(jPanel3Layout.createSequentialGroup()
@@ -1884,7 +1909,9 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(tblastselldate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tblastselldate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel13))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tblastpaydate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1896,13 +1923,9 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel52)
                             .addComponent(jLabel53)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(tbgroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel54))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(jLabel13)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbgroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel54))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbcreditlimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2754,10 +2777,15 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
        }
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
+    private void btchangelogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btchangelogActionPerformed
+        callChangeDialog(tbkey.getText(), this.getClass().getSimpleName());
+    }//GEN-LAST:event_btchangelogActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddattachment;
     private javax.swing.JButton btaddcontact;
+    private javax.swing.JButton btchangelog;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btclearshipto;
     private javax.swing.JButton btcopy;

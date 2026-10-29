@@ -1134,12 +1134,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
        if (! c.isEmpty()) {
            addChangeLog(c);
        } 
-       sodlist = getOrderDet(new String[]{tbkey.getText()}); // refresh sodlist original if item action add, update, delete has altered picture
+    //   sodlist = getOrderDet(new String[]{tbkey.getText()}); // refresh sodlist original if item action add, update, delete has altered picture
                                                             //...so as to not duplicate change twice
-       ArrayList<admData.change_log> c2 = logChangeArrays(tbkey.getText(), this.getClass().getSimpleName(),sodlist,_sodlist);
-       if (! c2.isEmpty()) {
-           addChangeLog(c2);
-       }
+     //  ArrayList<admData.change_log> c2 = logChangeArrays(tbkey.getText(), this.getClass().getSimpleName(),sodlist,_sodlist);
+     //  if (! c2.isEmpty()) {
+     //      addChangeLog(c2);
+     //  }
      }
         
      return m;
