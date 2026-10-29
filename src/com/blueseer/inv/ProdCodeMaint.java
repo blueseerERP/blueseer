@@ -290,9 +290,13 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerV {
           initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "");
         }
        
-       tbkey.setBackground(Color.white);
         tbkey.setText("");
-         tbdesc.setText("");
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.black);
+        tbkey.setBackground(Color.white);
+        tbdesc.setText("");
+        tbdesc.setForeground(Color.black);
+        tbdesc.setBackground(Color.white); 
          tbinvacct.setText("");
          tbinvdescrepancyacct.setText("");
          tbscrapacct.setText("");
@@ -903,7 +907,8 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerV {
             }
         });
 
-        btcopy.setText("Copy");
+        btcopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/addfile.png"))); // NOI18N
+        btcopy.setToolTipText("Copy");
         btcopy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcopyActionPerformed(evt);
@@ -983,6 +988,8 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerV {
                                 .addGap(7, 7, 7)
                                 .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btcopy)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnew)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btclear)
@@ -1022,8 +1029,7 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerV {
                                     .addComponent(tboutratevaracct, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbtbd, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btcopy)
-                                .addGap(35, 35, 35)
+                                .addGap(107, 107, 107)
                                 .addComponent(jLabel67)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))))
@@ -1040,9 +1046,9 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerV {
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel66)
                         .addComponent(btnew)
-                        .addComponent(btclear)
-                        .addComponent(btcopy))
-                    .addComponent(btlookup))
+                        .addComponent(btclear))
+                    .addComponent(btlookup)
+                    .addComponent(btcopy))
                 .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -1189,9 +1195,11 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerV {
     }//GEN-LAST:event_btlookupActionPerformed
 
     private void btcopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcopyActionPerformed
-         if (! isLoad) {
+        if (! isLoad) {
             tbkey.setText("");
             tbkey.setBackground(Color.yellow);
+            tbdesc.setText("");
+            tbdesc.setBackground(Color.yellow);
             //bsmf.MainFrame.show("choose new parent key and adjust ISA/GS IDs accordingly");
             tbkey.requestFocus();
             btadd.setEnabled(true);
@@ -1200,7 +1208,7 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerV {
             btdelete.setEnabled(false);
             btupdate.setEnabled(false);
             btcopy.setEnabled(false);
-            }
+        }
     }//GEN-LAST:event_btcopyActionPerformed
 
 
