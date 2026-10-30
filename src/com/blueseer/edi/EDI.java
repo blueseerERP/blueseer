@@ -3784,7 +3784,9 @@ public class EDI {
                 "0",
                 "",
                 0,
-                0); 
+                0,
+                "" // ap_paymethod
+            ); 
             
             // now the detail
             

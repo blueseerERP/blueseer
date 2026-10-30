@@ -927,7 +927,9 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerV {
                 "1",
                 "",
                 bsParseDouble(d[1]),
-                bsParseDouble(d[2]));  
+                bsParseDouble(d[2]),
+                "" // ap_paymethod
+                );  
         return x;  
     }
     

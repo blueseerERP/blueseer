@@ -3016,7 +3016,9 @@ public class shpData {
                         "1",
                         "",
                         0,
-                        0);  
+                        0,
+                        "" // ap_paymethod
+                        );  
                         
                         // create vod_mstr JRT
                         fapData.vod_mstr y = new fapData.vod_mstr(null, 

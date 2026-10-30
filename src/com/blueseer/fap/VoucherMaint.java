@@ -671,7 +671,9 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerV {
                 "1",
                 bsmf.MainFrame.userid,
                 bsParseDouble(tbtax.getText()),
-                bsParseDouble(tbservice.getText()) );   
+                bsParseDouble(tbservice.getText()),
+                "" // ap_paymethod
+                );   
         return x;  
     }
     

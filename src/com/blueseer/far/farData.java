@@ -1346,7 +1346,9 @@ public class farData {
            
         Statement st = bscon.createStatement();
         ResultSet res;
-                
+         
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        
         // high balance
         double highbal = 0.00;
         res = st.executeQuery("select ar_open_amt from ar_mstr where ar_status = 'o' and ar_cust = " + "'" + cust + "'" +";");
@@ -1369,6 +1371,7 @@ public class farData {
 
         
         st.executeUpdate("update cm_mstr set cm_highbal = case when cm_highbal < " +  highbal + " then " + highbal + " else cm_highbal end, cm_avgdays = " + "'" + avgdays + "'" +
+                ", cm_lastpaydate = " + "'" + today + "'" +
                 " where cm_code = " + "'" + cust + "'");
        
         

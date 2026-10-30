@@ -4170,8 +4170,8 @@ public class fglData {
                                " and ap_vend <= " + "'" + keys[3] + "'" +
                                " and ap_effdate >= " + "'" + keys[0] + "'" +
                                " and ap_effdate <= " + "'" + keys[1] + "'" +
-                               " and ap_type <> 'V' " +
-                               " and ap_status = 'c' " +
+                               " and ap_type = 'V' " +
+                            //   " and ap_status = 'c' " +
                                " and ap_site = " + "'" + keys[4] + "'" +
                                ";");
                     

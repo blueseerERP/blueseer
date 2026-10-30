@@ -145,7 +145,8 @@ public class fapData {
                 "1", // approved
                 "", // approver
                 0,
-                0
+                0,
+                "" // paymethod
                 );
                 
                 
@@ -278,7 +279,8 @@ public class fapData {
                 ap.ap_approved,
                 ap.ap_approver,
                 0,
-                0
+                0,
+                ap.ap_paymethod
                 ); 
                 _addAPMstr(x, bscon, ps, res); // add AP Type E payment
             
@@ -393,7 +395,8 @@ public class fapData {
                 ap.ap_approved,
                 ap.ap_approver,
                 0,
-                0
+                0,
+                ap.ap_paymethod
                 ); 
                 _addAPMstr(x, bscon, ps, res); // add AP Type E payment
             
@@ -653,7 +656,8 @@ public class fapData {
                 "1",
                 "",
                 0,
-                0
+                0,
+                "" // ap_paymethod
                 );
                 _addAPMstr(x, bscon, ps, res);
                 // increment each check nbr per record
@@ -780,8 +784,9 @@ public class fapData {
         "ap_amt, ap_base_amt, ap_effdate, ap_entdate, ap_duedate, " +
         "ap_type, ap_rmks, ap_ref, ap_terms, ap_acct, " +
         "ap_cc, ap_applied, ap_status, ap_bank, ap_curr, " +
-        "ap_base_curr, ap_check, ap_batch, ap_site, ap_subtype, ap_entrytype, ap_approved, ap_approver ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        "ap_base_curr, ap_check, ap_batch, ap_site, ap_subtype, ap_entrytype, ap_approved, ap_approver, " +
+        "ap_amt_tax, ap_amt_sac, ap_paymethod ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.ap_batch);
@@ -815,6 +820,9 @@ public class fapData {
             ps.setString(23, x.ap_entrytype);
             ps.setString(24, x.ap_approved);
             ps.setString(25, x.ap_approver);
+            ps.setDouble(26, x.ap_amt_tax);
+            ps.setDouble(27, x.ap_amt_sac);
+            ps.setString(28, x.ap_paymethod);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -861,7 +869,8 @@ public class fapData {
                                 res.getString("ap_approved"),
                                 res.getString("ap_approver"),
                                 res.getDouble("ap_amt_tax"),
-                                res.getDouble("ap_amt_sac")
+                                res.getDouble("ap_amt_sac"),
+                                res.getString("ap_paymethod")
                             );
                 }
             }
@@ -1570,7 +1579,9 @@ public class fapData {
                 "1",
                 "",
                 0,
-                0); 
+                0,
+                "" // ap_paymethod
+                ); 
          
          // recv_mstr
          rcvData.recv_mstr rv = new rcvData.recv_mstr(null, 
@@ -1926,7 +1937,9 @@ public class fapData {
                 "1",
                 "",
                 0,
-                0); 
+                0,
+                "" // ap_paymethod
+                ); 
         
         // now POS
                      ordData.pos_mstr pos = new ordData.pos_mstr(null, 
@@ -3403,11 +3416,11 @@ public class fapData {
         String ap_type, String ap_rmks, String ap_ref, String ap_terms, String ap_acct,
         String ap_cc, String ap_applied, String ap_status, String ap_bank, String ap_curr,
         String ap_base_curr, String ap_check, String ap_batch, String ap_site, String ap_subtype,
-        String ap_entrytype, String ap_approved, String ap_approver, double ap_amt_tax, double ap_amt_sac) {
+        String ap_entrytype, String ap_approved, String ap_approver, double ap_amt_tax, double ap_amt_sac, String ap_paymethod) {
         public ap_mstr(String[]m) {
             this(m, "", "", "", 0, 0, "", "", "", "", "", 
                     "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", 0, 0);
+                    "", "", "", "", "", "", 0, 0, "");
         }
     }
     
