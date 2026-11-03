@@ -456,7 +456,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerV {
             return false;
         }
         
-     boolean proceed = bsmf.MainFrame.warn("PrePaid option is " + cbprepaid.isSelected() + " ...do you want to continue?");
+     boolean proceed = bsmf.MainFrame.warn("payment type option is " + ddpaymethod.getSelectedItem().toString() + " ...do you want to continue?");
      if (! proceed) {
          return false;
      }
@@ -542,10 +542,10 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerV {
     public String[] addRecord(String[] x) {
      String[] m = null;
      
-     if (cbprepaid.isSelected()) {
-       m = VouchAndPayTransaction("AP-Expense", createDetRecord(), createRecord(), false);
+     if (ddpaymethod.getSelectedItem().toString().equals("billing")) {
+       m =  VoucherTransaction("Expense" , createDetRecord(), createRecord(), false);         
      } else {
-       m =  VoucherTransaction("Expense" , createDetRecord(), createRecord(), false); 
+       m = VouchAndPayTransaction("AP-Expense", createDetRecord(), createRecord(), false);
      }      
       // autopost
         if (isAutoPost) {
@@ -851,7 +851,6 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerV {
         jLabel3 = new javax.swing.JLabel();
         cbprofile = new javax.swing.JCheckBox();
         btLookUpAccount = new javax.swing.JButton();
-        cbprepaid = new javax.swing.JCheckBox();
         ddpaymethod = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
         btLookUpVendor = new javax.swing.JButton();
@@ -1040,9 +1039,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerV {
             }
         });
 
-        cbprepaid.setText("PrePaid?");
-
-        ddpaymethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "cash", "card", "check", "wire", "draft" }));
+        ddpaymethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "cash", "billing", "card", "check", "wire", "draft" }));
 
         jLabel11.setText("PayMethod");
 
@@ -1084,9 +1081,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerV {
                                 .addComponent(btclear)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cbprofile)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbprepaid)
-                                .addGap(18, 18, 18)
+                                .addGap(100, 100, 100)
                                 .addComponent(lbmessage, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
                                 .addGap(142, 142, 142))
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -1157,14 +1152,14 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerV {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(btnew)
-                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel24)
-                                .addComponent(btclear)
-                                .addComponent(cbprofile)
-                                .addComponent(cbprepaid)
-                                .addComponent(lbmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lbmessage, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnew)
+                                    .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel24)
+                                    .addComponent(btclear)
+                                    .addComponent(cbprofile)))
                             .addComponent(btlookup))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1384,6 +1379,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerV {
         }
         String keyvalue = ddsite.getSelectedItem().toString() + ":" +
                           ddvend.getSelectedItem().toString() + ":" +
+                          ddpaymethod.getSelectedItem().toString() + ":" +
                 ddacct.getSelectedItem().toString() + ":" +
                 ddcc.getSelectedItem().toString() + ":" +
                 expensedet.getValueAt(0, 3).toString() + ":" +
@@ -1408,10 +1404,11 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerV {
              String[] s = values.split(":", -1);
                 ddsite.setSelectedItem(s[0]);
                 ddvend.setSelectedItem(s[1]);
-                ddacct.setSelectedItem(s[2]);
-                ddcc.setSelectedItem(s[3]);
-                tbqty.setText(s[4]);
-                tbprice.setText(s[5]);
+                ddpaymethod.setSelectedItem(s[2]);
+                ddacct.setSelectedItem(s[3]);
+                ddcc.setSelectedItem(s[4]);
+                tbqty.setText(s[5]);
+                tbprice.setText(s[6]);
                 tbitemservice.setText(ddprofile.getSelectedItem().toString());
         }
        
@@ -1419,6 +1416,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerV {
         if (ddprofile.getSelectedItem() != null && ddprofile.getSelectedItem().toString().isEmpty() && ! isLoad ) {
             ddsite.setSelectedIndex(0);
             ddvend.setSelectedIndex(0);
+            ddpaymethod.setSelectedIndex(0);
             ddacct.setSelectedIndex(0);
             ddcc.setSelectedIndex(0);
             tbqty.setText("");
@@ -1461,7 +1459,6 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerV {
     private javax.swing.JButton btdeleteitem;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
-    private javax.swing.JCheckBox cbprepaid;
     private javax.swing.JCheckBox cbprofile;
     private com.toedter.calendar.JDateChooser dcdate;
     private javax.swing.JComboBox<String> ddacct;

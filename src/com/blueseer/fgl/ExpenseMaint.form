@@ -57,9 +57,7 @@
                                   <Component id="btclear" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                                   <Component id="cbprofile" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbprepaid" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
                                   <Component id="lbmessage" pref="138" max="32767" attributes="0"/>
                                   <EmptySpace min="-2" pref="142" max="-2" attributes="0"/>
                               </Group>
@@ -149,14 +147,15 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="btnew" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="tbkey" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel24" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btclear" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbprofile" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbprepaid" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="lbmessage" alignment="1" min="-2" pref="22" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="btnew" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tbkey" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel24" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btclear" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbprofile" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                               <Component id="btlookup" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -531,20 +530,16 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLookUpAccountActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="cbprepaid">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="PrePaid?"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JComboBox" name="ddpaymethod">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="5">
+              <StringArray count="6">
                 <StringItem index="0" value="cash"/>
-                <StringItem index="1" value="card"/>
-                <StringItem index="2" value="check"/>
-                <StringItem index="3" value="wire"/>
-                <StringItem index="4" value="draft"/>
+                <StringItem index="1" value="billing"/>
+                <StringItem index="2" value="card"/>
+                <StringItem index="3" value="check"/>
+                <StringItem index="4" value="wire"/>
+                <StringItem index="5" value="draft"/>
               </StringArray>
             </Property>
           </Properties>
