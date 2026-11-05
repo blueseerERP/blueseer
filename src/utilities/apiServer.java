@@ -102,9 +102,7 @@ import org.eclipse.jetty.util.thread.ScheduledExecutorScheduler;
      
 
 public class apiServer {
-    
-    
-    
+          
     private static final String[] HEADERS = {
             "X-Forwarded-For",
             "Proxy-Client-IP",
