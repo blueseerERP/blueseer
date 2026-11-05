@@ -180,21 +180,11 @@
 </dependency>
 
 <dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-core</artifactId>
-    <version>[2.22.3,)</version>
-</dependency>
-
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-annotations</artifactId>
-    <version>[2.22.3,)</version>
-</dependency>
-
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-databind</artifactId>
-    <version>[2.22.3,)</version>
+  <groupId>com.fasterxml.jackson</groupId>
+  <artifactId>jackson-bom</artifactId>
+  <version>2.22.4</version>
+  <type>pom</type>
+  <scope>import</scope>
 </dependency>
 
 <dependency>
@@ -426,50 +416,50 @@
 <dependency>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-servlet</artifactId>
-    <version>[9.4.63,)</version>
+    <version>12.1.14</version>
 </dependency>
 
 <dependency>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-http</artifactId>
-    <version>[9.4.63,)</version>
+    <version>12.1.14</version>
 </dependency>
 
 <dependency>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-io</artifactId>
-    <version>[9.4.63,)</version>
+    <version>12.1.14</version>
 </dependency>
 
 <dependency>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-security</artifactId>
-    <version>[9.4.63,)</version>
+    <version>12.1.14</version>
 </dependency>
 
 <dependency>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-server</artifactId>
-    <version>[9.4.63,)</version>
+    <version>12.1.14</version>
 </dependency>
 
 
 <dependency>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-util</artifactId>
-    <version>[9.4.63,)</version>
+    <version>12.1.14</version>
 </dependency>
 
 <dependency>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-webapp</artifactId>
-    <version>[9.4.63,)</version>
+    <version>12.1.14</version>
 </dependency>
 
 <dependency>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-xml</artifactId>
-    <version>[9.4.63,)</version>
+    <version>12.1.14</version>
 </dependency>
 
 
