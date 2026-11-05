@@ -61,7 +61,6 @@ import com.blueseer.srv.dataServSCH;
 import com.blueseer.srv.dataServSHP;
 import com.blueseer.srv.dataServTCA;
 import com.blueseer.srv.dataServVDR;
-import com.blueseer.srv.webServ;
 import static com.blueseer.utl.BlueSeerUtils.isParsableToInt;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -99,7 +98,7 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.thread.ScheduledExecutorScheduler;
 
- 
+  
      
 
 public class apiServer {
@@ -187,42 +186,42 @@ public class apiServer {
         }
         
         
-        context.addServlet(AS2Serv.class, "/as2/*");
-        context.addServlet(WorkOrdServ.class, "/WorkOrder/*");
-        context.addServlet(WorkOrdServ.class, "/WorkOrderList/*");
-        context.addServlet(SalesOrdServ.class, "/SalesOrder/*");
-        context.addServlet(SalesOrdServ.class, "/SalesOrderList/*");
-        context.addServlet(ShipperServ.class, "/Shipper/*");
-        context.addServlet(ShipperServ.class, "/ShipperList/*");
-        context.addServlet(ItemServ.class, "/Item/*");
-        context.addServlet(ItemServ.class, "/ItemList/*");
-        context.addServlet(CustomerServ.class, "/Customer/*");
-        context.addServlet(CustomerServ.class, "/CustomerList/*");
-        context.addServlet(TestServlet.class, "/test/*");
-        context.addServlet(wellKnownServlet.class, "/.well-known/certificate");
-        context.addServlet(dataServ.class, "/dataServ/*");
-        context.addServlet(dataServFIN.class, "/dataServFIN/*"); 
-        context.addServlet(dataServORD.class, "/dataServORD/*"); 
-        context.addServlet(authServ.class, "/authServ/*");
-        context.addServlet(dataServOV.class, "/dataServOV/*");
-        context.addServlet(dataServDT.class, "/dataServDT/*");
-        context.addServlet(dataServEDI.class, "/dataServEDI/*");
-        context.addServlet(dataServADM.class, "/dataServADM/*");
-        context.addServlet(dataServSHP.class, "/dataServSHP/*"); 
-        context.addServlet(dataServINV.class, "/dataServINV/*");
-        context.addServlet(dataServCUS.class, "/dataServCUS/*");
-        context.addServlet(dataServLBL.class, "/dataServLBL/*");
-        context.addServlet(dataServENG.class, "/dataServENG/*");
-        context.addServlet(dataServFRT.class, "/dataServFRT/*");
-        context.addServlet(dataServHRM.class, "/dataServHRM/*");
-        context.addServlet(dataServPRD.class, "/dataServPRD/*");
-        context.addServlet(dataServPUR.class, "/dataServPUR/*");
-        context.addServlet(dataServRCV.class, "/dataServRCV/*");
-        context.addServlet(dataServSCH.class, "/dataServSCH/*");
-        context.addServlet(dataServVDR.class, "/dataServVDR/*");
-        context.addServlet(dataServFAP.class, "/dataServFAP/*");
-        context.addServlet(dataServFAR.class, "/dataServFAR/*");
-        context.addServlet(dataServTCA.class, "/dataServTCA/*");
+        context.addServlet(AS2Serv.class.getName(), "/as2/*");  
+        context.addServlet(WorkOrdServ.class.getName(), "/WorkOrder/*");
+        context.addServlet(WorkOrdServ.class.getName(), "/WorkOrderList/*");
+        context.addServlet(SalesOrdServ.class.getName(), "/SalesOrder/*");
+        context.addServlet(SalesOrdServ.class.getName(), "/SalesOrderList/*");
+        context.addServlet(ShipperServ.class.getName(), "/Shipper/*");
+        context.addServlet(ShipperServ.class.getName(), "/ShipperList/*");
+        context.addServlet(ItemServ.class.getName(), "/Item/*");
+        context.addServlet(ItemServ.class.getName(), "/ItemList/*");
+        context.addServlet(CustomerServ.class.getName(), "/Customer/*");
+        context.addServlet(CustomerServ.class.getName(), "/CustomerList/*");
+        context.addServlet(TestServlet.class.getName(), "/test/*");
+        context.addServlet(wellKnownServlet.class.getName(), "/.well-known/certificate");
+        context.addServlet(dataServ.class.getName(), "/dataServ/*");
+        context.addServlet(dataServFIN.class.getName(), "/dataServFIN/*"); 
+        context.addServlet(dataServORD.class.getName(), "/dataServORD/*"); 
+        context.addServlet(authServ.class.getName(), "/authServ/*");
+        context.addServlet(dataServOV.class.getName(), "/dataServOV/*");
+        context.addServlet(dataServDT.class.getName(), "/dataServDT/*");
+        context.addServlet(dataServEDI.class.getName(), "/dataServEDI/*");
+        context.addServlet(dataServADM.class.getName(), "/dataServADM/*");
+        context.addServlet(dataServSHP.class.getName(), "/dataServSHP/*"); 
+        context.addServlet(dataServINV.class.getName(), "/dataServINV/*");
+        context.addServlet(dataServCUS.class.getName(), "/dataServCUS/*");
+        context.addServlet(dataServLBL.class.getName(), "/dataServLBL/*");
+        context.addServlet(dataServENG.class.getName(), "/dataServENG/*");
+        context.addServlet(dataServFRT.class.getName(), "/dataServFRT/*");
+        context.addServlet(dataServHRM.class.getName(), "/dataServHRM/*");
+        context.addServlet(dataServPRD.class.getName(), "/dataServPRD/*");
+        context.addServlet(dataServPUR.class.getName(), "/dataServPUR/*");
+        context.addServlet(dataServRCV.class.getName(), "/dataServRCV/*");
+        context.addServlet(dataServSCH.class.getName(), "/dataServSCH/*");
+        context.addServlet(dataServVDR.class.getName(), "/dataServVDR/*");
+        context.addServlet(dataServFAP.class.getName(), "/dataServFAP/*");
+        context.addServlet(dataServFAR.class.getName(), "/dataServFAR/*");
+        context.addServlet(dataServTCA.class.getName(), "/dataServTCA/*");
         //server.setHandler(context);
         
         /*
@@ -290,7 +289,7 @@ public class apiServer {
         Path keystorePath = Paths.get(prop.getProperty("keystore")).toAbsolutePath();
         if (!Files.exists(keystorePath))
             throw new FileNotFoundException(keystorePath.toString());
-        SslContextFactory sslContextFactory = new SslContextFactory.Server();
+        SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
         sslContextFactory.setKeyStorePath(keystorePath.toString());
       //  sslContextFactory.setKeyStorePassword("OBF:1vny1zlo1x8e1vnw1vn61x8g1zlu1vn4");
       //  sslContextFactory.setKeyManagerPassword("OBF:1u2u1wml1z7s1z7a1wnl1u2g");

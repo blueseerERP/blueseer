@@ -41,7 +41,6 @@ import com.blueseer.srv.WorkOrdServ;
 import com.blueseer.srv.authServ;
 import com.blueseer.srv.dataServ;
 import com.blueseer.srv.dataServFIN;
-import com.blueseer.srv.webServ;
 import static com.blueseer.utl.BlueSeerUtils.isParsableToInt;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -67,7 +66,6 @@ import org.eclipse.jetty.server.SecureRequestCustomizer;
 
 
 import org.eclipse.jetty.servlet.ServletContextHandler; 
-import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
@@ -77,8 +75,8 @@ import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.thread.ScheduledExecutorScheduler;
-import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
+
 
  
      
@@ -164,29 +162,30 @@ public class bsServer {
         server.setDumpBeforeStop(false);
         server.setStopAtShutdown(true);
         
-        context.addServlet(AS2Serv.class, "/as2/*");
-        context.addServlet(WorkOrdServ.class, "/WorkOrder/*");
-        context.addServlet(WorkOrdServ.class, "/WorkOrderList/*");
-        context.addServlet(SalesOrdServ.class, "/SalesOrder/*");
-        context.addServlet(SalesOrdServ.class, "/SalesOrderList/*");
-        context.addServlet(ShipperServ.class, "/Shipper/*");
-        context.addServlet(ShipperServ.class, "/ShipperList/*");
-        context.addServlet(ItemServ.class, "/Item/*");
-        context.addServlet(ItemServ.class, "/ItemList/*");
-        context.addServlet(CustomerServ.class, "/Customer/*");
-        context.addServlet(CustomerServ.class, "/CustomerList/*");
-        context.addServlet(TestServlet.class, "/test/*");
-        context.addServlet(dataServ.class, "/dataServ/*");
-        context.addServlet(dataServFIN.class, "/dataServFIN/*"); 
-        context.addServlet(authServ.class, "/authServ/*");
-        context.addServlet(authServ.class, "/dataServOV/*");
+        context.addServlet(AS2Serv.class.getName(), "/as2/*");
+        context.addServlet(WorkOrdServ.class.getName(), "/WorkOrder/*");
+        context.addServlet(WorkOrdServ.class.getName(), "/WorkOrderList/*");
+        context.addServlet(SalesOrdServ.class.getName(), "/SalesOrder/*");
+        context.addServlet(SalesOrdServ.class.getName(), "/SalesOrderList/*");
+        context.addServlet(ShipperServ.class.getName(), "/Shipper/*");
+        context.addServlet(ShipperServ.class.getName(), "/ShipperList/*");
+        context.addServlet(ItemServ.class.getName(), "/Item/*");
+        context.addServlet(ItemServ.class.getName(), "/ItemList/*");
+        context.addServlet(CustomerServ.class.getName(), "/Customer/*");
+        context.addServlet(CustomerServ.class.getName(), "/CustomerList/*");
+        context.addServlet(TestServlet.class.getName(), "/test/*");
+        context.addServlet(dataServ.class.getName(), "/dataServ/*");
+        context.addServlet(dataServFIN.class.getName(), "/dataServFIN/*"); 
+        context.addServlet(authServ.class.getName(), "/authServ/*");
+        context.addServlet(authServ.class.getName(), "/dataServOV/*");
         //server.setHandler(context);
         
         
-        WebAppContext webapp = new WebAppContext();
-        webapp.setContextPath("/bsweb");
+        WebAppContext webapp = new WebAppContext();  
+        
+        webapp.setContextPath("/bsweb");     
         webapp.setResourceBase("web/");
-        webapp.addServlet(webServ.class, "/webServ/*"); 
+        webapp.addServlet("webServ.class", "/webServ/*");        
         webapp.setWelcomeFiles(new String[]{"login.html"});
        
         
@@ -256,7 +255,7 @@ public class bsServer {
         Path keystorePath = Paths.get(prop.getProperty("keystore")).toAbsolutePath();
         if (!Files.exists(keystorePath))
             throw new FileNotFoundException(keystorePath.toString());
-        SslContextFactory sslContextFactory = new SslContextFactory.Server();
+        SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
         sslContextFactory.setKeyStorePath(keystorePath.toString());
       //  sslContextFactory.setKeyStorePassword("OBF:1vny1zlo1x8e1vnw1vn61x8g1zlu1vn4");
       //  sslContextFactory.setKeyManagerPassword("OBF:1u2u1wml1z7s1z7a1wnl1u2g");
