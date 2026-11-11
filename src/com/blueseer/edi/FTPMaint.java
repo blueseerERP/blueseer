@@ -343,6 +343,9 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
        tableattribute.getTableHeader().setReorderingAllowed(false);
        
        tbkey.setText("");
+       tbkey.setEditable(true);
+       tbkey.setForeground(Color.black);
+       tbkey.setBackground(Color.white);
        tbport.setText("");
        lblstatus.setText("");
        lblstatus.setForeground(Color.blue);
@@ -401,6 +404,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
         btnew.setEnabled(false);
+        btcopy.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
         if (! x.isEmpty()) {
@@ -1135,6 +1139,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
         talog = new javax.swing.JTextArea();
         ddsite = new javax.swing.JComboBox<>();
         jLabel15 = new javax.swing.JLabel();
+        btcopy = new javax.swing.JButton();
 
         jLabel8.setText("jLabel8");
 
@@ -1143,7 +1148,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("FTP Maintenance"));
         jPanel1.setName("panelmain"); // NOI18N
-        jPanel1.setPreferredSize(new java.awt.Dimension(984, 620));
+        jPanel1.setPreferredSize(new java.awt.Dimension(984, 760));
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1177,6 +1182,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        bodypanel.setPreferredSize(new java.awt.Dimension(863, 600));
         bodypanel.setLayout(new javax.swing.BoxLayout(bodypanel, javax.swing.BoxLayout.LINE_AXIS));
 
         jTabbedPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -1388,7 +1394,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel12))
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("tab1", mainpanel);
@@ -1474,12 +1480,14 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(attributepanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btdeleteattr)
                     .addComponent(btaddattr))
-                .addGap(0, 277, Short.MAX_VALUE))
+                .addGap(0, 414, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("tab2", attributepanel);
 
         bodypanel.add(jTabbedPane1);
+
+        textpanel.setPreferredSize(new java.awt.Dimension(518, 525));
 
         talog.setColumns(20);
         talog.setRows(5);
@@ -1496,12 +1504,22 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
         );
         textpanelLayout.setVerticalGroup(
             textpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE)
+            .addGroup(textpanelLayout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         bodypanel.add(textpanel);
 
         jLabel15.setText("Site");
+
+        btcopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/addfile.png"))); // NOI18N
+        btcopy.setToolTipText("Copy");
+        btcopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcopyActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1518,14 +1536,16 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(13, 13, 13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btcopy)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnew)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tbclear)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(bodypanel, javax.swing.GroupLayout.DEFAULT_SIZE, 962, Short.MAX_VALUE))
+                .addComponent(bodypanel, javax.swing.GroupLayout.DEFAULT_SIZE, 968, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1537,7 +1557,8 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(btnew)
                                 .addComponent(tbclear))
-                            .addComponent(btlookup))
+                            .addComponent(btlookup)
+                            .addComponent(btcopy))
                         .addGap(27, 27, 27))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1548,7 +1569,8 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel15))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addComponent(bodypanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(6, 6, 6)
+                .addComponent(bodypanel, javax.swing.GroupLayout.DEFAULT_SIZE, 675, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -1640,12 +1662,28 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbattrvalue.setText(tableattribute.getValueAt(row, 1).toString());
     }//GEN-LAST:event_tableattributeMouseClicked
 
+    private void btcopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcopyActionPerformed
+        if (! isLoad) {
+            tbkey.setText("");
+            tbkey.setBackground(Color.yellow);
+            //bsmf.MainFrame.show("choose new parent key and adjust ISA/GS IDs accordingly");
+            tbkey.requestFocus();
+            btadd.setEnabled(true);
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            btdelete.setEnabled(false);
+            btupdate.setEnabled(false);
+            btcopy.setEnabled(false);
+        }
+    }//GEN-LAST:event_btcopyActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel attributepanel;
     private javax.swing.JPanel bodypanel;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddattr;
+    private javax.swing.JButton btcopy;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleteattr;
     private javax.swing.JButton btlookup;
