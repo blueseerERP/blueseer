@@ -1334,7 +1334,7 @@ public class fglData {
             xlist.add(new String[]{"id","updateTaxTransaction"});
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                String jsonString = objectMapper.writeValueAsString(x);
+                String jsonString = x;
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(lines);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(taxd);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(tax);
@@ -1803,7 +1803,7 @@ public class fglData {
             xlist.add(new String[]{"id","updatePayProfileTransaction"});
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                String jsonString = objectMapper.writeValueAsString(x);
+                String jsonString = x;
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(lines);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(paydet);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(pay);
@@ -6408,9 +6408,10 @@ public class fglData {
                     
                        res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_check, ap_nbr, vod_item, ap_site, ap_acct, ap_cc, ap_vend, vod_qty, vod_voprice, vod_expense_acct, vod_expense_cc from vod_mstr " +
                                "inner join ap_mstr on ap_nbr = vod_id and ap_type = 'V' where vod_id = " + "'" + voucher + "'" +";");
-                   
+                    
                     double amt = 0.00;   
                     while (res.next()) {
+                        
                      // credit vendor AP Acct (AP Voucher) and debit unvouchered receipts (po_rcpts acct)
                     amt = res.getDouble("vod_qty") * res.getDouble("vod_voprice");
                        acct_cr.add(res.getString("ap_acct"));
@@ -6441,7 +6442,7 @@ public class fglData {
                     
                 
                     }
-                     for (int j = 0; j < acct_cr.size(); j++) {
+                     for (int j = 0; j < acct_cr.size(); j++) {                         
                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), cost.get(j), basecost.get(j), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
           

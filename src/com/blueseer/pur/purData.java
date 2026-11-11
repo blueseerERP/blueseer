@@ -419,7 +419,7 @@ public class purData {
             list.add(new String[]{"id","updatePOTransaction"});
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                String jsonString = objectMapper.writeValueAsString(x);
+                String jsonString = x;
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(lines);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(pod);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(poa);

@@ -490,7 +490,7 @@ public class rcvData {
             list.add(new String[]{"id","updateReceiverTransaction"});
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                String jsonString = objectMapper.writeValueAsString(x);
+                String jsonString = x;
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(lines);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(rvd);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(rv);

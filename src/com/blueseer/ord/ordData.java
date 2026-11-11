@@ -585,7 +585,7 @@ public class ordData {
             list.add(new String[]{"id","updateOrderTransaction"});
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                String jsonString = objectMapper.writeValueAsString(x);
+                String jsonString = x;
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(lines);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(sod);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(so);
@@ -1877,7 +1877,7 @@ public class ordData {
             list.add(new String[]{"id","updateServiceOrderTransaction"});
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                String jsonString = objectMapper.writeValueAsString(x);
+                String jsonString = x;
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(lines);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(svd);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(sv);
@@ -2311,7 +2311,7 @@ public class ordData {
             list.add(new String[]{"id","updateQuoteTransaction"});
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                String jsonString = objectMapper.writeValueAsString(x);
+                String jsonString = x;
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(lines);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(qod);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(qo);
@@ -3013,7 +3013,7 @@ public class ordData {
             list.add(new String[]{"id","updateBillingTransaction"});
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                String jsonString = objectMapper.writeValueAsString(x);
+                String jsonString = x;
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(lines);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(bd);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(bm);

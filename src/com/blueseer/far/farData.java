@@ -211,7 +211,7 @@ public class farData {
             list.add(new String[]{"id","addArTransaction"});
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                String jsonString = objectMapper.writeValueAsString(artype);
+                String jsonString = artype;
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(ard);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(ar);
                 return jsonToStringArray(sendServerPost(list, jsonString, null, "dataServFAR"));

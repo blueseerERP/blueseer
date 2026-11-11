@@ -207,7 +207,7 @@ public class fapData {
             list.add(new String[]{"id","VouchAndPayTransaction"});
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                String jsonString = objectMapper.writeValueAsString(ctype);
+                String jsonString = ctype;
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(vod);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(ap);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(Void);
@@ -283,6 +283,7 @@ public class fapData {
                 ap.ap_paymethod
                 ); 
                 _addAPMstr(x, bscon, ps, res); // add AP Type E payment
+            
             
             if (ctype.equals("AP-Expense")) {
                 fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate), bscon, Void, ctype); // aptype=V
@@ -499,7 +500,7 @@ public class fapData {
             list.add(new String[]{"id","VoucherTransaction"});
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                String jsonString = objectMapper.writeValueAsString(ctype);
+                String jsonString = ctype;
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(vod);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(ap);
                 jsonString = jsonString + "=_=" + objectMapper.writeValueAsString(Void);
