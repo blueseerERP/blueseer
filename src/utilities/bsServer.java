@@ -55,6 +55,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.webapp.WebAppContext;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.AsyncRequestLogWriter;
 import org.eclipse.jetty.server.CustomRequestLog;
@@ -65,17 +67,16 @@ import org.eclipse.jetty.server.LowResourceMonitor;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
 
 
-import org.eclipse.jetty.servlet.ServletContextHandler; 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.util.resource.ResourceFactory;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.thread.ScheduledExecutorScheduler;
-import org.eclipse.jetty.webapp.WebAppContext;
 
 
  
@@ -122,7 +123,8 @@ public class bsServer {
         context.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false");
         context.setContextPath("/bsapi"); 
         String webdir = "src/web/WEB-INF/";
-        context.setResourceBase(webdir);
+        Path webdirPath = Paths.get(webdir).toAbsolutePath();
+        context.setBaseResourceAsPath(webdirPath);
         
         int i = 0;
         int serverport = 8088;
@@ -179,12 +181,13 @@ public class bsServer {
         context.addServlet(authServ.class.getName(), "/authServ/*");
         context.addServlet(authServ.class.getName(), "/dataServOV/*");
         //server.setHandler(context);
+         
         
-        
-        WebAppContext webapp = new WebAppContext();  
-        
+        WebAppContext webapp = new WebAppContext(); 
         webapp.setContextPath("/bsweb");     
-        webapp.setResourceBase("web/");
+        ResourceFactory resourceFactory = ResourceFactory.of(context);
+        Resource baseResource = resourceFactory.newResource("web/");
+        webapp.setBaseResource(baseResource);        
         webapp.addServlet("webServ.class", "/webServ/*");        
         webapp.setWelcomeFiles(new String[]{"login.html"});
        
@@ -235,11 +238,10 @@ public class bsServer {
         httpConfig.setSendDateHeader(false);
         // httpConfig.addCustomizer(new ForwardedRequestCustomizer());
 
-        // Handler Structure
-        HandlerCollection handlers = new HandlerCollection();
+        // Handler Structure        
         ContextHandlerCollection contexts = new ContextHandlerCollection();
-        handlers.setHandlers(new Handler[]{contexts, new DefaultHandler()});
-        server.setHandler(handlers);
+        contexts.setHandlers(new Handler[]{contexts, new DefaultHandler()});
+        server.setHandler(contexts);
 
        
 

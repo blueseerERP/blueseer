@@ -77,6 +77,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.AsyncRequestLogWriter;
 import org.eclipse.jetty.server.CustomRequestLog;
@@ -87,13 +88,11 @@ import org.eclipse.jetty.server.LowResourceMonitor;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
 
 
-import org.eclipse.jetty.servlet.ServletContextHandler; 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.thread.ScheduledExecutorScheduler;
@@ -141,7 +140,9 @@ public class apiServer {
 	ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/bsapi"); 
         String webdir = "src/web/WEB-INF/";
-        context.setResourceBase(webdir);
+        Path webdirPath = Paths.get(webdir).toAbsolutePath();
+        context.setBaseResourceAsPath(webdirPath);
+       
         context.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         int i = 0;
         int port = 8088;
@@ -182,7 +183,7 @@ public class apiServer {
         } else {
             server = new Server(port);
         }
-        
+         
         
         context.addServlet(AS2Serv.class.getName(), "/as2/*");  
         context.addServlet(WorkOrdServ.class.getName(), "/WorkOrder/*");
@@ -266,7 +267,7 @@ public class apiServer {
         // httpConfig.addCustomizer(new ForwardedRequestCustomizer());
 
         // Handler Structure
-        HandlerCollection handlers = new HandlerCollection();
+        Handler.Sequence handlers = new Handler.Sequence();
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         handlers.setHandlers(new Handler[]{contexts, new DefaultHandler()});
         server.setHandler(handlers);
